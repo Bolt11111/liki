@@ -1,0 +1,52 @@
+{
+  "policy_id": "governance-control-policy",
+  "policy_version": "1.0.0",
+  "content_hash": "sha256:c89db5990851549c3fa8b48b10b54eb993a28bf1e9b99e965539841592d1e769",
+  "protected_controls": [
+    {
+      "control_id": "constitution_precedence",
+      "path_prefixes": ["docs/LIKI_SRS.md", "liki/governance/constitution"],
+      "minimum_class": "RED"
+    },
+    {
+      "control_id": "real_money_enablement",
+      "path_prefixes": ["liki/execution/live", "config/live_execution"],
+      "minimum_class": "RED"
+    },
+    {
+      "control_id": "gate_audit_integrity",
+      "path_prefixes": ["liki/gates", "liki/audit", "liki/evaluator"],
+      "minimum_class": "RED"
+    },
+    {
+      "control_id": "sealed_holdout",
+      "path_prefixes": ["liki/sealed", "liki/data/holdout"],
+      "minimum_class": "RED"
+    },
+    {
+      "control_id": "critical_accounting_risk",
+      "path_prefixes": ["liki/accounting", "liki/risk", "liki/execution"],
+      "minimum_class": "RED"
+    },
+    {
+      "control_id": "secret_credential_boundary",
+      "path_prefixes": ["liki/security", "config/secrets"],
+      "minimum_class": "RED"
+    },
+    {
+      "control_id": "governance_self_reference",
+      "path_prefixes": ["liki/governance", "config/governance_policy.json"],
+      "minimum_class": "RED"
+    },
+    {
+      "control_id": "policy_engine_authorization",
+      "path_prefixes": ["liki/policy", "liki/control_plane"],
+      "minimum_class": "RED"
+    }
+  ],
+  "review_thresholds": {
+    "GREEN": 3,
+    "AMBER": 5,
+    "RED": 7
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "routes": [
+    {
+      "route_id": "anthropic-official",
+      "provider_class": "premium_reasoning",
+      "provider_id": "anthropic",
+      "endpoint_id": "anthropic-public-api",
+      "key_pool_id": "anthropic-owner-configured",
+      "adapter": "anthropic_messages",
+      "base_url": "https://api.anthropic.com",
+      "allowed_hosts": ["api.anthropic.com"],
+      "model": "owner-configured-verified-model",
+      "claimed_model_name": "owner-configured-verified-model",
+      "model_family": "owner-verified-family",
+      "identity_assurance": "UNKNOWN",
+      "upstream_correlation_domain": "anthropic-primary",
+      "egress_clearance": "INTERNAL",
+      "retention_known": true,
+      "may_train_on_prompts": false,
+      "health": "UNKNOWN",
+      "capabilities": {"context_window": 200000, "max_output_tokens": 4096, "reasoning_efforts": ["standard", "high"], "tools_supported": true, "streaming_supported": true, "continuation_supported": true, "timeout_seconds": 60},
+      "pricing": {"price_plan_id": "anthropic-example-2026-09", "effective_at": "2026-09-01T00:00:00Z", "input_per_million_usd": "0", "output_per_million_usd": "0", "fixed_request_usd": "0.80", "unknown_usage_reserve": {"input_tokens": 200000, "output_tokens": 4096, "reasoning_tokens": 0, "cache_read_tokens": 0, "cache_write_tokens": 0, "token_count_method": "configured_conservative_reserve"}, "bill_failed": true, "bill_timeout": true}
+    },
+    {
+      "route_id": "openai-compatible-fallback",
+      "provider_class": "token_fallback",
+      "provider_id": "owner-configured-provider",
+      "endpoint_id": "owner-configured-endpoint",
+      "key_pool_id": "owner-configured-key-pool",
+      "adapter": "openai_chat",
+      "base_url": "https://api.example-provider.invalid",
+      "allowed_hosts": ["api.example-provider.invalid"],
+      "model": "configured-by-owner",
+      "claimed_model_name": "configured-by-owner",
+      "model_family": "unknown-until-benchmarked",
+      "identity_assurance": "PROVIDER_ASSERTED",
+      "upstream_correlation_domain": "independent-provider-domain",
+      "egress_clearance": "PUBLIC",
+      "retention_known": false,
+      "may_train_on_prompts": null,
+      "health": "UNKNOWN",
+      "capabilities": {"context_window": 32768, "max_output_tokens": 4096, "tools_supported": false, "streaming_supported": false, "continuation_supported": false, "timeout_seconds": 60},
+      "pricing": {"price_plan_id": "owner-must-configure", "effective_at": "2026-09-01T00:00:00Z", "input_per_million_usd": "1.00", "output_per_million_usd": "1.00", "unknown_usage_reserve": {"input_tokens": 32768, "output_tokens": 4096, "reasoning_tokens": 0, "cache_read_tokens": 0, "cache_write_tokens": 0, "token_count_method": "configured_conservative_reserve"}, "bill_failed": true, "bill_timeout": true}
+    }
+  ]
+}

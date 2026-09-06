@@ -11,7 +11,7 @@ from liki.store import Credential, issue_credential
 
 def transition(store, token, key, aggregate, value=1):
     with store.transaction(token) as (conn, actor):
-        return store.transition(conn, actor, capability="research", kind="test", aggregate_id=aggregate,
+        return store.transition(conn, actor, capability="research", kind="research_object", aggregate_id=aggregate,
                                 expected_version=0, state={"value": value}, event_type="TEST",
                                 operation_key=key, task_id="test-task", policy_version="test-v1", topic="test")
 
@@ -44,12 +44,12 @@ def test_rollback_does_not_publish_event(store, credentials):
     aggregate = uid("AGG")
     with pytest.raises(RuntimeError):
         with store.transaction(credentials["research"]) as (conn, actor):
-            store.transition(conn, actor, capability="research", kind="test", aggregate_id=aggregate,
+            store.transition(conn, actor, capability="research", kind="research_object", aggregate_id=aggregate,
                              expected_version=0, state={}, event_type="TEST", operation_key=uid("OP"),
                              task_id="test", policy_version="v1", topic="test")
             raise RuntimeError("process crash before commit")
     with store.transaction(credentials["auditor"]) as (conn, _):
-        assert store.state(conn, "test", aggregate) is None
+        assert store.state(conn, "research_object", aggregate) is None
 
 
 def test_immutable_history_and_least_privilege(store, credentials):
@@ -90,3 +90,15 @@ def test_live_and_exceptional_json_are_unrepresentable():
         Mode("LIVE")
     with pytest.raises(ValueError):
         canonical({"metric": float("nan")})
+
+
+@pytest.mark.parametrize("gate_id", [0, 13, "G0", None])
+def test_audit_preserves_gate_identifier_type(store, credentials, gate_id):
+    with store.transaction(credentials["research"]) as (conn, actor):
+        event = store.transition(
+            conn, actor, capability="research", kind="research_object", aggregate_id=uid("AGG"),
+            expected_version=0, state={"gate_id": gate_id}, event_type="GATE_TYPE_TEST",
+            operation_key=uid("OP"), task_id="gate-type-test", policy_version="v1",
+        )
+        assert event["gate_id"] == (str(gate_id) if gate_id is not None else None)
+        assert store.audit(conn)["status"] == "VERIFIED"

@@ -7,6 +7,7 @@ from contextlib import contextmanager
 from dataclasses import dataclass, field
 from datetime import timedelta
 from pathlib import Path
+from typing import Any
 
 import psycopg
 from psycopg.rows import dict_row
@@ -15,14 +16,14 @@ from psycopg.types.json import Jsonb
 from liki.core import DomainError, content_hash, environment_fingerprint, uid, utcnow
 
 CAPABILITIES = {
-    "owner": {"read", "stop", "proposal", "owner_decision", "incident"},
-    "operator": {"read", "stop", "incident"},
+    "owner": {"read", "stop", "proposal", "owner_decision", "incident", "notification"},
+    "operator": {"read", "stop", "incident", "notification"},
     "research": {"read", "artifact", "research", "task"},
-    "evaluator": {"read", "artifact", "evidence", "gate", "snapshot", "research"},
+    "evaluator": {"read", "artifact", "evidence", "gate", "snapshot"},
     "sealed_evaluator": {"sealed", "artifact", "evidence", "gate", "snapshot"},
     "inference": {"read", "artifact", "inference"},
-    "scheduler": {"read", "task", "incident"},
-    "governance": {"read", "artifact", "proposal", "policy", "incident"},
+    "scheduler": {"read", "task", "incident", "notification"},
+    "governance": {"read", "artifact", "proposal", "policy", "incident", "notification"},
     "paper": {"read", "artifact", "paper", "stop", "incident"},
     "data": {"read", "artifact", "evidence", "data"},
     "auditor": {"read"},
@@ -51,12 +52,11 @@ class Store:
         self.fingerprint = environment_fingerprint()
 
     @contextmanager
-    def transaction(self, credential: Credential) -> Iterator[tuple[psycopg.Connection, Identity]]:
+    def transaction(self, credential: Credential) -> Iterator[tuple[psycopg.Connection[Any], Identity]]:
         with psycopg.connect(self._dsn, row_factory=dict_row) as conn:
             conn.execute("SET LOCAL statement_timeout = '15s'")
             record = conn.execute(
-                "SELECT p.* FROM principals p JOIN service_tokens t USING(principal_id) "
-                "WHERE t.token_hash=%s AND p.enabled AND t.revoked_at IS NULL AND t.expires_at>now()",
+                "SELECT * FROM liki_authenticate(%s)",
                 (hashlib.sha256(credential.token.encode()).hexdigest(),),
             ).fetchone()
             if not record:
@@ -65,11 +65,11 @@ class Store:
             yield conn, identity
 
     @staticmethod
-    def state(conn: psycopg.Connection, kind: str, aggregate_id: str) -> dict | None:
+    def state(conn: psycopg.Connection[Any], kind: str, aggregate_id: str) -> dict | None:
         return conn.execute("SELECT * FROM aggregates WHERE aggregate_type=%s AND aggregate_id=%s",
                             (kind, aggregate_id)).fetchone()
 
-    def transition(self, conn: psycopg.Connection, actor: Identity, *, capability: str,
+    def transition(self, conn: psycopg.Connection[Any], actor: Identity, *, capability: str,
                    kind: str, aggregate_id: str, expected_version: int, state: dict,
                    event_type: str, operation_key: str, task_id: str,
                    policy_version: str, evidence_ids: tuple[str, ...] = (),
@@ -118,6 +118,8 @@ class Store:
         columns = ",".join(keys)
         placeholders = ",".join(["%s"] * len(keys))
         event = conn.execute(f"INSERT INTO event_log ({columns}) VALUES ({placeholders}) RETURNING *", values).fetchone()
+        if event is None:
+            raise DomainError("EVENT_APPEND_FAILED")
         conn.execute("INSERT INTO aggregates VALUES (%s,%s,%s,%s) ON CONFLICT (aggregate_type,aggregate_id) "
                      "DO UPDATE SET version=EXCLUDED.version,state=EXCLUDED.state",
                      (kind, aggregate_id, actual + 1, Jsonb(state)))
@@ -126,7 +128,7 @@ class Store:
                          (uid("OUT"), event["event_id"], topic, Jsonb({"event_id": event["event_id"]})))
         return event
 
-    def put_artifact(self, conn: psycopg.Connection, actor: Identity, content: dict, *,
+    def put_artifact(self, conn: psycopg.Connection[Any], actor: Identity, content: dict, *,
                      schema_name: str, classification: str, policy_version: str) -> str:
         actor.require("artifact")
         if classification == "SECRET" or (classification == "SEALED" and actor.role != "sealed_evaluator"):
@@ -140,10 +142,13 @@ class Store:
                             policy_version, Jsonb(content))).fetchone()
         if row:
             return row["artifact_id"]
-        return conn.execute("SELECT artifact_id FROM artifacts WHERE producer_id=%s AND content_hash=%s AND schema_name=%s",
-                            (actor.principal_id, digest, schema_name)).fetchone()["artifact_id"]
+        existing = conn.execute("SELECT artifact_id FROM artifacts WHERE producer_id=%s AND content_hash=%s AND schema_name=%s",
+                                (actor.principal_id, digest, schema_name)).fetchone()
+        if existing is None:
+            raise DomainError("ARTIFACT_PERSISTENCE_FAILED")
+        return existing["artifact_id"]
 
-    def artifact(self, conn: psycopg.Connection, actor: Identity, artifact_id: str) -> dict:
+    def artifact(self, conn: psycopg.Connection[Any], actor: Identity, artifact_id: str) -> dict:
         row = conn.execute("SELECT * FROM artifacts WHERE artifact_id=%s", (artifact_id,)).fetchone()
         if not row or (row["classification"] == "SEALED" and actor.role != "sealed_evaluator"):
             raise DomainError("NOT_FOUND")
@@ -151,12 +156,18 @@ class Store:
             raise DomainError("ARTIFACT_CORRUPTED")
         return row
 
-    def audit(self, conn: psycopg.Connection) -> dict:
+    def audit(self, conn: psycopg.Connection[Any]) -> dict:
+        conn.execute("SELECT pg_advisory_xact_lock_shared(71403218)")
         previous = "GENESIS"
         count = 0
         reconstructed: dict[tuple[str, str], tuple[int, dict]] = {}
         for record in conn.execute("SELECT * FROM event_log ORDER BY sequence"):
             envelope = {k: v for k, v in record.items() if k not in {"sequence", "ingested_at_utc", "event_hash"}}
+            # PostgreSQL's text projection loses the gate ID's original JSON type.
+            gate_id = record["metadata"]["state_after"].get("gate_id")
+            if record["gate_id"] != (str(gate_id) if gate_id is not None else None):
+                raise DomainError("AUDIT_GATE_PROJECTION_MISMATCH")
+            envelope["gate_id"] = gate_id
             if record["previous_hash"] != previous or content_hash(envelope) != record["event_hash"]:
                 raise DomainError("AUDIT_INTEGRITY_FAILURE")
             key = record["aggregate_type"], record["aggregate_id"]
@@ -166,7 +177,10 @@ class Store:
             reconstructed[key] = record["aggregate_version"], record["metadata"]["state_after"]
             previous = record["event_hash"]
             count += 1
-        for row in conn.execute("SELECT * FROM aggregates"):
+        projections = conn.execute("SELECT * FROM aggregates").fetchall()
+        if len(projections) != len(reconstructed):
+            raise DomainError("PROJECTION_DRIFT")
+        for row in projections:
             if reconstructed.get((row["aggregate_type"], row["aggregate_id"])) != (row["version"], row["state"]):
                 raise DomainError("PROJECTION_DRIFT")
         return {"events": count, "head_hash": previous, "aggregates": len(reconstructed), "status": "VERIFIED"}
@@ -176,7 +190,9 @@ def migrate(dsn: str) -> None:
     with psycopg.connect(dsn) as conn:
         conn.execute("SELECT pg_advisory_xact_lock(71403219)")
         for file in sorted(Path("migrations").glob("*.sql")):
-            exists = conn.execute("SELECT to_regclass('public.schema_migrations')").fetchone()[0]
+            relation = conn.execute("SELECT to_regclass('public.schema_migrations')").fetchone()
+            assert relation is not None
+            exists = relation[0]
             previous = conn.execute("SELECT content_hash FROM schema_migrations WHERE version=%s", (file.name,)).fetchone() if exists else None
             digest = hashlib.sha256(file.read_bytes()).hexdigest()
             if previous and previous[0] != digest:
@@ -185,10 +201,17 @@ def migrate(dsn: str) -> None:
                 conn.execute(file.read_text())
                 conn.execute("INSERT INTO schema_migrations(version,content_hash) VALUES(%s,%s)", (file.name, digest))
         conn.execute("REVOKE CREATE ON SCHEMA public FROM PUBLIC")
+        unprotected = conn.execute(
+            "SELECT c.relname FROM pg_class c JOIN pg_namespace n ON n.oid=c.relnamespace "
+            "WHERE n.nspname='public' AND c.relkind='r' AND NOT c.relrowsecurity"
+        ).fetchall()
+        if unprotected:
+            raise DomainError("MIGRATION_MISSING_WORKLOAD_RLS")
         conn.execute("GRANT USAGE ON SCHEMA public TO liki_app")
         conn.execute("GRANT SELECT, INSERT, UPDATE ON ALL TABLES IN SCHEMA public TO liki_app")
         conn.execute("GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO liki_app")
         conn.execute("REVOKE INSERT, UPDATE ON principals, service_tokens, schema_migrations FROM liki_app")
+        conn.execute("REVOKE SELECT ON service_tokens FROM liki_app")
         conn.execute("REVOKE UPDATE ON event_log, artifacts, evidence, evaluation_snapshots FROM liki_app")
 
 
@@ -200,7 +223,7 @@ def issue_credential(dsn: str, principal_id: str, role: str, *, duration: timede
         conn.execute("INSERT INTO principals(principal_id,role,code_fingerprint) VALUES(%s,%s,%s) "
                      "ON CONFLICT(principal_id) DO NOTHING", (principal_id, role, environment_fingerprint()))
         existing = conn.execute("SELECT role FROM principals WHERE principal_id=%s", (principal_id,)).fetchone()
-        if existing[0] != role:
+        if existing is None or existing[0] != role:
             raise DomainError("PRINCIPAL_ROLE_CONFLICT")
         conn.execute("INSERT INTO service_tokens(token_hash,principal_id,expires_at) VALUES(%s,%s,%s)",
                      (hashlib.sha256(token.encode()).hexdigest(), principal_id, utcnow() + duration))

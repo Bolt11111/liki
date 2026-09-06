@@ -17,8 +17,6 @@ def main() -> None:
     config = database_config()
     if args.action == "migrate":
         migrate(config["owner_dsn"])
-        if "test_owner_dsn" in config:
-            migrate(config["test_owner_dsn"])
         print("Database migrations applied")
     else:
         if not all((args.principal, args.role, args.output)):

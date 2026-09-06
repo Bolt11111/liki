@@ -7,6 +7,11 @@ __pycache__/
 htmlcov/
 .runtime/
 .env
+.env.*
+!.env.example
+*.token
+*.hoplite-write-*
+.hypothesis/
 *.egg-info/
 .hoplite/attachments/
 .hoplite/artifacts/

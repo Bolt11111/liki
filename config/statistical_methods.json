@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "metrics": [
+    {
+      "metric_id": "simple-return",
+      "version": "v1",
+      "formula_reference": "LIKI SRS 38A.2: V_t / V_(t-1) - 1",
+      "input_series_semantics": "reconciled marked-to-market equity, cash-flow convention declared",
+      "units": "decimal return per period",
+      "annualization_rule": "none",
+      "missing_data_rule": "undefined; no zero substitution",
+      "undefined_conditions": ["fewer than two observations", "nonpositive or nonfinite equity"],
+      "numerical_tolerance": "1e-12",
+      "golden_fixture_ids": ["equity-100-110-v1"]
+    },
+    {
+      "metric_id": "maximum-drawdown",
+      "version": "v1",
+      "formula_reference": "LIKI SRS 38A.4: min(V_t / max_{u<=t} V_u - 1)",
+      "input_series_semantics": "reconciled marked-to-market equity",
+      "units": "decimal return (negative loss sign)",
+      "annualization_rule": "none",
+      "missing_data_rule": "undefined; no zero substitution",
+      "undefined_conditions": ["empty series", "nonpositive or nonfinite equity"],
+      "numerical_tolerance": "1e-12",
+      "golden_fixture_ids": ["equity-100-120-90-v1"]
+    }
+  ],
+  "methods": [
+    {
+      "method_id": "PSR.v1",
+      "formula_reference": "Bailey & López de Prado (2014), The Deflated Sharpe Ratio, Eq. 10",
+      "supported_input": "finite, nonconstant return series with declared sampling convention",
+      "dependence_handling": "none; serial dependence requires a separately justified effective-sample treatment",
+      "failure_conditions": ["fewer than 3 observations", "zero variance", "invalid sampling variance"],
+      "reference_tests": ["tests/statistics/test_inference.py::test_psr_signal_exceeds_null"]
+    },
+    {
+      "method_id": "DSR.v1",
+      "formula_reference": "Bailey & López de Prado (2014), expected maximum Sharpe threshold",
+      "supported_input": "PSR inputs plus persisted Trial Ledger search provenance and trial Sharpe distribution",
+      "dependence_handling": "effective trial estimates are conservative and versioned in Trial Ledger",
+      "failure_conditions": ["missing provenance", "fewer than two trial Sharpes", "zero trial Sharpe variance"],
+      "reference_tests": ["tests/statistics/test_inference.py::test_dsr_requires_ledger_provenance"]
+    },
+    {
+      "method_id": "PBO-CSCV.v1",
+      "formula_reference": "Bailey et al. (2017), The Probability of Backtest Overfitting",
+      "supported_input": "finite contiguous observation-by-variant return matrix",
+      "dependence_handling": "contiguous symmetric partitions; interpretation remains qualified for dependence",
+      "failure_conditions": ["odd partitions", "partitions do not divide observations", "fewer than two variants"],
+      "reference_tests": ["tests/statistics/test_inference.py::test_pbo_overfit_is_higher_than_signal"]
+    },
+    {
+      "method_id": "White-RC.v1",
+      "formula_reference": "White (2000), A Reality Check for Data Snooping",
+      "supported_input": "time-by-model benchmark excess-return matrix and full search provenance",
+      "dependence_handling": "Politis-Romano stationary bootstrap with predeclared expected block length",
+      "failure_conditions": ["fewer than 100 bootstrap replications", "nonfinite observations", "missing full model family"],
+      "reference_tests": ["tests/statistics/test_inference.py::test_white_reality_check_null_is_not_significant"]
+    },
+    {
+      "method_id": "OBF-spending-bonferroni.v2",
+      "formula_reference": "O'Brien & Fleming (1979), A multiple testing procedure for clinical trials",
+      "supported_input": "complete predeclared one-sided z-test information-fraction schedule under valid information increments",
+      "dependence_handling": "Lan-DeMets O'Brien-Fleming-shaped cumulative spend, converted with Bonferroni-valid per-look boundaries; not exact joint-look calibration and not valid for uncontrolled serial dependence",
+      "failure_conditions": ["zero variance", "schedule does not end at 1", "non-increasing information fractions", "undeclared schedule"],
+      "reference_tests": ["tests/statistics/test_validation.py::test_sequential_z_test_requires_predeclared_design"]
+    }
+  ]
+}

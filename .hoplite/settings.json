@@ -3,7 +3,7 @@
   "ports": {"preview": 3000, "additional": {}},
   "scripts": {
     "setup": {"enabled": true, "command": "bash scripts/setup.sh"},
-    "run": {"enabled": true, "command": "uv run python -m liki.server"},
+    "run": {"enabled": true, "command": "uv run uvicorn liki.server:create_app --factory --host 0.0.0.0 --port 3000 --reload --reload-dir liki --no-access-log"},
     "archive": {"enabled": true, "command": null},
     "check": {"enabled": true, "command": "uv run pytest && uv run ruff check . && uv run python tools/requirements.py check"}
   },

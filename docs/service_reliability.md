@@ -1,0 +1,7 @@
+# Incident and reliability controls
+
+`ReliabilityService` persists the formal incident lifecycle separately from research and proposal flow. A declared SEV0/SEV1 requires an owner notification recipient, queues a durable notification, snapshots all supplied evidence, and freezes promotion through `incident_promotion_freezes`. Incidents move `OPEN → CONTAINED → RECONCILING → RESOLVED → CLOSED`; resolution requires reconciled authoritative evidence, root cause, impact assessment, verified corrective action, and passing regression checks. SEV0/SEV1 closure requires a structured postmortem. Cause links keep recurring failures visible.
+
+SLIs are defined per required service scope with immutable policy-backed targets, finite sampling windows, and a breach threshold. Samples are immutable evidence-backed observations. Window compliance is `floor(good × 10,000 / total)`; error-budget consumption is the bounded ratio of actual errors to the SLO's allowed errors, in integer basis points. Repeated breached windows since the most recent remediation create a persistent promotion freeze; `promotion_blockers` returns all active incident and SLO blocks. A resolved incident may be explicitly reopened with evidence before closure.
+
+Promotion code must call `promotion_blockers` before authoritative promotion and fail closed when it returns any blocker. The existing governance promotion path is not changed by this module.
