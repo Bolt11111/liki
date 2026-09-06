@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "ports": {"preview": 3000, "additional": {}},
+  "scripts": {
+    "setup": {"enabled": true, "command": "bash scripts/setup.sh"},
+    "run": {"enabled": true, "command": "uv run python -m liki.server"},
+    "archive": {"enabled": true, "command": null},
+    "check": {"enabled": true, "command": "uv run pytest && uv run ruff check . && uv run python tools/requirements.py check"}
+  },
+  "mcpServers": []
+}
