@@ -1,4 +1,4 @@
-"""Scoped, deterministic command entrypoint for persisted research and early gates."""
+"""Scoped, deterministic command entrypoint for persisted research gates."""
 
 from __future__ import annotations
 
@@ -52,7 +52,7 @@ class DatasetInput(Contract):
 class VerifyInput(Contract):
     snapshot_id: str = Field(min_length=1)
     strategy_version_id: str = Field(min_length=1)
-    gate_id: Literal[0, 1, 2, 3, 4]
+    gate_id: Literal[0, 1, 2, 3, 4, 5]
     operation_key: str = Field(min_length=1)
 
 

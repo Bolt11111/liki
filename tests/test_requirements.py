@@ -41,3 +41,23 @@ def test_omitted_critical_requirement_is_rejected():
     registry = compile_registry(spec)
     registry["requirements"] = []
     assert validate(registry, spec)
+
+
+def test_explicit_requirement_and_artifact_lists_are_not_omitted():
+    spec = "# G5 — Full Protocol Backtest\nRequirements:\n\n- pinned code;\n- complete ledger.\n\n" \
+           "# G6 — Economics\nMust evaluate relevant:\n\n- fees;\n- funding.\n\n" \
+           "# 17.2 Required outputs\nEvery full backtest artifact includes:\n\n- gross PnL;\n- net PnL.\n\n" \
+           "# 17.6 Tiers\nEvery experiment declares one reproducibility tier:\n\n- BITWISE;\n- STATISTICAL.\n"
+    entries = extract(spec)
+    assert len(entries) == 4
+    assert "complete ledger" in entries[0]["requirement_text"]
+    assert "net PnL" in entries[2]["requirement_text"]
+    assert not validate(compile_registry(spec), spec)
+
+
+def test_new_list_contracts_preserve_existing_requirement_ids():
+    original = "# 17.3 Accounting\nMoney MUST be exact.\n"
+    before = compile_registry(original)
+    after = compile_registry(original + "\n# G5\nRequirements:\n\n- replay.\n", before)
+    assert after["requirements"][0]["requirement_id"] == before["requirements"][0]["requirement_id"]
+    assert after["requirements"][1]["status"] == "NOT_STARTED"

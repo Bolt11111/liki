@@ -22,6 +22,9 @@ not absent source code. Preserve these distinctions.
 
 ## Inventory and integration boundaries
 
+This table records the starting baseline; subsequent checkpoints below supersede
+only the specific boundaries they verify.
+
 | Area | What exists and is tested | What is partial, disconnected, or missing |
 |---|---|---|
 | Core persistence | Authenticated PostgreSQL transactions, RLS, immutable artifacts/event chain, revision checks, migration drift checks | Whole-system aggregate coverage and independent operational acceptance remain unclosed |
@@ -73,3 +76,33 @@ cross-currency contracts cannot enter the spot-only paper ledger. Verification:
 all passed; **19 tests, 37.17 seconds**. Projection-loss tests use restrictive
 database policies rather than mocked financial services. Requirement counts
 remain unchanged.
+
+## G5 integration and traceability repair
+
+The signed runner now executes `spot-quote-protocol-v1` through the real CLI and
+database boundary. It resolves exact dataset-event raw artifacts, validates
+normalized/schema hashes and timing, executes a candidate-bound lagged program
+and simple benchmark, and persists financial histories and a signed package.
+`docs/backtest_protocol.md` defines supported scope and explicit exclusions.
+
+The first G0–G5 process/database/API run passed **7 tests in 262.13 seconds**.
+Independent adversarial review then exposed sell-side financing, executable
+price-band and normalized-quantity defects; all were repaired. The independent
+regressions initially produced seven failures and subsequently passed. The
+final focused financial/traceability run passed **85 tests in 1.13 seconds**;
+repository Ruff and all 63 source modules' Mypy checks passed.
+The final complete suite passed **300 tests in 658.39 seconds**, with two
+pre-existing dependency deprecation warnings and no failures or skips.
+
+Review also found eight explicit list contracts omitted by the uppercase-only
+requirement extractor, including G5 and the section 17.2 output package. The
+compiler now includes explicit `Requirements`, `Must ...`, and `Every/Each ...
+includes/contains/declares` list introductions. All prior 540 IDs were preserved;
+the registry now contains **548** requirements. Added requirements are not
+silently accepted. Neither the SRS nor its source hash changed.
+
+The current source-bound whole-checkpoint manifest and exact accepted counts
+are recorded in `docs/acceptance_traceability.md`. Existing early-gate evidence
+must be renewed after the verifier changes; old immutable manifests remain
+historical artifacts, not current-source proof. Full G6 cost/latency/capacity
+stress is the next dependency, not a parallel unfinished branch of G5.

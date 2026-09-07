@@ -105,7 +105,7 @@ Enroll only the matching public key using administrative
 --public-key-file ...`. Private keys never enter the database or command output.
 Enrollment is code-identity-specific; code changes require a newly enrolled key.
 
-The deterministic verifier is now `deterministic-early-gates-v2`. Its signature
+The deterministic verifier is now `deterministic-gates-v3`. Its signature
 binds the candidate aggregate revision as well as the snapshot and immutable
 input hashes. Legacy reports without this binding cannot authorize a decision.
 The runner includes snapshot datasets automatically; callers must not need to
@@ -134,7 +134,8 @@ new candidate revision, even after returning to an older snapshot.
 
 `GET /gates/outcomes` reports persisted counts grouped by gate, decision and
 reason. `GET /gates/{strategy_version_id}` preserves decision history. There is
-no live-execution command and no signed G5–G13 implementation in this slice.
+no live-execution command. G5's supported spot protocol is documented in
+`docs/backtest_protocol.md`; signed G6–G13 execution remains unsupported.
 
 ## Signed execution contract
 

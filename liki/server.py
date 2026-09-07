@@ -141,6 +141,10 @@ def create_app(store: Store | None = None, telegram_settings: TelegramSettings |
     def gate_outcomes(auth: Auth):
         return operations.gate_outcomes(auth)
 
+    @app.get("/backtests/{strategy_version_id}")
+    def backtest(strategy_version_id: str, auth: Auth):
+        return operations.backtest(auth, strategy_version_id)
+
     @app.get("/gates/{strategy_version_id}")
     def gates(strategy_version_id: str, auth: Auth):
         return operations.query(auth, "SELECT gate_decision_id,gate_id,snapshot_id,gate_version,"

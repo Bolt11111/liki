@@ -14,7 +14,7 @@ from pydantic import Field, ValidationError, model_validator
 from liki.core import Contract, DomainError, canonical, content_hash, environment_fingerprint, uid
 from liki.store import Credential, Store
 
-VERIFIER_VERSION = "deterministic-early-gates-v2"
+VERIFIER_VERSION = "deterministic-gates-v3"
 
 
 def verifier_code_hash() -> str:
@@ -86,11 +86,11 @@ class VerificationRunner:
 
     def execute(
         self, credential: Credential, *, snapshot_id: str, strategy_version_id: str,
-        gate_id: Literal[0, 1, 2, 3, 4], operation_key: str,
+        gate_id: Literal[0, 1, 2, 3, 4, 5], operation_key: str,
     ) -> str:
         from liki.evaluation import EVIDENCE_CLASSES, EvaluationSnapshot, REQUIRED_CHECKS
 
-        if gate_id not in range(5):
+        if gate_id not in range(6):
             raise DomainError("VERIFIER_GATE_NOT_SUPPORTED")
 
         with self.store.transaction(credential) as (conn, actor):
@@ -101,6 +101,7 @@ class VerificationRunner:
             ).fetchone()
             if (not key or not key["enabled"] or key["principal_id"] != actor.principal_id
                     or key["code_hash"] != verifier_code_hash()
+                    or key["code_hash"] != self.store.fingerprint
                     or key["verifier_version"] != VERIFIER_VERSION
                     or bytes(key["public_key"]) != self._signing_key.public_key().public_bytes_raw()):
                 raise DomainError("UNAUTHORIZED_VERIFIER")
@@ -154,10 +155,14 @@ class VerificationRunner:
             ]
             derived_report = None
             if gate_id:
-                from liki.early_gate_checks import check_gate
-                derived_report = check_gate(self.store, conn, actor, row, obj, gate_id,
-                    tuple(dict.fromkeys(snapshot.dataset_snapshot_ids
-                        + snapshot.gate_input_artifact_ids.get(str(gate_id), ()))))
+                if gate_id == 5:
+                    from liki.backtest_gate import check_backtest
+                    derived_report = check_backtest(self.store, conn, actor, row, obj)
+                else:
+                    from liki.early_gate_checks import check_gate
+                    derived_report = check_gate(self.store, conn, actor, row, obj, gate_id,
+                        tuple(dict.fromkeys(snapshot.dataset_snapshot_ids
+                            + snapshot.gate_input_artifact_ids.get(str(gate_id), ()))))
                 inputs.extend(self.store.artifact(conn, actor, aid)
                               for aid in derived_report["input_artifacts"])
                 if gate_id == 4:

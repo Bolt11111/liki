@@ -1,0 +1,1264 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-09-07T02:51:41.986990+00:00",
+  "srs_source_hash": "sha256:03a871ac73ed2515a86cc6a3a7329a6e43e0366d0dba3f68a9dde9c76b79748a",
+  "requirement_ids": [
+    "LKI-REQ-03b228ea-413a-44bd-9c03-b2ec213eb87c",
+    "LKI-REQ-04699e76-f8a7-4be3-a5cc-83d47ce439e3",
+    "LKI-REQ-0712f0fe-410d-4d0f-a4ea-8a2b64f5474a",
+    "LKI-REQ-14733bdf-f460-4178-8c17-891df3005cb3",
+    "LKI-REQ-36413358-b7b1-4073-ac8d-61c08b2a0cd5",
+    "LKI-REQ-46f61c1c-b690-4f66-be9b-cf457d1b1879",
+    "LKI-REQ-4886caa4-c7ba-4fea-b976-b5dac45c30b7",
+    "LKI-REQ-48cb8404-8a40-44d6-88bd-b43dc1a5499d",
+    "LKI-REQ-5d459405-5537-4e94-9085-b11fe5270186",
+    "LKI-REQ-76571605-87ae-4d4c-ac91-06374e90e63e",
+    "LKI-REQ-f7726b90-9dff-4a26-b500-df32ca5c2f48"
+  ],
+  "junit_sha256": "sha256:1abaf68b3ad0dd9d3edc8fd3fa1d46789786c7609841c4e47f08a48ebdc3f977",
+  "tests": [
+    {
+      "nodeid": "tests/data/test_adversarial_data.py::test_binance_rejects_malformed_json_and_kline_rows_instead_of_inventing_data",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/data/test_adversarial_data.py::test_binance_rejects_malformed_exchange_metadata_schema",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/data/test_adversarial_data.py::test_timestamp_and_gap_checks_fail_closed_without_forward_fill",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/data/test_binance.py::test_binance_pagination_and_dynamic_filters",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/data/test_binance.py::test_binance_rate_limit_is_exposed",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/data/test_data_integrity.py::test_raw_store_is_content_addressed_and_integrity_checked",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/data/test_data_integrity.py::test_validator_fails_closed_for_gap_and_lookahead",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/data/test_data_integrity.py::test_bars_and_asof_join_preserve_availability_boundaries",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/data/test_data_integrity.py::test_order_book_requires_continuous_sequence",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/finance/test_accounting.py::test_hand_calculated_golden_ledger_and_cost_nonoverlap",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/finance/test_accounting.py::test_orphan_decomposition_and_duplicate_fill_fail_closed",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/finance/test_accounting.py::test_primary_and_independent_fifo_reconcile_marked_equity",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/finance/test_backtest_adversarial.py::test_adverse_sell_costs_reject_without_creating_negative_cash",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/finance/test_backtest_adversarial.py::test_native_price_bands_validate_executable_price_not_midpoint[BUY]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/finance/test_backtest_adversarial.py::test_native_price_bands_validate_executable_price_not_midpoint[SELL]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/finance/test_backtest_adversarial.py::test_order_preserves_requested_and_normalized_quantity_with_consistent_filled_state",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/finance/test_backtest_adversarial.py::test_g5_native_program_rejects_non_lot_aligned_quantity[candidate]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/finance/test_backtest_adversarial.py::test_g5_native_program_rejects_non_lot_aligned_quantity[benchmark]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/finance/test_backtest_adversarial.py::test_deferred_partial_orders_share_each_observations_participation_budget",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/finance/test_backtest_adversarial.py::test_fok_insufficient_executable_quantity_never_partially_fills",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/finance/test_backtest_adversarial.py::test_marketable_post_only_limit_rejects_instead_of_taking_liquidity",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/finance/test_backtest_adversarial.py::test_adverse_stress_cannot_fill_beyond_limit[BUY]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/finance/test_backtest_adversarial.py::test_adverse_stress_cannot_fill_beyond_limit[SELL]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/finance/test_backtest_adversarial.py::test_independent_fee_check_detects_fault_in_primary_calculator",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/finance/test_backtest_adversarial.py::test_declared_information_cutoff_cannot_lag_consumed_history",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/finance/test_backtest_adversarial.py::test_naive_market_timestamps_cannot_enter_execution_replay[timestamp]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/finance/test_backtest_adversarial.py::test_naive_market_timestamps_cannot_enter_execution_replay[available_at]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/finance/test_backtest_adversarial.py::test_relabeling_ohlc_cannot_fabricate_higher_fidelity_quotes[F1_TRADE_BBO]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/finance/test_backtest_adversarial.py::test_relabeling_ohlc_cannot_fabricate_higher_fidelity_quotes[F3_SEQ_L2]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/finance/test_backtest_adversarial.py::test_relabeling_ohlc_cannot_fabricate_higher_fidelity_quotes[F4_ORDER_LEVEL]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/finance/test_backtest_contracts.py::test_effective_dates_and_fee_tier_selection_fail_closed",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/finance/test_backtest_contracts.py::test_fx_availability_and_tca_residual_are_explicit",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/finance/test_backtest_contracts.py::test_backtest_is_deterministic_and_signal_cannot_receive_current_bar_close",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/finance/test_backtest_contracts.py::test_revised_or_late_market_data_is_not_an_available_signal_input",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/finance/test_backtest_costs.py::test_missing_and_ambiguous_historical_fee_policy_fail_closed",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/finance/test_backtest_costs.py::test_golden_backtest_deducts_historical_fees_and_reconciles_independently",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/finance/test_backtest_costs.py::test_fee_rebate_is_signed_and_not_clamped_to_zero",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/finance/test_backtest_costs.py::test_unfunded_short_and_hidden_cash_leverage_are_rejected",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/finance/test_backtest_costs.py::test_invalid_cost_does_not_partially_mutate_ledger",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/finance/test_backtest_costs.py::test_reconciliation_detects_cash_projection_drift",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/finance/test_contracts_execution.py::test_venue_rounding_pretrade_and_paper_only_envelope",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/finance/test_contracts_execution.py::test_lifecycle_timeout_reconciliation_and_partial_fill_invariants",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/finance/test_contracts_execution.py::test_fill_model_has_latency_partial_fills_and_fidelity_sequence_guards",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/finance/test_contracts_execution.py::test_causality_forbids_signal_after_eligibility",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/finance/test_contracts_execution.py::test_paper_emergency_stop_blocks_only_its_scope_without_implicit_flatten",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/finance/test_contracts_execution.py::test_global_stop_and_reserved_live_stop_are_fail_closed",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/finance/test_metrics_derivatives_portfolio.py::test_metric_known_answers_registry_and_exception_states",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/finance/test_metrics_derivatives_portfolio.py::test_linear_inverse_margin_funding_and_collateral_stress",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/finance/test_metrics_derivatives_portfolio.py::test_synchronized_netting_shrinkage_and_reverse_stress",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/governance/test_domain.py::test_lawful_green_promotion_waits_for_delivered_24_hour_window",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/governance/test_domain.py::test_post_delivery_failure_freezes_and_revalidation_requires_a_new_delivery",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/governance/test_domain.py::test_protected_paths_and_real_money_cannot_be_downgraded_or_auto_promoted",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/governance/test_domain.py::test_review_padding_unresolved_objections_incidents_and_stale_snapshots_fail_closed",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/governance/test_domain.py::test_immutable_contracts_replay_and_labeled_stress_reject_fake_inputs",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/governance/test_domain.py::test_incident_and_model_risk_require_evidence_and_independence",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/governance/test_domain.py::test_proposal_lifecycle_is_serialized_and_cannot_promote_without_evaluation",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/governance/test_domain.py::test_amber_needs_adversarial_review_and_combined_change_set_needs_test_evidence",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/inference/test_broker.py::test_80_percent_faults_fallback_across_independent_domains",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/inference/test_broker.py::test_malformed_refusal_and_truncation_are_never_semantic_success",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/inference/test_broker.py::test_route_economics_uses_task_calibration_and_configured_tier_prices",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/inference/test_broker.py::test_reservations_fences_reconciliation_hibernation_and_revival_are_durable",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/inference/test_broker.py::test_failed_attempt_cost_remains_in_the_semantic_budget",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/inference/test_broker.py::test_critical_context_rejects_any_unavailable_material_required_evidence",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/inference/test_broker.py::test_context_rejects_unregistered_or_side_effecting_tool_access",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/inference/test_broker.py::test_route_selection_can_require_a_common_calibration_benchmark",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/inference/test_broker.py::test_context_omission_egress_tool_expansion_memory_and_review_independence",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/inference/test_broker.py::test_native_adapters_use_provider_wire_contracts_and_reject_ssrf_endpoints",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/inference/test_broker.py::test_adapter_rejects_private_dns_before_resolving_a_credential",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/inference/test_broker.py::test_partial_usage_is_conservatively_reserved_and_cannot_bypass_call_limit",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/inference/test_broker.py::test_complete_provider_usage_releases_unused_pre_call_reservation",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/inference/test_broker.py::test_tool_expansion_updates_the_context_package_and_manifest",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/inference/test_hardening.py::test_critical_context_requires_declared_inputs_and_secure_fallback",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/inference/test_hardening.py::test_timeout_reserves_conservative_cost_and_can_be_revived",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/inference/test_hardening.py::test_fenced_json_recovery_and_idempotency_context_conflict",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/inference/test_hardening.py::test_deterministic_parser_recovers_one_embedded_artifact_but_not_ambiguous_prose",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/inference/test_hardening.py::test_private_ip_provider_urls_are_rejected",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/inference/test_hardening.py::test_secret_and_unlicensed_memory_never_enter_context",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/portfolio/test_portfolio.py::test_analysis_is_synchronized_constrained_and_reconciles_attribution",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/portfolio/test_portfolio.py::test_analysis_rejects_missing_common_clock_and_reports_unreconciled_pnl",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/portfolio/test_portfolio.py::test_optimizer_preserves_declared_method_and_compounds_returns_for_drawdown",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/portfolio/test_portfolio.py::test_reverse_stress_reports_when_declared_maximum_cannot_breach_target",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/portfolio/test_portfolio.py::test_seeded_path_simulation_is_reproducible_and_explicit_about_uncertainty",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/statistics/test_adversarial_reference.py::test_psr_matches_independent_scipy_reference_formula",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/statistics/test_adversarial_reference.py::test_dsr_rejects_partial_history_and_uses_conservative_largest_effective_count",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/statistics/test_adversarial_reference.py::test_pbo_matches_independent_contiguous_cscv_rank_calculation",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/statistics/test_adversarial_reference.py::test_obf_spending_has_measured_null_family_error_below_alpha",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/statistics/test_adversarial_reference.py::test_sequential_interface_rejects_unscheduled_or_nonterminal_claims",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/statistics/test_adversarial_reference.py::test_purge_removes_overlapping_labels_and_embargo_exactly_after_test_window",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/statistics/test_adversarial_reference.py::test_dependence_bootstrap_uses_one_shared_index_path_for_every_strategy",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/statistics/test_inference.py::test_psr_signal_exceeds_null_and_nonfinite_is_explicit",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/statistics/test_inference.py::test_dsr_requires_ledger_provenance_and_uses_full_trial_distribution",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/statistics/test_inference.py::test_pbo_and_fdr_return_auditable_values",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/statistics/test_inference.py::test_white_reality_check_null_is_not_significant",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/statistics/test_inference.py::test_registered_metric_golden_fixture_and_heavy_tail_diagnostic",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/statistics/test_robustness.py::test_dependence_aware_uncertainty_and_transportability_are_explicit",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/statistics/test_validation.py::test_temporal_splits_purge_overlapping_events_and_walk_forward",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/statistics/test_validation.py::test_sequential_z_test_requires_predeclared_design",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/statistics/test_validation.py::test_obf_spending_schedule_is_strict_and_finishes_with_alpha_budget",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_acceptance_evidence.py::test_evidence_binds_executed_parametrized_test_requirement_and_source",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_acceptance_evidence.py::test_failing_or_skipped_tests_cannot_create_acceptance_evidence[<failure message=\"bug\"/>]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_acceptance_evidence.py::test_failing_or_skipped_tests_cannot_create_acceptance_evidence[<error/>]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_acceptance_evidence.py::test_failing_or_skipped_tests_cannot_create_acceptance_evidence[<skipped/>]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_acceptance_evidence.py::test_collection_failure_cannot_be_hidden_by_passing_testcases",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_acceptance_evidence.py::test_missing_required_test_and_cross_requirement_evidence_are_rejected",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_acceptance_evidence.py::test_unexecuted_status_and_missing_hashes_are_not_closure",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_acceptance_evidence.py::test_status_symbols_and_evidence_paths_fail_closed",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_backtest_gate.py::test_golden_protocol_has_independent_finances_benchmark_and_complete_outputs",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_backtest_gate.py::test_protocol_replay_is_byte_identical_across_ambient_decimal_contexts",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_backtest_gate.py::test_binary_float_inputs_cannot_be_authoritative_financial_values[starting_cash]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_backtest_gate.py::test_binary_float_inputs_cannot_be_authoritative_financial_values[participation_limit]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_backtest_gate.py::test_binary_float_inputs_cannot_be_authoritative_financial_values[tail_confidence]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_backtest_gate.py::test_non_native_strategy_target_is_explicitly_unsupported",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_backtest_gate.py::test_missing_cost_never_defaults_to_zero[fee]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_backtest_gate.py::test_missing_cost_never_defaults_to_zero[spread]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_backtest_gate.py::test_missing_cost_never_defaults_to_zero[slippage_bps]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_backtest_gate.py::test_missing_cost_never_defaults_to_zero[impact_bps]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_backtest_gate.py::test_missing_cost_never_defaults_to_zero[funding]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_backtest_gate.py::test_missing_cost_never_defaults_to_zero[borrow]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_backtest_gate.py::test_missing_cost_never_defaults_to_zero[financing]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_backtest_gate.py::test_missing_cost_never_defaults_to_zero[transfer]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_backtest_gate.py::test_missing_cost_never_defaults_to_zero[liquidation]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_backtest_gate.py::test_missing_cost_never_defaults_to_zero[other]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_backtest_gate.py::test_unsupported_or_noncausal_replay_inputs_fail_closed[late_fee]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_backtest_gate.py::test_unsupported_or_noncausal_replay_inputs_fail_closed[missing_fee]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_backtest_gate.py::test_unsupported_or_noncausal_replay_inputs_fail_closed[duplicate_fee]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_backtest_gate.py::test_unsupported_or_noncausal_replay_inputs_fail_closed[late_spec]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_backtest_gate.py::test_unsupported_or_noncausal_replay_inputs_fail_closed[expired_spec]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_backtest_gate.py::test_unsupported_or_noncausal_replay_inputs_fail_closed[late_quote]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_backtest_gate.py::test_unsupported_or_noncausal_replay_inputs_fail_closed[duplicate_quote]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_backtest_gate.py::test_unsupported_or_noncausal_replay_inputs_fail_closed[gap]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_backtest_gate.py::test_unsupported_or_noncausal_replay_inputs_fail_closed[tick]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_backtest_gate.py::test_unsupported_or_noncausal_replay_inputs_fail_closed[derivative]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_backtest_gate.py::test_unsupported_or_noncausal_replay_inputs_fail_closed[fx]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_backtest_gate.py::test_strategy_history_cannot_consume_the_current_quote",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_backtest_gate.py::test_delayed_and_partial_orders_retain_terminal_ledger_states",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_backtest_gate.py::test_predeclared_regime_windows_partition_pnl_without_resetting_positions",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_backtest_runtime.py::test_signed_cli_backtest_replays_persisted_data_and_audits_complete_package",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_backtest_runtime.py::test_invalid_protocol_dependencies_produce_signed_blocked_not_empty_success[cost-impact_bps]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_backtest_runtime.py::test_invalid_protocol_dependencies_produce_signed_blocked_not_empty_success[code-G5_PLAN_BINDING_MISMATCH]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_backtest_runtime.py::test_invalid_protocol_dependencies_produce_signed_blocked_not_empty_success[candidate-G5_PLAN_BINDING_MISMATCH]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_backtest_runtime.py::test_invalid_protocol_dependencies_produce_signed_blocked_not_empty_success[plan-G5_PLAN_MISSING]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_backtest_runtime.py::test_invalid_protocol_dependencies_produce_signed_blocked_not_empty_success[normalized_hash-G5_NORMALIZED_DATA_MISMATCH]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_backtest_runtime.py::test_g5_rejects_unsigned_caller_reports_and_caller_metrics",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_backup.py::test_backup_restore_reconstructs_exact_event_chain_and_projections",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_backup.py::test_restore_rejects_nonempty_target_wrong_key_and_tampering",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_data_service.py::test_dataset_persistence_writes_raw_artifacts_transition_and_manifest",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_data_service.py::test_current_metadata_cannot_silently_become_historical_and_missing_history_is_unknown",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_data_service.py::test_effective_dated_specification_is_retrievable_only_at_its_recorded_time",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_data_service.py::test_dataset_write_requires_data_capability_and_conflicting_replay_is_atomic",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_data_service.py::test_lifecycle_write_is_content_bound_and_idempotent",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_database_security.py::test_database_login_without_service_identity_has_no_data_visibility",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_database_security.py::test_direct_sql_cannot_spoof_evidence_producer_or_read_sealed",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_database_security.py::test_research_cannot_mutate_paper_or_policy_aggregate_with_raw_sql",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_early_gate_adversarial.py::test_g2_empty_feature_evidence_cannot_prove_point_in_time_validity",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_early_gate_adversarial.py::test_g4_unambiguous_matched_evidence_retains_exact_economics",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_early_gate_adversarial.py::test_g4_duplicate_contradictory_ids_never_win_by_row_order[contradiction-first-benchmarks]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_early_gate_adversarial.py::test_g4_duplicate_contradictory_ids_never_win_by_row_order[contradiction-first-capacity]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_early_gate_adversarial.py::test_g4_duplicate_contradictory_ids_never_win_by_row_order[contradiction-last-benchmarks]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_early_gate_adversarial.py::test_g4_duplicate_contradictory_ids_never_win_by_row_order[contradiction-last-capacity]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_early_gate_adversarial.py::test_g4_benchmark_must_match_its_samples_dataset_not_merely_the_snapshot_set",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_early_gate_adversarial.py::test_capacity_observation_rejects_executable_notional_above_requested",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_early_gate_adversarial.py::test_g4_impossible_capacity_cannot_certify_a_planned_trade",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_early_gate_adversarial.py::test_g3_nonblank_required_prose_is_a_valid_contract",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_early_gate_adversarial.py::test_g3_rejects_blank_required_prose[mechanism-empty]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_early_gate_adversarial.py::test_g3_rejects_blank_required_prose[mechanism-whitespace]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_early_gate_adversarial.py::test_g3_rejects_blank_required_prose[payer-empty]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_early_gate_adversarial.py::test_g3_rejects_blank_required_prose[payer-whitespace]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_early_gate_adversarial.py::test_g3_rejects_blank_required_prose[market_structure-empty]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_early_gate_adversarial.py::test_g3_rejects_blank_required_prose[market_structure-whitespace]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_early_gate_adversarial.py::test_g3_rejects_blank_required_prose[prediction.prediction-empty]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_early_gate_adversarial.py::test_g3_rejects_blank_required_prose[prediction.prediction-whitespace]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_early_gate_adversarial.py::test_g3_rejects_blank_required_prose[prediction.disconfirming_outcome-empty]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_early_gate_adversarial.py::test_g3_rejects_blank_required_prose[prediction.disconfirming_outcome-whitespace]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_early_gate_adversarial.py::test_g3_rejects_blank_required_prose[prediction.measurement_method-empty]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_early_gate_adversarial.py::test_g3_rejects_blank_required_prose[prediction.measurement_method-whitespace]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_early_gate_adversarial.py::test_g3_rejects_blank_required_prose[minimum_viable_test.sample_unit-empty]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_early_gate_adversarial.py::test_g3_rejects_blank_required_prose[minimum_viable_test.sample_unit-whitespace]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_early_gate_adversarial.py::test_g3_rejects_blank_required_prose[constraints-empty]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_early_gate_adversarial.py::test_g3_rejects_blank_required_prose[constraints-whitespace]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_early_gate_adversarial.py::test_empirical_pattern_must_actually_declare_observations[None]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_early_gate_adversarial.py::test_empirical_pattern_must_actually_declare_observations[observations1]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_early_gate_adversarial.py::test_empirical_pattern_must_actually_declare_observations[observations2]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_early_gate_adversarial.py::test_empirical_pattern_must_actually_declare_observations[observations3]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_early_gate_adversarial.py::test_empirical_pattern_must_actually_declare_observations[not-a-list]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_early_gate_adversarial.py::test_open_ended_universe_membership_roundtrips_explicit_null",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_early_gate_checks.py::test_g1_uses_candidate_hash_and_trial_cache_from_authenticated_database",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_early_gate_checks.py::test_g2_revalidates_real_manifest_and_timing_rows",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_early_gate_checks.py::test_g3_allows_typed_empirical_basis_without_mechanism_narrative",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_early_gate_checks.py::test_g4_derives_after_cost_and_capacity_from_decimal_samples",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_governance_service.py::test_service_rejects_forged_producer_and_owner_veto_is_durable",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_governance_service.py::test_spoofed_automated_check_and_stale_concurrent_writer_are_rejected",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_governance_service.py::test_incident_freezes_revalidation_and_replay_is_persisted_with_real_history",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_governance_service.py::test_monthly_and_emergency_governance_schedules_are_durable",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_governance_service.py::test_owner_delivery_is_outbox_backed_and_binds_real_check_and_receipt_times",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_governance_service.py::test_lifecycle_failure_is_immutable_and_requires_fresh_notification_receipt",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_governance_service.py::test_monthly_schedule_race_rejects_stale_writer",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_inference_service.py::test_postgres_backend_persists_idempotent_attempt_artifact_and_reconciliation",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_inference_service.py::test_postgres_backend_rejects_concurrent_claim_race",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_inference_service.py::test_expired_attempt_is_deduplicated_then_hibernated_and_revived",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_inference_service.py::test_service_constructs_only_explicitly_configured_routes_and_credentials",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_model_risk_service.py::test_model_approval_requires_independent_effective_challenge_and_tracks_drift",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_model_risk_service.py::test_model_risk_rejects_recalibration_contamination_and_preserves_retirement",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_model_risk_service.py::test_recalibration_reclassifies_prior_validation_evidence",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_outbox.py::test_delivery_commit_receipt_and_idempotency",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_outbox.py::test_unknown_delivery_and_expired_sender_never_claim_success",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_outbox.py::test_delivery_requires_capability_and_retries_are_bounded",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_paper_projection_integrity.py::test_hidden_reservation_fails_closed_and_rolls_back_all_financial_writes[fill]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_paper_projection_integrity.py::test_hidden_reservation_fails_closed_and_rolls_back_all_financial_writes[cancel]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_paper_projection_integrity.py::test_hidden_run_policy_cannot_commit_a_partial_order_transition[unknown]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_paper_projection_integrity.py::test_hidden_run_policy_cannot_commit_a_partial_order_transition[cancel]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_paper_projection_integrity.py::test_unsupported_contracts_cannot_enter_the_spot_paper_ledger[changes0]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_paper_projection_integrity.py::test_unsupported_contracts_cannot_enter_the_spot_paper_ledger[changes1]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_paper_projection_integrity.py::test_unsupported_contracts_cannot_enter_the_spot_paper_ledger[changes2]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_paper_service.py::test_paper_starts_reconcile_only_and_research_cannot_order",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_paper_service.py::test_atomic_risk_headroom_and_client_intent_idempotency",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_paper_service.py::test_partial_fill_converts_risk_cancel_releases_working_and_fill_is_idempotent",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_paper_service.py::test_fill_admission_rejects_forged_policy_inputs_and_preserves_exact_replay",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_paper_service.py::test_restart_and_scoped_stop_block_intents_without_flattening",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_paper_service.py::test_unknown_order_remains_reserved_and_blocks_reconciliation",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_paper_service.py::test_mutation_retries_are_idempotent_and_key_reuse_fails_closed",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_paper_service.py::test_repeated_unknown_reconciliation_does_not_accept_changed_reason",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_paper_service.py::test_out_of_order_fill_is_rejected_before_persistent_ledger_mutation",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_paper_service.py::test_local_simulator_is_fee_aware_and_never_requires_network",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_paper_service.py::test_fill_before_submission_is_rejected_before_ledger_mutation",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_paper_service.py::test_global_safety_latch_cancels_only_risk_increasing_orders_and_blocks_future_runs",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_portfolio_service.py::test_evaluation_binds_authenticated_lineage_trial_and_research_only_mode",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_portfolio_service.py::test_dormant_reactivation_requires_fresh_predeclared_evidence_and_packet_never_enables_execution",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_recovery.py::test_recovery_report_distinguishes_process_and_storage_rpo",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_recovery.py::test_recovery_report_rejects_invalid_measurements[-0.1]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_recovery.py::test_recovery_report_rejects_invalid_measurements[inf]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_recovery.py::test_recovery_report_rejects_invalid_measurements[nan]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_recovery.py::test_recovery_report_rejects_invalid_measurements[False]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_reliability_service.py::test_incident_lifecycle_preserves_evidence_and_blocks_promotion",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_reliability_service.py::test_slo_windows_use_deterministic_integer_error_budget_and_freeze",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_requirements.py::test_ids_survive_insertion",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_requirements.py::test_changed_text_requires_explicit_revision",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_requirements.py::test_examples_quotes_and_references_are_not_requirements",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_requirements.py::test_acceptance_cannot_be_inferred_from_registry_presence",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_requirements.py::test_omitted_critical_requirement_is_rejected",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_requirements.py::test_explicit_requirement_and_artifact_lists_are_not_omitted",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_requirements.py::test_new_list_contracts_preserve_existing_requirement_ids",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_research_evaluation.py::test_infrastructure_retry_cannot_hide_seed_or_metric_shopping",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_research_evaluation.py::test_legacy_self_asserted_gate_reports_are_rejected",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_research_runtime.py::test_cli_campaign_reaches_g4_with_signed_evidence_and_audited_read_models[EMPIRICAL]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_research_runtime.py::test_cli_campaign_reaches_g4_with_signed_evidence_and_audited_read_models[MECHANISM]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_research_runtime.py::test_blocked_dependency_reentry_replays_from_g0_without_rewriting_history",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_research_runtime.py::test_fatal_cost_fact_fails_before_backtest_and_cannot_be_downgraded_by_forged_metrics",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_research_runtime.py::test_concurrent_siblings_roles_and_stale_family_screen_fail_closed",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_research_runtime.py::test_g4_cannot_lower_or_underfill_the_predeclared_g3_test[1-1]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_research_runtime.py::test_g4_cannot_lower_or_underfill_the_predeclared_g3_test[1-10]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_research_runtime.py::test_runtime_rejects_a_family_plan_not_bound_to_its_registered_trial",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_research_runtime.py::test_old_signed_report_cannot_be_reused_after_snapshot_round_trip",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_research_runtime.py::test_cli_rejects_unsafe_key_files_and_redacts_invalid_payload",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_sandbox.py::test_generated_code_cannot_read_host_or_credentials",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_sandbox.py::test_network_and_fork_are_denied",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_sandbox.py::test_runaway_compute_is_bounded",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_sandbox.py::test_policy_writes_and_output_flood_are_bounded",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_scheduler.py::test_budget_child_fanout_and_semantic_dedup",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_scheduler.py::test_dependency_cycle_and_failed_parent_are_not_completion",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_scheduler.py::test_expired_owner_cannot_commit_and_task_quarantines",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_scheduler.py::test_activity_requires_fresh_lease_and_heartbeat",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_sealed_protocol.py::test_sealed_descendant_cannot_requery_by_renaming_family",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_server.py::test_http_requires_auth_and_never_exposes_live_order_routes",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_server.py::test_http_read_models_are_backed_by_database",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_server.py::test_stop_forbidden_for_research_and_never_echoes_invalid_input",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_server.py::test_financial_read_models_keep_decimal_precision",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_server.py::test_telegram_webhook_disabled_without_explicit_configuration",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_store.py::test_atomic_event_outbox_and_replay",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_store.py::test_concurrent_sibling_writers_cannot_both_win",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_store.py::test_rollback_does_not_publish_event",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_store.py::test_immutable_history_and_least_privilege",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_store.py::test_revoked_expired_and_forged_identity_fail",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_store.py::test_sealed_artifact_cannot_be_retrieved_or_authored_by_research",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_store.py::test_live_and_exceptional_json_are_unrepresentable",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_store.py::test_audit_preserves_gate_identifier_type[0]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_store.py::test_audit_preserves_gate_identifier_type[13]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_store.py::test_audit_preserves_gate_identifier_type[G0]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_store.py::test_audit_preserves_gate_identifier_type[None]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_telegram.py::test_telegram_auth_replay_private_chat_and_no_inference",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_telegram.py::test_telegram_expired_commands_never_execute",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_telegram.py::test_telegram_transport_requires_real_receipt[200-payload0-None]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_telegram.py::test_telegram_transport_requires_real_receipt[200-payload1-UNKNOWN_DELIVERY]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_telegram.py::test_telegram_transport_requires_real_receipt[429-payload2-TRANSIENT]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_telegram.py::test_telegram_transport_requires_real_receipt[403-payload3-PERMANENT]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_telegram.py::test_telegram_transport_requires_real_receipt[502-payload4-UNKNOWN_DELIVERY]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_telegram.py::test_timeout_after_send_is_uncertain_not_success",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_verification.py::test_authentic_execution_passes_and_remains_idempotent",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_verification.py::test_invalid_research_contract_cannot_be_certified[changes0]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_verification.py::test_invalid_research_contract_cannot_be_certified[changes1]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_verification.py::test_invalid_research_contract_cannot_be_certified[changes2]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_verification.py::test_invalid_research_contract_cannot_be_certified[changes3]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_verification.py::test_invalid_research_contract_cannot_be_certified[changes4]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_verification.py::test_invalid_research_contract_cannot_be_certified[changes5]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_verification.py::test_invalid_research_contract_cannot_be_certified[changes6]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_verification.py::test_unsigned_boolean_evidence_is_rejected_without_advancing_state",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_verification.py::test_unenrolled_key_cannot_execute_or_enroll_via_application_login",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_verification.py::test_forged_execution_signature_and_rebinding_are_rejected",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/test_verification.py::test_revoked_verifier_key_is_not_gate_authority",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/web/test_operator_ui.py::test_operator_console_uses_external_same_origin_assets_and_real_endpoints",
+      "status": "passed"
+    },
+    {
+      "nodeid": "tests/web/test_operator_ui.py::test_operator_console_keeps_token_ephemeral_and_uses_safe_dom_rendering",
+      "status": "passed"
+    }
+  ],
+  "source_hashes": {
+    "config/finance_models.json": "sha256:b8b6b0df8c2604feaa7b7cc7643480cb2db72897b098913cb580513ba39624c2",
+    "config/metrics.json": "sha256:8cf38161da33c36ce3f72650de3c3764d888c0e1d2938c2084dbcf41d7387676",
+    "docs/LIKI_SRS.md": "sha256:03a871ac73ed2515a86cc6a3a7329a6e43e0366d0dba3f68a9dde9c76b79748a",
+    "liki/backtest_gate.py": "sha256:bfa3a1aa169fefa4b3592d8ef68da6a993c30e8855a4db6f8fa08e779e15668a",
+    "liki/core.py": "sha256:84b1511b849e95a0d8fc6974f9499395c06d69d2de1156256f27c97d14873fb6",
+    "liki/data/models.py": "sha256:321fa43080d521689018c0c31f9eab22899e46f192f2f88a072d9bd118847761",
+    "liki/data_service.py": "sha256:c16495b3957e07c8336aae0d217f54fc1ae649960424c4ac467c84a5a80570e4",
+    "liki/early_gate_checks.py": "sha256:6582ac4defca90c6b038b0885cbd00f34eb1c1943b10432db7f99e81e0341c41",
+    "liki/evaluation.py": "sha256:adffa0a5285d8f93ec01684e9a810967c9038764998ea205d7d622026f5863c6",
+    "liki/finance/accounting.py": "sha256:a9dca1efd5b4dd62247b6b097421517ead01fa77810c83fadc3d358f0f365a9c",
+    "liki/finance/backtest.py": "sha256:0a6d7576170e6a6063d6099a49adad78984e94f0808a026edbbb5264ea36838c",
+    "liki/finance/contracts.py": "sha256:0675ebcc8569ff16a84cc9af55313bd1f81eb1d2bbf998c45c7ff879c959519b",
+    "liki/finance/execution.py": "sha256:f1849fff760c99ab212e11edd998e837c474df1dfee0c6440cd616211b98ca1e",
+    "liki/finance/metrics.py": "sha256:55bf48b9a4819c5c4b3dd6315ef9d0abd72372407bfea6b5e452747119bdc7b0",
+    "liki/finance/reference.py": "sha256:2b29710430ee275301c929705b3a8819ac3250a5b6f2ed23a9a9ef023c1e89cd",
+    "liki/finance/types.py": "sha256:6873825eb875f1d7abfefa2e4946e41c8387171bc4fe59db69b3bd5bb3bb6a82",
+    "liki/operations.py": "sha256:cf89a5fc883e96b3c1a7e1a8d679025284d979dbf5ffc57bdb1c127b6b430dec",
+    "liki/research.py": "sha256:e810c08bd2022343d7c2a9b8e959ea12664147c705dba8265efdc15dbc6e60f6",
+    "liki/research_runtime.py": "sha256:57a659337a8c9867df6d9221f8e16be97838487f563445bb6e7f24d7d5e0cd8b",
+    "liki/server.py": "sha256:faedf7a7279b8a724d662c0726caab58837ff54637fbaff0360a3db23f7812fa",
+    "liki/store.py": "sha256:c54080403f07b53607c29aedce23f3c59c91fa10298a9cdbc09f4a41864c0162",
+    "liki/verification.py": "sha256:adc217d1e9e3440983288197136d59c58ede459415d510b2d3b1b1a607f77fd1",
+    "migrations/002_research_runtime.sql": "sha256:686a07fbe4e34e78eb5de329434fbf0d1f1b28e70ec5ce81c52996877b7c3adb",
+    "migrations/012_workload_authorization.sql": "sha256:fab5cff8b66f01288177f702c596c889dd73dbfd1a93ef3f248346b5942e942a",
+    "tests/finance/test_backtest_adversarial.py": "sha256:836237251fecbacb7f9cd261b76ec8518881ecdfa314ab20a79a9f66e1b3c1a9",
+    "tests/test_backtest_gate.py": "sha256:dc5ebd2aaf523c204b8c3ce4662765427cb7a7aaccad2d302cc1b4643ba63702",
+    "tests/test_backtest_runtime.py": "sha256:03979d85040e225b611e440178be4966e7037f80ed1b8fc21ad8c7a7e358266d",
+    "tests/test_early_gate_adversarial.py": "sha256:086a0413bd8495804e6468b02fc3c7df5d7a0aca25a9ca0172ac9f63a23b23dc",
+    "tests/test_early_gate_checks.py": "sha256:45fa85d803b36c86ff4666372a92e2bbe02a7c93e8b7dac21df3fc7963aa6765",
+    "tests/test_research_runtime.py": "sha256:fda17c3e7b91ab93205016527c37e372121a335da4d0a959716e1e2d88f82852",
+    "tools/acceptance.py": "sha256:c60a4d9276ed525500cd483876885a37ede44a093d732e92d8f45a981bac5f3f",
+    "tools/requirements.py": "sha256:4732270299862f3433db0c8009c02b5bef55ae06fad3054cd6b7ebe1c6885507",
+    "uv.lock": "sha256:9d247315110a44bbc5498b8385961fb6719adf01df9e3fd785b9f623b2d535c3"
+  },
+  "started_at": "2026-09-07T02:40:42.757588+00:00",
+  "command": [
+    "python",
+    "-m",
+    "pytest",
+    "tests",
+    "-q"
+  ]
+}
