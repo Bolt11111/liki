@@ -3,11 +3,14 @@
 from __future__ import annotations
 
 import argparse
+import ast
 import hashlib
 import json
 import re
 import uuid
 from pathlib import Path
+
+from tools.acceptance import validate_evidence
 
 ROOT = Path(__file__).resolve().parents[1]
 SPEC = ROOT / "docs/LIKI_SRS.md"
@@ -138,17 +141,32 @@ def validate(registry: dict, spec: str, *, acceptance: bool = False) -> list[str
         errors.append("Source hash changed without registry review")
     for entry in entries:
         rid = entry["requirement_id"]
+        if entry["status"] not in {"NOT_STARTED", "IN_PROGRESS", "IMPLEMENTED", "VERIFIED", "ACCEPTED"}:
+            errors.append(f"{rid}: unknown status")
         if digest(entry["requirement_text"]) != entry["text_hash"]:
             errors.append(f"{rid}: text hash mismatch")
         for ref in entry["implementation_refs"] + entry["test_refs"]:
             path = (ROOT / ref.split("::")[0]).resolve()
             if not path.is_relative_to(ROOT) or not path.is_file():
                 errors.append(f"{rid}: invalid reference {ref}")
+            elif ref in entry["test_refs"] and "::" in ref:
+                symbols = ref.split("::")[1:]
+                scope = ast.parse(path.read_text()).body
+                for symbol in symbols:
+                    name = symbol.split("[")[0]
+                    matches = [node for node in scope if isinstance(node, (
+                        ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)) and node.name == name]
+                    if not matches:
+                        errors.append(f"{rid}: missing test symbol {ref}")
+                        break
+                    scope = matches[0].body
         if entry["status"] == "ACCEPTED" or acceptance:
             if not all(entry[field] for field in ("implementation_refs", "test_refs", "acceptance_evidence")):
                 errors.append(f"{rid}: missing implementation/test/acceptance evidence")
             if entry["status"] != "ACCEPTED":
                 errors.append(f"{rid}: not accepted ({entry['status']})")
+            else:
+                errors.extend(validate_evidence(entry, registry["source_hash"], ROOT))
     return errors
 
 

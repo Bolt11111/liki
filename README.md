@@ -14,12 +14,15 @@ Implemented modules include the authenticated PostgreSQL event store, research
 and trial ledgers, scheduler leases, data/statistics/financial primitives,
 paper execution, inference routing, governance, operator API and dashboard,
 notification delivery, encrypted backups, and initial portfolio/model-risk/SLO
-services. Deterministic G0–G4 verification is being integrated with signed,
-snapshot-bound execution records; unsigned gate reports are rejected.
+services. A credential-scoped command runtime now drives persisted G0–G4
+screening with signed snapshot/revision-bound evidence, audited blocked-state
+re-entry, and deterministic operator read models. See `docs/early_gates.md`.
 
-Full end-to-end acceptance, remaining gate integrations, adversarial validation,
-and the required guarded soak are not complete. Some latest changes still need
-reverification after a sandbox replacement interrupted concurrent tests.
+Eight atomic early-gate controls are `ACCEPTED`, backed by a 236-test executed
+checkpoint and source-bound evidence manifests; the previous 35 `VERIFIED`
+controls retain their narrower status. Full gate acceptance, signed G5–G13
+integration, remaining adversarial validation and the required guarded soak
+are not complete. The registry is not a production-readiness claim.
 
 ## Local development
 

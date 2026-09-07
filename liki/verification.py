@@ -14,7 +14,7 @@ from pydantic import Field, ValidationError, model_validator
 from liki.core import Contract, DomainError, canonical, content_hash, environment_fingerprint, uid
 from liki.store import Credential, Store
 
-VERIFIER_VERSION = "deterministic-early-gates-v1"
+VERIFIER_VERSION = "deterministic-early-gates-v2"
 
 
 def verifier_code_hash() -> str:
@@ -119,6 +119,30 @@ class VerificationRunner:
                 raise DomainError("CANDIDATE_SNAPSHOT_MISMATCH")
             if obj["created_by"] == actor.principal_id:
                 raise DomainError("SELF_CERTIFICATION")
+            prior = self.store.state(conn, "candidate", strategy_version_id)
+            state_version = prior["version"] if prior else 0
+            if prior and prior["state"].get("snapshot_id") != snapshot_id:
+                raise DomainError("EVALUATION_REENTRY_REQUIRED")
+            if (gate_id != (prior["state"]["gate_id"] + 1 if prior else 0)
+                    or prior and prior["state"]["status"] in {
+                        "FAILED", "BLOCKED", "BORDERLINE_FRONTIER", "SUSPENDED"
+                    }):
+                # A retry may return its immutable execution after its decision was applied.
+                previous = conn.execute("SELECT metadata FROM event_log WHERE operation_key=%s",
+                                        (operation_key,)).fetchone()
+                if previous:
+                    eid = previous["metadata"]["state_after"].get("evidence_id")
+                    execution = conn.execute(
+                        "SELECT v.* FROM verifier_executions v JOIN evidence e "
+                        "ON e.artifact_id=v.report_artifact_id WHERE e.evidence_id=%s", (eid,)
+                    ).fetchone()
+                    if (execution and execution["snapshot_id"] == snapshot_id
+                            and execution["strategy_version_id"] == strategy_version_id
+                            and execution["gate_id"] == gate_id
+                            and execution["verifier_key_id"] == self.key_id):
+                        return eid
+                    raise DomainError("IDEMPOTENCY_CONFLICT")
+                raise DomainError("GATE_DEPENDENCY_UNSATISFIED")
             artifact = self.store.artifact(conn, actor, obj["artifact_id"])
             if artifact["content_hash"] != snapshot.candidate_hash:
                 raise DomainError("CANDIDATE_HASH_MISMATCH")
@@ -132,12 +156,39 @@ class VerificationRunner:
             if gate_id:
                 from liki.early_gate_checks import check_gate
                 derived_report = check_gate(self.store, conn, actor, row, obj, gate_id,
-                                            snapshot.gate_input_artifact_ids.get(str(gate_id), ()))
+                    tuple(dict.fromkeys(snapshot.dataset_snapshot_ids
+                        + snapshot.gate_input_artifact_ids.get(str(gate_id), ()))))
                 inputs.extend(self.store.artifact(conn, actor, aid)
                               for aid in derived_report["input_artifacts"])
+                if gate_id == 4:
+                    from liki.early_gate_checks import EarlyGatePlan
+                    upstream = [self.store.artifact(conn, actor, aid)
+                                for aid in snapshot.gate_input_artifact_ids.get("3", ())]
+                    plans = [a for a in upstream if a["schema_name"] == "research/early-gate-plan-v1"]
+                    current = [a for a in inputs if a["schema_name"] == "research/early-gate-plan-v1"]
+                    current = list({a["artifact_id"]: a for a in current}.values())
+                    try:
+                        if len(plans) != 1 or len(current) != 1:
+                            raise ValueError("missing or ambiguous upstream test")
+                        g3 = EarlyGatePlan.model_validate(plans[0]["content"]).g3
+                        g4 = EarlyGatePlan.model_validate(current[0]["content"]).g4
+                        if g3 is None or g4 is None:
+                            raise ValueError("wrong gate plan")
+                        minimum = g3.minimum_viable_test.minimum_observations
+                        derived_report["derived_metrics"]["minimum_test_observations"] = minimum
+                        if g4.minimum_samples < minimum:
+                            raise ValueError("cheap proxy cannot lower its declared test minimum")
+                    except (ValueError, ValidationError):
+                        derived_report["checks"]["sample_available"] = False
+                        derived_report["unknowns"].append("G4_MINIMUM_TEST_NOT_HONORED")
+                    inputs.extend(plans)
+                    for artifact_row in plans:
+                        for name in ("input_artifacts", "referenced_input_artifacts"):
+                            derived_report[name][artifact_row["artifact_id"]] = artifact_row["content_hash"]
             binding = {
                 "strategy_version_id": strategy_version_id, "snapshot_id": snapshot_id,
                 "snapshot_hash": row["content_hash"], "gate_id": gate_id,
+                "candidate_state_version": state_version,
                 "input_artifacts": {a["artifact_id"]: a["content_hash"] for a in inputs},
             }
             input_hash = content_hash(binding)
@@ -231,6 +282,7 @@ def verify_execution(store: Store, conn, actor, artifact: dict, request, snapsho
         "verifier_key_id": row["verifier_key_id"],
         "verifier_execution_id": row["verifier_execution_id"],
         "verifier_version": row["verifier_version"], "code_hash": row["code_hash"],
+        "candidate_state_version": request.expected_version,
     }
     if (any(manifest.get(key) != value for key, value in expected.items())
             or row["principal_id"] != artifact["producer_id"]
@@ -248,7 +300,8 @@ def verify_execution(store: Store, conn, actor, artifact: dict, request, snapsho
     if not isinstance(input_artifacts, dict) or not input_artifacts:
         raise DomainError("VERIFIER_INPUT_MISSING")
     binding = {key: manifest[key] for key in (
-        "strategy_version_id", "snapshot_id", "snapshot_hash", "gate_id", "input_artifacts"
+        "strategy_version_id", "snapshot_id", "snapshot_hash", "gate_id", "input_artifacts",
+        "candidate_state_version",
     )}
     if content_hash(binding) != manifest.get("input_hash") or row["input_hash"] != manifest["input_hash"]:
         raise DomainError("VERIFIER_INPUT_MISMATCH")
@@ -258,3 +311,11 @@ def verify_execution(store: Store, conn, actor, artifact: dict, request, snapsho
     candidate = snapshot_row["manifest"]["candidate_artifact_id"]
     if input_artifacts.get(candidate) != snapshot_row["manifest"]["candidate_hash"]:
         raise DomainError("VERIFIER_CANDIDATE_NOT_BOUND")
+    if request.gate_id == 1:
+        from liki.early_gate_checks import check_gate
+        obj = conn.execute("SELECT * FROM research_objects WHERE object_id=%s",
+                           (request.strategy_version_id,)).fetchone()
+        fresh = check_gate(store, conn, actor, snapshot_row, obj, 1,
+                           tuple(aid for aid in input_artifacts if aid != candidate))
+        if any(artifact["content"].get(key) != value for key, value in fresh.items()):
+            raise DomainError("STALE_FAMILY_SCREEN")

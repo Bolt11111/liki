@@ -80,6 +80,11 @@ class Operations:
             "SELECT task_class,lane_class,status,count(*) AS count,min(created_at) AS oldest_at "
             "FROM tasks GROUP BY task_class,lane_class,status ORDER BY task_class,lane_class,status")}
 
+    def gate_outcomes(self, credential: Credential) -> list[dict]:
+        return self.query(credential,
+            "SELECT gate_id,decision,reason_code,count(*) AS count FROM gate_decisions "
+            "GROUP BY gate_id,decision,reason_code ORDER BY gate_id,decision,reason_code")
+
     def activity(self, credential: Credential, *, run_id: str | None = None,
                  agent_id: str | None = None) -> list[dict]:
         query = ("SELECT r.run_id,r.task_id,r.parent_task_id,r.agent_role_id,r.worker_id,"
