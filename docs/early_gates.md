@@ -135,7 +135,8 @@ new candidate revision, even after returning to an older snapshot.
 `GET /gates/outcomes` reports persisted counts grouped by gate, decision and
 reason. `GET /gates/{strategy_version_id}` preserves decision history. There is
 no live-execution command. G5's supported spot protocol is documented in
-`docs/backtest_protocol.md`; signed G6–G13 execution remains unsupported.
+`docs/backtest_protocol.md`; G6's signed execution-economics counterfactual is
+documented in `docs/execution_economics.md`. Signed G7–G13 execution remains unsupported.
 
 ## Signed execution contract
 

@@ -40,7 +40,12 @@ class DerivativePosition:
         return sign * self.contracts * self.spec.multiplier * (Decimal("1") / self.entry_price - Decimal("1") / mark)
 
     def notional(self, mark_price: Decimal) -> Decimal:
-        return self.contracts * self.spec.multiplier * decimal(mark_price)
+        """Return settlement-currency notional, including inverse contract conversion."""
+        mark = decimal(mark_price)
+        if mark <= ZERO:
+            raise ValueError("mark must be positive")
+        face_value = self.contracts * self.spec.multiplier
+        return face_value / mark if self.spec.contract_kind == ContractKind.INVERSE_PERPETUAL else face_value * mark
 
     def maintenance_margin(self, mark_price: Decimal) -> Decimal:
         if self.spec.maintenance_margin_rate is None:

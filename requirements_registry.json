@@ -1277,7 +1277,7 @@
         "tests/test_research_runtime.py::test_old_signed_report_cannot_be_reused_after_snapshot_round_trip"
       ],
       "acceptance_evidence": [
-        "docs/acceptance/g5-protocol-2026-09-07.json"
+        "docs/acceptance/g6-economics-2026-09-07.json"
       ],
       "dependencies": [],
       "history": [
@@ -5121,7 +5121,7 @@
         "tests/test_early_gate_adversarial.py::test_empirical_pattern_must_actually_declare_observations"
       ],
       "acceptance_evidence": [
-        "docs/acceptance/g5-protocol-2026-09-07.json"
+        "docs/acceptance/g6-economics-2026-09-07.json"
       ],
       "dependencies": [],
       "history": [
@@ -5168,7 +5168,7 @@
         "tests/test_research_runtime.py::test_cli_campaign_reaches_g4_with_signed_evidence_and_audited_read_models[EMPIRICAL]"
       ],
       "acceptance_evidence": [
-        "docs/acceptance/g5-protocol-2026-09-07.json"
+        "docs/acceptance/g6-economics-2026-09-07.json"
       ],
       "dependencies": [],
       "history": [
@@ -5217,7 +5217,7 @@
         "tests/test_early_gate_adversarial.py::test_g4_duplicate_contradictory_ids_never_win_by_row_order"
       ],
       "acceptance_evidence": [
-        "docs/acceptance/g5-protocol-2026-09-07.json"
+        "docs/acceptance/g6-economics-2026-09-07.json"
       ],
       "dependencies": [],
       "history": [
@@ -5284,7 +5284,7 @@
         "tests/test_backtest_gate.py::test_missing_cost_never_defaults_to_zero"
       ],
       "acceptance_evidence": [
-        "docs/acceptance/g5-protocol-2026-09-07.json"
+        "docs/acceptance/g6-economics-2026-09-07.json"
       ],
       "dependencies": [],
       "history": [
@@ -5318,13 +5318,54 @@
     {
       "requirement_id": "LKI-REQ-5ee003a8-c9b4-482d-81fd-8e001ea7a773",
       "introduced_by": "LIKI_SRS_v1.4",
-      "status": "NOT_STARTED",
+      "status": "ACCEPTED",
       "criticality": "CRITICAL",
-      "implementation_refs": [],
-      "test_refs": [],
-      "acceptance_evidence": [],
+      "implementation_refs": [
+        "liki/economics_gate.py::check_economics",
+        "liki/finance/economics_contracts.py::EconomicsPlan",
+        "liki/finance/economics.py::evaluate_economics",
+        "liki/finance/execution_reference.py::sweep_reference",
+        "liki/finance/contracts.py",
+        "liki/finance/types.py",
+        "liki/finance/execution.py",
+        "liki/backtest_gate.py",
+        "liki/data/models.py",
+        "liki/data_service.py",
+        "liki/store.py",
+        "liki/core.py",
+        "liki/finance/accounting.py::LedgerState",
+        "liki/finance/reference.py::independently_reconcile",
+        "liki/verification.py::VerificationRunner",
+        "liki/research_runtime.py::dispatch",
+        "liki/evaluation.py::Evaluator",
+        "liki/operations.py::Operations",
+        "liki/server.py::create_app",
+        "docs/execution_economics.md",
+        "config/finance_models.json"
+      ],
+      "test_refs": [
+        "tests/test_economics_runtime.py::test_g6_signed_cli_provenance_replay_idempotency_and_operator_api",
+        "tests/test_economics_runtime.py::test_g6_unknown_or_untrusted_dependencies_are_signed_blocked",
+        "tests/test_economics_runtime.py::test_g6_known_cost_failure_is_fail_not_missing_information",
+        "tests/test_economics_runtime.py::test_g6_rejects_forged_reports_and_caller_metrics",
+        "tests/test_economics_gate.py::test_g6_golden_profit_costs_and_capacity_are_independently_reconciled",
+        "tests/test_economics_gate.py::test_every_latency_sample_including_an_interior_spike_is_stressed",
+        "tests/test_economics_gate.py::test_independent_path_detects_execution_faults_instead_of_reconciling_corrupted_inputs",
+        "tests/test_economics_gate.py::test_g6_does_not_modify_g5_or_depend_on_ambient_decimal_context",
+        "tests/test_economics_gate.py::test_coarse_data_cannot_be_relabelled_as_validated_sequence_or_account_fills",
+        "tests/finance/test_economics_adversarial.py::test_standing_depth_is_shared_and_not_replenished_by_identical_snapshot",
+        "tests/finance/test_economics_adversarial.py::test_in_flight_ioc_cannot_be_retroactively_rejected_by_later_ack_timeout",
+        "tests/finance/test_economics_adversarial.py::test_terminal_valuation_does_not_hide_known_venue_loss_behind_feed_delay",
+        "tests/finance/test_economics_adversarial.py::test_fill_time_tier_and_signed_fee_change_use_half_open_boundary",
+        "tests/finance/test_economics_adversarial.py::test_native_price_band_uses_executable_price_at_exact_boundary",
+        "tests/finance/test_execution_reference.py::test_hand_calculated_buy_golden",
+        "tests/finance/test_execution_reference.py::test_two_level_nonlinear_impact_uses_entire_swept_quantity"
+      ],
+      "acceptance_evidence": [
+        "docs/acceptance/g6-economics-2026-09-07.json"
+      ],
       "dependencies": [],
-      "history": [],
+      "history": [{"date": "2026-09-07", "from": "NOT_STARTED", "to": "ACCEPTED", "reason": "Signed G6 spot execution protocol, independent financial controls, persisted provenance and 495-test source-bound checkpoint; unsupported contracts remain blocked."}],
       "cross_cutting": [
         "constitution",
         "provenance",
@@ -5481,7 +5522,7 @@
         "tests/test_research_runtime.py::test_old_signed_report_cannot_be_reused_after_snapshot_round_trip"
       ],
       "acceptance_evidence": [
-        "docs/acceptance/g5-protocol-2026-09-07.json"
+        "docs/acceptance/g6-economics-2026-09-07.json"
       ],
       "dependencies": [],
       "history": [
@@ -5555,7 +5596,7 @@
         "tests/test_early_gate_checks.py::test_g1_uses_candidate_hash_and_trial_cache_from_authenticated_database"
       ],
       "acceptance_evidence": [
-        "docs/acceptance/g5-protocol-2026-09-07.json"
+        "docs/acceptance/g6-economics-2026-09-07.json"
       ],
       "dependencies": [],
       "history": [
@@ -5603,7 +5644,7 @@
         "tests/test_research_runtime.py::test_fatal_cost_fact_fails_before_backtest_and_cannot_be_downgraded_by_forged_metrics"
       ],
       "acceptance_evidence": [
-        "docs/acceptance/g5-protocol-2026-09-07.json"
+        "docs/acceptance/g6-economics-2026-09-07.json"
       ],
       "dependencies": [],
       "history": [
@@ -6611,7 +6652,7 @@
         "tests/test_backtest_gate.py::test_protocol_replay_is_byte_identical_across_ambient_decimal_contexts"
       ],
       "acceptance_evidence": [
-        "docs/acceptance/g5-protocol-2026-09-07.json"
+        "docs/acceptance/g6-economics-2026-09-07.json"
       ],
       "dependencies": [],
       "history": [
@@ -6676,7 +6717,7 @@
         "tests/finance/test_backtest_adversarial.py::test_order_preserves_requested_and_normalized_quantity_with_consistent_filled_state"
       ],
       "acceptance_evidence": [
-        "docs/acceptance/g5-protocol-2026-09-07.json"
+        "docs/acceptance/g6-economics-2026-09-07.json"
       ],
       "dependencies": [],
       "history": [
@@ -7092,19 +7133,25 @@
     {
       "requirement_id": "LKI-REQ-c3628bab-1029-4e6f-8e15-d4485d02cf7f",
       "introduced_by": "LIKI_SRS_v1.4",
-      "status": "VERIFIED",
+      "status": "ACCEPTED",
       "criticality": "CRITICAL",
       "implementation_refs": [
-        "liki/finance/metrics.py::TransactionCostAnalysis"
+        "liki/finance/metrics.py::TransactionCostAnalysis",
+        "liki/finance/economics.py::evaluate_economics",
+        "liki/economics_gate.py::check_economics",
+        "docs/execution_economics.md"
       ],
       "test_refs": [
-        "tests/finance/test_backtest_contracts.py::test_fx_availability_and_tca_residual_are_explicit"
+        "tests/finance/test_backtest_contracts.py::test_fx_availability_and_tca_residual_are_explicit",
+        "tests/test_economics_gate.py::test_g6_golden_profit_costs_and_capacity_are_independently_reconciled",
+        "tests/test_economics_gate.py::test_known_friction_erases_apparent_profit_without_double_counting",
+        "tests/test_economics_runtime.py::test_g6_signed_cli_provenance_replay_idempotency_and_operator_api"
       ],
       "acceptance_evidence": [
-        "2026-09-06 focused audit: tests/finance passed"
+        "docs/acceptance/g6-economics-2026-09-07.json"
       ],
       "dependencies": [],
-      "history": [],
+      "history": [{"date": "2026-09-07", "from": "VERIFIED", "to": "ACCEPTED", "reason": "Component/shortfall distinction now exercised through signed G6 persistence and gate decisions, with source-bound golden and integration evidence."}],
       "cross_cutting": [
         "constitution",
         "provenance",
@@ -7123,19 +7170,25 @@
     {
       "requirement_id": "LKI-REQ-51391458-0ea2-4508-bd10-4cd3400ca4de",
       "introduced_by": "LIKI_SRS_v1.4",
-      "status": "VERIFIED",
+      "status": "ACCEPTED",
       "criticality": "CRITICAL",
       "implementation_refs": [
-        "liki/finance/accounting.py::Ledger"
+        "liki/finance/accounting.py::LedgerState",
+        "liki/finance/economics.py::evaluate_economics",
+        "liki/finance/execution_reference.py::sweep_reference",
+        "liki/economics_gate.py::check_economics"
       ],
       "test_refs": [
-        "tests/finance/test_accounting.py::test_hand_calculated_golden_ledger_and_cost_nonoverlap"
+        "tests/finance/test_accounting.py::test_hand_calculated_golden_ledger_and_cost_nonoverlap",
+        "tests/finance/test_economics_adversarial.py::test_partial_sweep_shortfall_is_not_deducted_twice",
+        "tests/test_economics_gate.py::test_known_friction_erases_apparent_profit_without_double_counting",
+        "tests/test_economics_runtime.py::test_g6_known_cost_failure_is_fail_not_missing_information"
       ],
       "acceptance_evidence": [
-        "2026-09-06 focused audit: tests/finance passed"
+        "docs/acceptance/g6-economics-2026-09-07.json"
       ],
       "dependencies": [],
-      "history": [],
+      "history": [{"date": "2026-09-07", "from": "VERIFIED", "to": "ACCEPTED", "reason": "No-double-counting accounting now has independently reconciled G6 partial-fill and friction-loss acceptance evidence."}],
       "cross_cutting": [
         "constitution",
         "provenance",
@@ -12875,7 +12928,7 @@
         "tests/test_research_runtime.py::test_blocked_dependency_reentry_replays_from_g0_without_rewriting_history"
       ],
       "acceptance_evidence": [
-        "docs/acceptance/g5-protocol-2026-09-07.json"
+        "docs/acceptance/g6-economics-2026-09-07.json"
       ],
       "dependencies": [],
       "history": [

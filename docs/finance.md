@@ -12,6 +12,13 @@ The primary moving-average `LedgerState` and `reference.independently_reconcile`
 
 `DeterministicBacktest` exposes prior available observations to signals and rejects revised or unavailable execution data. `OrderIntent` requires aware, ordered information, signal, eligibility, and submission timestamps. `FillModel` requires an explicit fidelity tier, latency and participation bound; the backtest rejects passive fills whose queue uncertainty is unresolved. OHLC cannot be relabeled as BBO evidence. The replay pins its Decimal context and retains deferred/partial/terminal orders and independently reconciled per-observation balances. See `docs/backtest_protocol.md` for the signed G5 integration and its deliberately bounded spot scope. Low-level model agreement is not observed venue execution evidence.
 
+G6 adds immutable, source-bound fixed-intent depth replay, historical account/fee
+selection, latency distributions, conservative liquidity consumption, capacity
+curves and an independently calculated financial control path. See
+`docs/execution_economics.md` for its exact contracts and conditional public-data
+confidence limits. Inverse derivative funding, maintenance and forced-event fees
+use settlement-currency notional; derivatives remain excluded from G5/G6 admission.
+
 `OrderRecord` implements the canonical paper state machine. `pretrade_check` performs pure deterministic checks and returns a reservation containing the venue-direction-rounded quantity/limit. The adapter must submit those normalized reservation fields, never the unrounded intent. `PaperService` persists this lifecycle using PostgreSQL transaction locks, immutable configuration artifacts, idempotency keys, and the same `Store.transition` audit chain. `RiskEnvelope` permits `PAPER` only: there is no live path.
 
 `emergency_stop(stop_id=..., scope=..., actions=..., actor_id=..., reason=..., activated_at=..., policy_version=..., strategy_id=..., venue=...)` produces immutable paper stop commands. It supports strategy, venue, and paper-global scopes and exact `BLOCK_NEW`, `CANCEL_WORKING`, `RECONCILE`, and explicit `REDUCE_FLATTEN` actions. `enforce_emergency_stops` is the inference-free pretrade guard. The parent must atomically read active stops with the reservation check, schedule cancellation/reconciliation work for matching active orders, and preserve commands in its audit ledger. `FUTURE_LIVE_GLOBAL_STOP` is deliberately reserved: this module has no live path.

@@ -26,6 +26,41 @@
       "validation": ["partial fill", "latency", "sequence-gap", "fidelity refusal tests"]
     },
     {
+      "model_id": "depth-execution-economics-v1",
+      "model_type": "execution",
+      "materiality": "CRITICAL",
+      "version": "1",
+      "status": "DEVELOPMENT",
+      "purpose": "Signed G6 fixed-intent spot execution counterfactuals, realistic friction and conditional capacity ranges.",
+      "assumptions": [
+        "single-venue fully-funded long-only spot market IOC orders",
+        "fee is additive; spread, depth, impact and timing decompose execution price",
+        "implementation and opportunity shortfall are diagnostic, not additional deductions",
+        "nonnegative square-root participation impact with disjoint calibration/validation episodes",
+        "sample-and-hold public book with mandatory adverse depth and impact scenarios"
+      ],
+      "limitations": [
+        "F2 evidence is a limited snapshot model, not observed fills or queue precision",
+        "scenario ranges are conditional, not statistical confidence intervals",
+        "hypothetical scale does not empirically validate endogenous market impact",
+        "derivatives, borrow, cross-currency, passive and order/account-level claims are blocked"
+      ],
+      "dependencies": [
+        "signed applied G5 package and exact original instrument/data hashes",
+        "effective-dated venue rules, account state and fee source inputs",
+        "Python Decimal and shared persisted inputs are declared common-mode dependencies",
+        "independent native sweep, fee-selection and latency implementations",
+        "moving-average ledger and independent FIFO reconciliation"
+      ],
+      "validation": [
+        "hand-derived profitable and friction-destroyed edge fixtures",
+        "fault-injected fee, quantity, price and latency disagreement blocks",
+        "causal in-flight acknowledgement and delayed terminal-loss regressions",
+        "real-process CLI/database/API signed G0-G6 acceptance",
+        "source-bound acceptance evidence and immutable G5 comparisons"
+      ]
+    },
+    {
       "model_id": "shrunk-portfolio-covariance",
       "model_type": "risk",
       "materiality": "MATERIAL",

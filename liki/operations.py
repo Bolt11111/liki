@@ -86,13 +86,19 @@ class Operations:
             "GROUP BY gate_id,decision,reason_code ORDER BY gate_id,decision,reason_code")
 
     def backtest(self, credential: Credential, strategy_version_id: str) -> dict:
+        return self._execution_report(credential, strategy_version_id, 5, "BACKTEST_NOT_FOUND")
+
+    def economics(self, credential: Credential, strategy_version_id: str) -> dict:
+        return self._execution_report(credential, strategy_version_id, 6, "ECONOMICS_NOT_FOUND")
+
+    def _execution_report(self, credential: Credential, strategy_version_id: str, gate_id: int, missing: str) -> dict:
         with self.store.transaction(credential) as (conn, actor):
             actor.require("read")
             row = conn.execute("SELECT verifier_execution_id,report_artifact_id,snapshot_id "
-                "FROM verifier_executions WHERE strategy_version_id=%s AND gate_id=5 "
-                "ORDER BY created_at DESC,verifier_execution_id DESC LIMIT 1", (strategy_version_id,)).fetchone()
+                "FROM verifier_executions WHERE strategy_version_id=%s AND gate_id=%s "
+                "ORDER BY created_at DESC,verifier_execution_id DESC LIMIT 1", (strategy_version_id, gate_id)).fetchone()
             if row is None:
-                raise DomainError("BACKTEST_NOT_FOUND")
+                raise DomainError(missing)
             report = self.store.artifact(conn, actor, row["report_artifact_id"])
             package_id = report["content"].get("package_artifact_id")
             package = self.store.artifact(conn, actor, package_id) if package_id else None

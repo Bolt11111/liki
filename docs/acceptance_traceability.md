@@ -7,21 +7,23 @@ copies) and `requirements_registry.json`. This is not system acceptance.
 
 | Status | Count | Meaning |
 |---|---:|---|
-| ACCEPTED | 11 | Eight early-gate controls and three supported G5 protocol requirements, closed by executed source-bound evidence |
-| VERIFIED | 35 | Earlier focused verification; not silently upgraded to acceptance |
+| ACCEPTED | 14 | Eight early-gate, three G5, supported G6 and two integrated cost-accounting controls, closed by executed source-bound evidence |
+| VERIFIED | 33 | Other earlier focused verification; not silently upgraded to acceptance |
 | IN_PROGRESS | 3 | Existing Telegram status, owner notification and alert-deduplication integrations |
-| NOT_STARTED | 499 | No completed atomic traceability claim; related code may exist |
+| NOT_STARTED | 498 | No completed atomic traceability claim; related code may exist |
 | Total | 548 | Existing IDs preserved; eight omitted explicit SRS list contracts recovered |
 
-**46/548 (8.39%) have verification or acceptance evidence. Only 11/548 (2.01%)
+**47/548 (8.58%) have verification or acceptance evidence. Only 14/548 (2.55%)
 are ACCEPTED.** These figures are not whole-system production readiness.
 
-The previous checkpoint reported 43/540 (7.96%) with verification or acceptance
+Before the G5 checkpoint, the matrix reported 43/540 (7.96%) with verification or acceptance
 evidence and 8/540 (1.48%) ACCEPTED. Review found that the uppercase-only
 extractor omitted eight explicit requirement/output checklists, including G5
 and section 17.2. The compiler now retains these declarative list contracts.
 No SRS text, source hash, existing requirement ID or prior evidence was erased.
 The denominator correction is not eight newly requested product features.
+G6 keeps the denominator unchanged at 548; its preceding G5 checkpoint had
+11 ACCEPTED and 35 additional VERIFIED entries.
 
 ## Closed integrated controls
 
@@ -48,13 +50,27 @@ API. G5 PASS is `BACKTESTED`, not profitability or execution permission. The
 fuller accounting, data-validity and execution-realism SRS sections are not
 closed by association with this protocol.
 
+G6 adds signed fixed-intent execution counterfactuals, persisted cost calibration
+and validation sources, effective fees/tiers, independent depth/fee/latency math,
+liquidity budgets, native venue controls and capacity/uncertainty curves. Its
+supported scope and limited public-snapshot confidence are explicit in
+`docs/execution_economics.md`. The additional accepted IDs are:
+
+- `LKI-REQ-5ee003a8-c9b4-482d-81fd-8e001ea7a773`: supported G6 protocol;
+- `LKI-REQ-c3628bab-1029-4e6f-8e15-d4485d02cf7f`: component versus implementation-shortfall distinction;
+- `LKI-REQ-51391458-0ea2-4508-bd10-4cd3400ca4de`: no duplicate cost deductions.
+
+The latter two were previously VERIFIED, not new requirement coverage. Broad
+venue-adapter, cost-calibration, derivative and execution-fidelity sections are
+not silently closed by this bounded integration.
+
 ## Current executed evidence
 
-`docs/acceptance/g5-protocol-2026-09-07.json` binds all eleven accepted IDs to
-the SRS hash, exact source/test hashes and **300 executed passing tests**, zero
-failures/skips, 658.39 seconds. The two warnings are pre-existing dependency
+`docs/acceptance/g6-economics-2026-09-07.json` binds all fourteen accepted IDs to
+the SRS hash, 44 source/test/config hashes and **495 executed passing tests**, zero
+failures/skips, 1449.50 seconds. The two warnings are pre-existing dependency
 deprecations. The recorder checked source hashes before and after execution.
-Ruff, Mypy across all 63 source modules, and evidence-aware registry validation
+Ruff, Mypy across all 67 source modules, and evidence-aware registry validation
 also passed. The previous immutable early-gate manifest remains historical;
 current entries point to the renewed manifest, not stale source hashes.
 
@@ -74,10 +90,11 @@ paper-service SRS acceptance.
 
 ## Remaining dependency boundary
 
-Signed G6–G13 execution is still unsupported. G6 historical costs, latency,
-liquidity/capacity and stress integration is next; point estimates in G5 do not
-close it. Generic strategy-code integration, derivatives/cross-currency and
-passive execution remain outside the supported G5 protocol.
+Signed G7–G13 execution is still unsupported. Predeclared, leakage-resistant G7
+OOS/walk-forward integration is next. G6's conditional model ranges do not prove
+real-market edge or future readiness. Generic strategy-code integration,
+derivatives/cross-currency and passive execution remain outside the supported
+G5/G6 protocols.
 
 Full G1 semantic-family classification, G2 timing/universe coverage and authentic
 data acquisition, G4 observed-economics provenance and additional prescreens,

@@ -106,3 +106,39 @@ are recorded in `docs/acceptance_traceability.md`. Existing early-gate evidence
 must be renewed after the verifier changes; old immutable manifests remain
 historical artifacts, not current-source proof. Full G6 cost/latency/capacity
 stress is the next dependency, not a parallel unfinished branch of G5.
+
+## G6 execution-economics checkpoint
+
+The signed runtime now binds the applied G5 decision and immutable package to
+persisted execution depth, effective venue/fee/account state, latency samples,
+disjoint impact calibration/validation observations and a trusted policy.
+The supported fixed-intent spot IOC protocol emits reconciled ledgers,
+component costs, implementation shortfall and size/latency/depth/impact capacity
+curves. Unknown material inputs block; known friction can produce an audited
+FAIL. Public snapshots carry limited model confidence, not observed-fill claims.
+Unsupported derivative, passive and cross-currency paths remain explicit.
+
+Independent depth, fee and latency reference calculations plus FIFO accounting
+were checked with golden fixtures and corruption injection. Adversarial review
+exposed terminal-loss masking by delayed feeds, retroactive in-flight rejects,
+submission-rate ordering errors and G5/G6 currency/asset mismatches. These were
+fixed before acceptance. A nearby inverse-contract notional unit defect was
+also corrected and regression-tested without claiming broader derivative
+acceptance.
+
+Focused financial/reference/adversarial verification passed 180 tests. The
+first full run passed 493 tests and failed two stale runtime assertions that
+expected unsupported G6 rather than its now-valid unsatisfied G5 dependency.
+The corrected assertions also retain unsupported-G7 coverage; no financial
+assertion was weakened. No evidence manifest was written from the failing run.
+The complete corrected run passed **495 tests in 1449.50 seconds**, no failures
+or skips, with two pre-existing dependency deprecation warnings. Ruff and Mypy
+over 67 source modules passed.
+
+`docs/acceptance/g6-economics-2026-09-07.json` binds all fourteen accepted IDs to
+44 exact source/test/config hashes and the unchanged SRS hash. The registry is
+**548 total: 14 ACCEPTED, 33 VERIFIED, 3 IN_PROGRESS, 498 NOT_STARTED**. G6 adds
+one accepted protocol requirement and promotes two previously verified
+accounting controls. Thus 47/548 (8.58%) have verification or acceptance
+evidence; only 14/548 (2.55%) are accepted. This is not system acceptance.
+Signed predeclared G7 OOS/walk-forward validation is the next connected slice.
