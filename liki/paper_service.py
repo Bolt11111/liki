@@ -6,16 +6,18 @@ from dataclasses import dataclass, replace
 from datetime import datetime, timedelta
 from decimal import Decimal
 from enum import StrEnum
+from typing import Any
 
+import psycopg
 from psycopg.types.json import Jsonb
 from pydantic import Field, field_validator
 
 from liki.core import Contract, DomainError, uid, utcnow
-from liki.finance import FeeSchedule, FidelityTier, Fill, FillModel, InstrumentSpec, LedgerState, LiquidityRole, OrderIntent, OrderRecord, OrderState, RiskEnvelope, Side, independently_reconcile, pretrade_check, select_fee
+from liki.finance import ContractKind, FeeSchedule, FidelityTier, Fill, FillModel, InstrumentSpec, LedgerState, LiquidityRole, OrderIntent, OrderRecord, OrderState, RiskEnvelope, Side, independently_reconcile, pretrade_check, select_fee
 from liki.finance.contracts import effective_at
 from liki.finance.execution import MarketSnapshot
 from liki.finance.types import decimal
-from liki.store import Credential, Store
+from liki.store import Credential, Identity, Store
 
 __all__ = ["DeterministicPaperAdapter", "PaperFill", "PaperRunSpec", "PaperRunStatus", "PaperService", "PinnedFillModel", "StopRequest", "StopScope"]
 
@@ -174,9 +176,22 @@ class PaperService:
             raise DomainError("PAPER_PROJECTION_MISSING")
         return aggregate
 
+    @staticmethod
+    def _run_policy(conn: psycopg.Connection[Any], run_id: str) -> str:
+        run = conn.execute("SELECT policy_version FROM paper_runs WHERE paper_run_id=%s",
+                           (run_id,)).fetchone()
+        if run is None:
+            raise DomainError("PAPER_RUN_PROJECTION_MISSING")
+        return run["policy_version"]
+
     def start_run(self, credential: Credential, spec: PaperRunSpec, operation_key: str) -> str:
         with self.store.transaction(credential) as (conn, actor):
             actor.require("paper")
+            if any(instrument.contract_kind != ContractKind.SPOT or instrument.multiplier != 1
+                   or instrument.settlement_currency != instrument.quote_currency
+                   or instrument.quote_currency != spec.reporting_currency
+                   for instrument in spec.instruments):
+                raise DomainError("PAPER_CONTRACT_NOT_SUPPORTED")
             self._lock(conn)
             existing = conn.execute("SELECT * FROM paper_runs WHERE paper_run_id=%s", (spec.paper_run_id,)).fetchone()
             if existing:
@@ -323,7 +338,7 @@ class PaperService:
             conn.execute("UPDATE paper_orders SET final_state=%s,raw_venue_semantics_json=raw_venue_semantics_json || %s,updated_at=now() WHERE paper_order_id=%s", (record.state, Jsonb({"reconciliation_reason": reason_code}), order_id))
             conn.execute("UPDATE risk_reservations SET state='UNRECONCILED',updated_at=now() WHERE reservation_id=%s", (order["reservation_id"],))
             aggregate = self._aggregate(conn, "paper_order", order_id)
-            self.store.transition(conn, actor, capability="paper", kind="paper_order", aggregate_id=order_id, expected_version=aggregate["version"], state={**aggregate["state"], "state": record.state, "reconciliation_reason": reason_code}, event_type="PAPER_ORDER_UNKNOWN_RECONCILING", operation_key=operation_key, task_id=order["paper_run_id"], policy_version=conn.execute("SELECT policy_version FROM paper_runs WHERE paper_run_id=%s", (order["paper_run_id"],)).fetchone()["policy_version"], topic="paper.incident")
+            self.store.transition(conn, actor, capability="paper", kind="paper_order", aggregate_id=order_id, expected_version=aggregate["version"], state={**aggregate["state"], "state": record.state, "reconciliation_reason": reason_code}, event_type="PAPER_ORDER_UNKNOWN_RECONCILING", operation_key=operation_key, task_id=order["paper_run_id"], policy_version=self._run_policy(conn, order["paper_run_id"]), topic="paper.incident")
 
     def record_fill(self, credential: Credential, order_id: str, fill: PaperFill, quote_currency: str) -> str:
         with self.store.transaction(credential) as (conn, actor):
@@ -379,12 +394,14 @@ class PaperService:
             prior_cash = conn.execute("SELECT balance_after FROM paper_cash_ledger WHERE paper_run_id=%s AND currency=%s ORDER BY created_at DESC LIMIT 1 FOR UPDATE", (order["paper_run_id"], quote_currency)).fetchone()
             conn.execute("INSERT INTO paper_cash_ledger(paper_cash_entry_id,paper_run_id,paper_fill_id,currency,delta,balance_after) VALUES(%s,%s,%s,%s,%s,%s)", (uid("PCASH"), order["paper_run_id"], fill_id, quote_currency, delta, (prior_cash["balance_after"] if prior_cash else Decimal("0")) + delta))
             reservation = conn.execute("SELECT * FROM risk_reservations WHERE reservation_id=%s FOR UPDATE", (order["reservation_id"],)).fetchone()
+            if reservation is None:
+                raise DomainError("PAPER_RESERVATION_PROJECTION_MISSING")
             filled_fraction = record.filled_quantity / record.intent.quantity
             position_amount = reservation["original_amount"] * filled_fraction
             conn.execute("UPDATE risk_reservations SET working_amount=%s,position_amount=%s,state=%s,updated_at=now() WHERE reservation_id=%s", (reservation["original_amount"] - position_amount, position_amount, "CONVERTED" if position_amount else "HELD", order["reservation_id"]))
             conn.execute("UPDATE paper_orders SET final_state=%s,filled_quantity=%s,updated_at=now() WHERE paper_order_id=%s", (record.state, record.filled_quantity, order_id))
             aggregate = self._aggregate(conn, "paper_order", order_id)
-            self.store.transition(conn, actor, capability="paper", kind="paper_order", aggregate_id=order_id, expected_version=aggregate["version"], state={**aggregate["state"], "state": record.state, "filled_quantity": str(record.filled_quantity), "accounting_check": "PASS"}, event_type="PAPER_FILL_RECORDED", operation_key=f"paper-fill:{fill.external_fill_key}", task_id=order["paper_run_id"], policy_version=conn.execute("SELECT policy_version FROM paper_runs WHERE paper_run_id=%s", (order["paper_run_id"],)).fetchone()["policy_version"], topic="paper.fill")
+            self.store.transition(conn, actor, capability="paper", kind="paper_order", aggregate_id=order_id, expected_version=aggregate["version"], state={**aggregate["state"], "state": record.state, "filled_quantity": str(record.filled_quantity), "accounting_check": "PASS"}, event_type="PAPER_FILL_RECORDED", operation_key=f"paper-fill:{fill.external_fill_key}", task_id=order["paper_run_id"], policy_version=run["policy_version"], topic="paper.fill")
             return fill_id
 
     def cancel(self, credential: Credential, order_id: str, operation_key: str) -> None:
@@ -403,11 +420,13 @@ class PaperService:
             intent = OrderIntent.model_validate(order["intent_json"]).model_copy(update={"quantity": order["quantity"], "limit_price": order["price"]})
             state = OrderRecord(intent, OrderState(order["final_state"]), order["filled_quantity"]).transition(OrderState.CANCEL_PENDING).transition(OrderState.CANCELLED)
             reservation = conn.execute("SELECT * FROM risk_reservations WHERE reservation_id=%s FOR UPDATE", (order["reservation_id"],)).fetchone()
+            if reservation is None:
+                raise DomainError("PAPER_RESERVATION_PROJECTION_MISSING")
             new_state = "CONVERTED" if reservation["position_amount"] > 0 else "RELEASED"
             conn.execute("UPDATE risk_reservations SET working_amount=0,released_amount=%s,state=%s,updated_at=now() WHERE reservation_id=%s", (reservation["original_amount"] - reservation["position_amount"], new_state, reservation["reservation_id"]))
             conn.execute("UPDATE paper_orders SET final_state=%s,updated_at=now() WHERE paper_order_id=%s", (state.state, order_id))
             aggregate = self._aggregate(conn, "paper_order", order_id)
-            self.store.transition(conn, actor, capability="paper", kind="paper_order", aggregate_id=order_id, expected_version=aggregate["version"], state={**aggregate["state"], "state": state.state}, event_type="PAPER_ORDER_CANCELLED", operation_key=operation_key, task_id=order["paper_run_id"], policy_version=conn.execute("SELECT policy_version FROM paper_runs WHERE paper_run_id=%s", (order["paper_run_id"],)).fetchone()["policy_version"], topic="paper.order")
+            self.store.transition(conn, actor, capability="paper", kind="paper_order", aggregate_id=order_id, expected_version=aggregate["version"], state={**aggregate["state"], "state": state.state}, event_type="PAPER_ORDER_CANCELLED", operation_key=operation_key, task_id=order["paper_run_id"], policy_version=self._run_policy(conn, order["paper_run_id"]), topic="paper.order")
 
     def stop(self, credential: Credential, run_id: str, request: StopRequest, operation_key: str) -> str:
         with self.store.transaction(credential) as (conn, actor):
@@ -531,16 +550,16 @@ class PaperService:
             )
             conn.execute("UPDATE paper_safety_latches SET active=false WHERE safety_latch_id=%s", (latch_id,))
 
-    def _cancel_for_safety_latch(self, conn: object, actor: object, order: dict, latch_id: str) -> None:
+    def _cancel_for_safety_latch(self, conn: psycopg.Connection[Any], actor: Identity, order: dict, latch_id: str) -> None:
         """Cancel only risk-increasing working orders; reduce-only orders remain available to reduce exposure."""
-        reservation = conn.execute("SELECT * FROM risk_reservations WHERE reservation_id=%s FOR UPDATE", (order["reservation_id"],)).fetchone()  # type: ignore[attr-defined]
+        reservation = conn.execute("SELECT * FROM risk_reservations WHERE reservation_id=%s FOR UPDATE", (order["reservation_id"],)).fetchone()
         if reservation is None:
             raise DomainError("PAPER_RESERVATION_PROJECTION_MISSING")
         new_state = "CONVERTED" if reservation["position_amount"] > 0 else "RELEASED"
-        conn.execute("UPDATE risk_reservations SET working_amount=0,released_amount=%s,state=%s,updated_at=now() WHERE reservation_id=%s", (reservation["original_amount"] - reservation["position_amount"], new_state, reservation["reservation_id"]))  # type: ignore[attr-defined]
-        conn.execute("UPDATE paper_orders SET final_state='CANCELLED',raw_venue_semantics_json=raw_venue_semantics_json || %s,updated_at=now() WHERE paper_order_id=%s", (Jsonb({"safety_latch_id": latch_id, "cancel_reason": "EMERGENCY_STOP"}), order["paper_order_id"]))  # type: ignore[attr-defined]
+        conn.execute("UPDATE risk_reservations SET working_amount=0,released_amount=%s,state=%s,updated_at=now() WHERE reservation_id=%s", (reservation["original_amount"] - reservation["position_amount"], new_state, reservation["reservation_id"]))
+        conn.execute("UPDATE paper_orders SET final_state='CANCELLED',raw_venue_semantics_json=raw_venue_semantics_json || %s,updated_at=now() WHERE paper_order_id=%s", (Jsonb({"safety_latch_id": latch_id, "cancel_reason": "EMERGENCY_STOP"}), order["paper_order_id"]))
         aggregate = self._aggregate(conn, "paper_order", order["paper_order_id"])
-        self.store.transition(conn, actor, capability="stop", kind="paper_order", aggregate_id=order["paper_order_id"], expected_version=aggregate["version"], state={**aggregate["state"], "state": "CANCELLED", "cancel_reason": "EMERGENCY_STOP", "safety_latch_id": latch_id}, event_type="PAPER_ORDER_CANCELLED_FOR_SAFETY_LATCH", operation_key=f"safety-latch-cancel:{latch_id}:{order['paper_order_id']}", task_id=order["paper_run_id"], policy_version=conn.execute("SELECT policy_version FROM paper_runs WHERE paper_run_id=%s", (order["paper_run_id"],)).fetchone()["policy_version"], topic="paper.order")  # type: ignore[attr-defined]
+        self.store.transition(conn, actor, capability="stop", kind="paper_order", aggregate_id=order["paper_order_id"], expected_version=aggregate["version"], state={**aggregate["state"], "state": "CANCELLED", "cancel_reason": "EMERGENCY_STOP", "safety_latch_id": latch_id}, event_type="PAPER_ORDER_CANCELLED_FOR_SAFETY_LATCH", operation_key=f"safety-latch-cancel:{latch_id}:{order['paper_order_id']}", task_id=order["paper_run_id"], policy_version=self._run_policy(conn, order["paper_run_id"]), topic="paper.order")
 
     @staticmethod
     def _configured_model(run: dict) -> PinnedFillModel:

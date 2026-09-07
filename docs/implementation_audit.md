@@ -61,3 +61,15 @@ credentials. Those are historical findings, not newly measured service health.
 This audit uses isolated test databases and no external provider calls.
 They do not excuse unfinished adapters, integration or local acceptance work.
 The 24-hour soak cannot be replaced by accelerated clocks or a short test.
+
+## Paper defect checkpoint
+
+The inherited paper-service type failures are repaired without claiming new
+SRS acceptance. Missing run/reservation projections now fail closed and roll
+back the whole financial transaction. Unsupported derivative, multiplier and
+cross-currency contracts cannot enter the spot-only paper ledger. Verification:
+`uv run ruff check .`, `uv run mypy liki` (62 source files), and
+`uv run pytest -q tests/test_paper_projection_integrity.py tests/test_paper_service.py`
+all passed; **19 tests, 37.17 seconds**. Projection-loss tests use restrictive
+database policies rather than mocked financial services. Requirement counts
+remain unchanged.
