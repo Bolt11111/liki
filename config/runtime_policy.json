@@ -1,0 +1,18 @@
+{
+  "policy_id": "runtime-boot-v1",
+  "origin": "LIKI_SRS_v1.4 sections 9,24.5,29,43A.3A",
+  "status": "BOOT_NOT_CALIBRATED",
+  "rationale": "Conservative SRS boot limits; no financial promotion thresholds are preapproved",
+  "units": {"timeouts": "seconds", "fractions": "fraction", "concurrency": "workers"},
+  "exploration_floor": "0.05",
+  "frontier_fraction": "0.08",
+  "rejection_audit_fraction": "0.02",
+  "research_lanes": 3,
+  "codex_per_process_concurrency": 1,
+  "unknown_usage_calls_per_hour": 20,
+  "stale_heartbeat_min_seconds": 30,
+  "stale_heartbeat_timeout_fraction": "0.20",
+  "cooldown_hours": {"soft": 6, "medium": 24, "hard": 72},
+  "class_limits": {"cheap": 8, "medium": 4, "expensive": 2, "telegram": 1, "evaluator": 8, "backtest": 3, "data": 4, "maintenance": 1, "paper": 1, "governance": 1},
+  "class_timeouts_seconds": {"cheap": 45, "medium": 180, "expensive": 600, "telegram": 45, "evaluator": 60, "backtest": 900, "data": 240, "maintenance": 60, "paper": 60, "governance": 600}
+}

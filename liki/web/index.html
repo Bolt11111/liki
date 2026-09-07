@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light">
+    <title>LIKI operator console</title>
+    <link rel="stylesheet" href="/assets/styles.css">
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to dashboard content</a>
+    <header class="site-header">
+      <div>
+        <p class="eyebrow">LIKI · authenticated operator console</p>
+        <h1>Research operations</h1>
+      </div>
+      <p class="execution-lock" role="status"><strong>Real-money execution: prohibited</strong><span> This console cannot enable or submit live orders.</span></p>
+    </header>
+
+    <main id="main-content">
+      <section id="auth-panel" class="auth-panel" aria-labelledby="auth-title">
+        <div>
+          <p class="eyebrow">Control-plane access</p>
+          <h2 id="auth-title">Connect an operator session</h2>
+          <p>Enter an approved bearer token to read the current operational projections. The token stays only in this page's active memory and is discarded on sign out or refresh.</p>
+        </div>
+        <form id="auth-form" class="auth-form">
+          <label for="access-token">Access token</label>
+          <input id="access-token" name="access-token" type="password" autocomplete="off" spellcheck="false" required>
+          <button type="submit">Connect</button>
+          <p id="auth-feedback" class="feedback" role="alert" aria-live="assertive"></p>
+        </form>
+      </section>
+
+      <section id="console" hidden aria-label="LIKI operator dashboard">
+        <div class="console-bar">
+          <div>
+            <p id="connection-state" class="connection-state" role="status" aria-live="polite">Connected</p>
+            <p id="as-of" class="muted">Loading operational projections…</p>
+          </div>
+          <div class="console-actions">
+            <button id="refresh" class="button-secondary" type="button">Refresh data</button>
+            <button id="sign-out" class="button-secondary" type="button">Sign out</button>
+          </div>
+        </div>
+
+        <nav class="view-nav" aria-label="Dashboard views" role="tablist">
+          <button id="tab-status" type="button" role="tab" aria-selected="true" aria-controls="view-status" data-view="status">Status</button>
+          <button id="tab-runs" type="button" role="tab" aria-selected="false" aria-controls="view-runs" data-view="runs">Active runs</button>
+          <button id="tab-queues" type="button" role="tab" aria-selected="false" aria-controls="view-queues" data-view="queues">Queues</button>
+          <button id="tab-campaigns" type="button" role="tab" aria-selected="false" aria-controls="view-campaigns" data-view="campaigns">Campaigns</button>
+          <button id="tab-paper" type="button" role="tab" aria-selected="false" aria-controls="view-paper" data-view="paper">Paper</button>
+          <button id="tab-governance" type="button" role="tab" aria-selected="false" aria-controls="view-governance" data-view="governance">Governance</button>
+          <button id="tab-requirements" type="button" role="tab" aria-selected="false" aria-controls="view-requirements" data-view="requirements">Requirements</button>
+        </nav>
+
+        <p id="refresh-feedback" class="feedback" role="status" aria-live="polite"></p>
+
+        <section id="view-status" class="view" role="tabpanel" aria-labelledby="tab-status">
+          <div class="view-heading">
+            <div>
+              <p class="eyebrow">Operational source of truth</p>
+              <h2>System status</h2>
+            </div>
+            <span id="operator-role" class="role-badge">Role unavailable</span>
+          </div>
+          <div id="status-summary" class="summary-grid" aria-live="polite"></div>
+          <section class="card" aria-labelledby="incidents-title">
+            <div class="section-heading">
+              <div><h3 id="incidents-title">Open incidents</h3><p>Unresolved incidents returned by the authenticated control plane.</p></div>
+              <span id="incident-count" class="count-badge">—</span>
+            </div>
+            <div id="incidents-table"></div>
+          </section>
+          <section class="card" aria-labelledby="milestone-title">
+            <h3 id="milestone-title">Business milestone reporting</h3>
+            <p>The USD 10,000/week aspiration requires net PnL, capital, risk, capacity, and uncertainty context. Those metrics are not exposed by the currently connected authenticated endpoints, so no milestone value is inferred here.</p>
+          </section>
+        </section>
+
+        <section id="view-runs" class="view" role="tabpanel" aria-labelledby="tab-runs" hidden>
+          <div class="view-heading"><div><p class="eyebrow">Truthful activity state</p><h2>Active runs and why they are running</h2></div></div>
+          <p class="view-intro">Activity labels and reasons come directly from the scheduler projection. A stale run is never represented as normal running work.</p>
+          <div id="runs-table"></div>
+        </section>
+
+        <section id="view-queues" class="view" role="tabpanel" aria-labelledby="tab-queues" hidden>
+          <div class="view-heading"><div><p class="eyebrow">Scheduler projection</p><h2>Queues</h2></div></div>
+          <p class="view-intro">Counts are grouped by task class, lane, and actual scheduler status.</p>
+          <div id="queues-table"></div>
+        </section>
+
+        <section id="view-campaigns" class="view" role="tabpanel" aria-labelledby="tab-campaigns" hidden>
+          <div class="view-heading"><div><p class="eyebrow">Research oversight</p><h2>Campaigns</h2></div></div>
+          <div id="campaigns-table"></div>
+        </section>
+
+        <section id="view-paper" class="view" role="tabpanel" aria-labelledby="tab-paper" hidden>
+          <div class="view-heading"><div><p class="eyebrow">Paper execution only</p><h2>Paper runs, orders, and risk reservations</h2></div><span class="prohibited-badge">Real money prohibited</span></div>
+          <div id="paper-stop-control" class="card" hidden>
+            <div class="section-heading"><div><h3>Emergency stop</h3><p>Risk-reducing global stop. It blocks existing and future paper runs and cancels working risk-increasing paper orders.</p></div></div>
+            <button id="open-emergency-stop" class="button-danger" type="button">Request emergency stop</button>
+          </div>
+          <section class="card" aria-labelledby="paper-runs-title"><h3 id="paper-runs-title">Paper runs</h3><div id="paper-runs-table"></div></section>
+          <section class="card" aria-labelledby="paper-stops-title"><h3 id="paper-stops-title">Active global safety latches</h3><div id="paper-stops-table"></div></section>
+          <section class="card" aria-labelledby="orders-title"><h3 id="orders-title">Recent paper orders</h3><div id="orders-table"></div></section>
+          <section class="card" aria-labelledby="reservations-title"><h3 id="reservations-title">Risk reservations</h3><div id="reservations-table"></div></section>
+        </section>
+
+        <section id="view-governance" class="view" role="tabpanel" aria-labelledby="tab-governance" hidden>
+          <div class="view-heading"><div><p class="eyebrow">Read-only oversight</p><h2>Governance proposals</h2></div></div>
+          <p class="view-intro">Proposal states are evidence records. This console does not make governance decisions.</p>
+          <div id="governance-table"></div>
+        </section>
+
+        <section id="view-requirements" class="view" role="tabpanel" aria-labelledby="tab-requirements" hidden>
+          <div class="view-heading"><div><p class="eyebrow">Requirement-level traceability</p><h2>Requirements coverage</h2></div></div>
+          <div id="requirements-summary" class="summary-grid"></div>
+          <div id="requirements-table"></div>
+        </section>
+      </section>
+    </main>
+
+    <dialog id="emergency-stop-dialog" aria-labelledby="stop-title">
+      <form id="emergency-stop-form" class="stop-form">
+        <div class="dialog-heading"><div><p class="eyebrow">Risk-reducing safety control</p><h2 id="stop-title">Request a global paper emergency stop</h2></div></div>
+        <p>This requests a global, durable paper safety latch. It applies even when no paper run is active and cannot enable real-money execution.</p>
+        <label for="stop-reason">Reason code</label>
+        <input id="stop-reason" maxlength="500" required aria-describedby="stop-reason-help">
+        <p id="stop-reason-help" class="muted">State a concise operational reason. This reason will be recorded by the control plane.</p>
+        <label class="checkbox-label"><input id="stop-confirmation" type="checkbox" required> I confirm this is a global, safety-reducing action for all paper execution.</label>
+        <p id="stop-feedback" class="feedback" role="alert" aria-live="assertive"></p>
+        <div class="dialog-actions"><button id="cancel-emergency-stop" type="button" class="button-secondary">Cancel</button><button id="submit-emergency-stop" type="submit" class="button-danger">Confirm emergency stop</button></div>
+      </form>
+    </dialog>
+    <script src="/assets/app.js" defer></script>
+  </body>
+</html>

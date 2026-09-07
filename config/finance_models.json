@@ -1,0 +1,41 @@
+{
+  "schema_version": "1",
+  "models": [
+    {
+      "model_id": "decimal-moving-average-ledger",
+      "model_type": "cost",
+      "materiality": "CRITICAL",
+      "version": "1",
+      "status": "DEVELOPMENT",
+      "purpose": "Authoritative Decimal position, cash, fee, and additive-cost accounting.",
+      "assumptions": ["all fills are authoritative and idempotent", "quote-currency accounting"],
+      "limitations": ["FIFO tax lots are deliberately not represented; independent reconciliation uses FIFO"],
+      "dependencies": ["Python decimal; common-mode risk declared"],
+      "validation": ["hand golden ledgers", "independent FIFO equity reconciliation", "property tests"]
+    },
+    {
+      "model_id": "bounded-paper-fill-model",
+      "model_type": "execution",
+      "materiality": "CRITICAL",
+      "version": "1",
+      "status": "DEVELOPMENT",
+      "purpose": "Causality-safe partial fills with declared fidelity and queue uncertainty.",
+      "assumptions": ["available quantity is point-in-time", "F0 bars have no queue claim"],
+      "limitations": ["paper/modelled fill evidence is not observed endogenous impact"],
+      "dependencies": ["versioned market-data manifest", "instrument specification"],
+      "validation": ["partial fill", "latency", "sequence-gap", "fidelity refusal tests"]
+    },
+    {
+      "model_id": "shrunk-portfolio-covariance",
+      "model_type": "risk",
+      "materiality": "MATERIAL",
+      "version": "1",
+      "status": "DEVELOPMENT",
+      "purpose": "Regularized covariance for portfolio attribution; outputs are MODEL_ESTIMATE.",
+      "assumptions": ["synchronized finite returns", "predeclared shrinkage"],
+      "limitations": ["does not establish alpha or independent empirical evidence"],
+      "dependencies": ["numpy", "synchronized return data"],
+      "validation": ["singular covariance fixture", "correlation-to-one stress"]
+    }
+  ]
+}

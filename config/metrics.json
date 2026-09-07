@@ -1,0 +1,41 @@
+{
+  "schema_version": "1",
+  "metrics": [
+    {
+      "metric_id": "maximum_drawdown",
+      "version": "1",
+      "formula_reference": "SRS 38A.4: min(V_t/max(V_0..V_t)-1)",
+      "input_series_semantics": "reconciled marked-to-market equity, chronological and non-overlapping",
+      "units": "decimal fraction; negative is loss",
+      "annualization_rule": "not annualized",
+      "missing_data_rule": "INSUFFICIENT_DATA for empty series; UNDEFINED for nonpositive peak",
+      "undefined_conditions": ["empty equity", "nonpositive running peak"],
+      "numerical_tolerance": "0.0000000001",
+      "golden_fixture_ids": ["mdd-hand-001"]
+    },
+    {
+      "metric_id": "naive_sharpe",
+      "version": "1",
+      "formula_reference": "SRS 38A.3: mean(excess returns)/sample_std*sqrt(A)",
+      "input_series_semantics": "non-overlapping comparable simple returns; risk-free is separately supplied in future metric version",
+      "units": "dimensionless",
+      "annualization_rule": "A is predeclared non-overlapping periods/year",
+      "missing_data_rule": "INSUFFICIENT_DATA below two observations",
+      "undefined_conditions": ["zero sample standard deviation", "missing annualization policy"],
+      "numerical_tolerance": "0.0000000001",
+      "golden_fixture_ids": ["sharpe-hand-001"]
+    },
+    {
+      "metric_id": "expected_shortfall",
+      "version": "1",
+      "formula_reference": "SRS 38A.7: mean worst floor((1-confidence)*n), minimum one observation",
+      "input_series_semantics": "non-overlapping return observations",
+      "units": "decimal return fraction",
+      "annualization_rule": "not annualized",
+      "missing_data_rule": "INSUFFICIENT_DATA for empty series",
+      "undefined_conditions": ["confidence outside open interval (0,1)"],
+      "numerical_tolerance": "0.0000000001",
+      "golden_fixture_ids": ["es-hand-001"]
+    }
+  ]
+}
