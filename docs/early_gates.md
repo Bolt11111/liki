@@ -83,19 +83,73 @@ executable notional and the predeclared limit, and compares only matching sample
 IDs to the declared baseline. Missing evidence/policy is an unknown; known cost,
 capacity, or predeclared economic failures are hard invalidity.
 
-## Parent integration steps
+## Runtime integration
 
-1. In the authenticated verifier runner, resolve the candidate, all snapshot
+`python -m liki.research_runtime` exposes the same persisted services through
+bounded, credential-scoped JSON commands. It does not invent campaigns or launch
+LLM calls. Supply `--credential-file` and `--request-file`; each request is
+`{"action": "...", "payload": {...}}` with a strict action-specific contract.
+
+Actions are `campaign`, `artifact`, `dataset`, `register`, `trial`, `snapshot`,
+`verify`, `decide`, `reenter`, and `audit`. Research/data/governance/evaluator
+commands retain their existing separate role requirements. A command cannot
+borrow another role's authority. The dataset command carries the immutable
+manifest plus raw payload metadata and base64 source bytes; hashes are checked
+by `DataService`, not trusted from the command.
+
+Verifier calls additionally require `--verifier-key-id` and
+`--verifier-key-file` (raw 32-byte Ed25519 private key). Credential and private
+key files must be regular, non-symlink files with no group/other permissions.
+Enroll only the matching public key using administrative
+`python -m liki.manage enroll-verifier --principal ... --key-id ...
+--public-key-file ...`. Private keys never enter the database or command output.
+Enrollment is code-identity-specific; code changes require a newly enrolled key.
+
+The deterministic verifier is now `deterministic-gates-v3`. Its signature
+binds the candidate aggregate revision as well as the snapshot and immutable
+input hashes. Legacy reports without this binding cannot authorize a decision.
+The runner includes snapshot datasets automatically; callers must not need to
+repeat them in G2 inputs. A G1 decision rechecks mutable family history under
+the decision transaction lock; a stale signed screen cannot ignore a newly
+recorded duplicate or rejection.
+
+`BLOCKED` is not rejection. A declared duplicate without a conclusive hard
+failure blocks rather than contributing a scientific failure. A G1 plan must
+match the candidate's persisted non-infrastructure trial, dataset set, family ID
+and semantic configuration. Equivalent hard failures are considered even when
+another family label is supplied.
+
+G4 retains the accepted G3 minimum viable test's observation minimum and binds
+that upstream plan into its signed inputs. Ambiguous duplicate sample keys,
+impossible capacity observations and cross-dataset benchmark pairing cannot
+produce passing arithmetic. Known fatal economics remain `FAIL`, even if a
+caller also supplies invalid or unbound metric claims.
+
+For an unavailable dependency, `reenter` requires an expected candidate
+revision, a different valid snapshot and a nonblank reason. Only a `BLOCKED`
+candidate can use this route; failed candidates cannot erase rejection this
+way. Re-entry appends an `EVALUATION_REENTERED` event, preserves every previous
+decision, and starts again at G0. A prior signed report cannot be rebound to the
+new candidate revision, even after returning to an older snapshot.
+
+`GET /gates/outcomes` reports persisted counts grouped by gate, decision and
+reason. `GET /gates/{strategy_version_id}` preserves decision history. There is
+no live-execution command. G5's supported spot protocol is documented in
+`docs/backtest_protocol.md`; signed G6–G13 execution remains unsupported.
+
+## Signed execution contract
+
+1. The authenticated verifier runner resolves the candidate, all snapshot
    dataset artifacts, the gate plan, policy, and every plan-referenced evidence
-   artifact; pass their IDs to `check_gate` with the persisted snapshot row and
+   artifact and passes their IDs to `check_gate` with the persisted snapshot row and
    research-object row.
-2. Persist the returned report unchanged as `verified-gate-report-v1`, including
+2. Persist the report as `verified-gate-report-v1`, including
    its artifact binding map in the signed execution manifest. The existing evaluator
    reserves `metrics` for `MetricValue` records, so early-gate diagnostics such as
    sample count and Decimal-derived after-cost means are stored under
    `derived_metrics` while `metrics` remains an empty list. Do not convert unknowns
    to false booleans or discard either metrics field.
-3. Keep `Evaluation.REQUIRED_CHECKS[1:5]` as the exact required check names.
+3. `Evaluation.REQUIRED_CHECKS[1:5]` defines the exact required check names.
    Gate decision logic must fail on `hard_invalidity` and block on nonempty
    `unknowns`, consistent with the existing verifier contract.
 
@@ -108,3 +162,10 @@ synthetic/testnet results into observed liquidity evidence. Those unresolved
 facts remain explicit unknowns rather than favorable assumptions. It also does
 not write cooldowns or gate decisions; those lifecycle writes remain with the
 parent-owned evaluation and signed-runner paths.
+
+Canonical semantic family classification across renamed strategies, complete
+feature/universe coverage, authentic observed-economics provenance, parameter
+neighborhoods, turnover, statistical proxy, implementation feasibility and
+false-negative accounting are not closed by this work. An authenticated
+artifact producer is not proof that a financial observation happened. The
+runtime acceptance fixtures explicitly test software controls, not market edge.

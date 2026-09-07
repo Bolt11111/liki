@@ -100,6 +100,18 @@ def test_g1_uses_candidate_hash_and_trial_cache_from_authenticated_database(stor
     with store.transaction(credentials["evaluator"]) as (conn, _):
         snapshot_row = conn.execute("SELECT * FROM evaluation_snapshots WHERE snapshot_id=%s", (snapshot_id,)).fetchone()
         obj = conn.execute("SELECT * FROM research_objects WHERE object_id=%s", (candidate_id,)).fetchone()
+    missing = _report(store, credentials, snapshot_row, obj, 1, (plan_id, policy_id))
+    assert not missing["checks"]["family_history_checked"] and not missing["hard_invalidity"]
+    assert "G1_DECLARED_TRIAL_NOT_BOUND" in missing["unknowns"]
+    Research(store).trial(credentials["research"], Trial(
+        trial_event_id=uid("TRIAL"), campaign_id=campaign_id,
+        trial_family_id="crypto:btc:1h:trend:lag:hour", strategy_version_id=candidate_id,
+        trial_type="hypothesis", selection_reason="predeclared", semantic_configuration={"rule": "lagged-sign"},
+        dataset_snapshot_ids=(dataset_id,), metric_ids=("simple-return",), operation_key=uid("OP"),
+    ))
+    with store.transaction(credentials["evaluator"]) as (conn, _):
+        snapshot_row = conn.execute("SELECT * FROM evaluation_snapshots WHERE snapshot_id=%s", (snapshot_id,)).fetchone()
+        obj = conn.execute("SELECT * FROM research_objects WHERE object_id=%s", (candidate_id,)).fetchone()
     report = _report(store, credentials, snapshot_row, obj, 1, (plan_id, policy_id))
     assert all(report["checks"].values())
     assert report["hard_invalidity"] is False
@@ -126,7 +138,8 @@ def test_g1_uses_candidate_hash_and_trial_cache_from_authenticated_database(stor
     )
     cached_report = _report(store, credentials, snapshot_row, obj, 1, (plan_id, policy_id))
     assert cached_report["checks"]["not_duplicate"] is False
-    assert cached_report["hard_invalidity"] is True
+    assert cached_report["hard_invalidity"] is False
+    assert "EQUIVALENT_RESEARCH_NOT_CONCLUSIVELY_REJECTED" in cached_report["unknowns"]
     assert cached_report["derived_metrics"]["equivalent_experiment_count"] == 1
 
     duplicate_id = uid("SV")
@@ -138,7 +151,8 @@ def test_g1_uses_candidate_hash_and_trial_cache_from_authenticated_database(stor
     )
     duplicate_report = _report(store, credentials, snapshot_row, obj, 1, (plan_id, policy_id))
     assert duplicate_report["checks"]["not_duplicate"] is False
-    assert duplicate_report["hard_invalidity"] is True
+    assert duplicate_report["hard_invalidity"] is False
+    assert "EQUIVALENT_RESEARCH_NOT_CONCLUSIVELY_REJECTED" in duplicate_report["unknowns"]
 
 
 def test_g2_revalidates_real_manifest_and_timing_rows(store, credentials):

@@ -82,9 +82,61 @@ class GateInput(Contract):
     operation_key: str
 
 
+class GateReentry(Contract):
+    strategy_version_id: str = Field(min_length=1)
+    snapshot_id: str = Field(min_length=1)
+    expected_version: int = Field(ge=1)
+    reason: str = Field(min_length=1, pattern=r"\S")
+    operation_key: str = Field(min_length=1)
+
+
 class Evaluator:
     def __init__(self,store:Store):
         self.store=store
+
+    def reenter(self, credential: Credential, request: GateReentry) -> dict:
+        with self.store.transaction(credential) as (conn, actor):
+            actor.require("gate")
+            conn.execute("SELECT pg_advisory_xact_lock(71403218)")
+            digest = content_hash(request.model_dump(mode="json"))
+            prior_operation = conn.execute("SELECT * FROM event_log WHERE operation_key=%s",
+                                           (request.operation_key,)).fetchone()
+            if prior_operation:
+                if (prior_operation["principal_id"] != actor.principal_id
+                        or prior_operation["event_type"] != "EVALUATION_REENTERED"
+                        or prior_operation["metadata"].get("input_hash") != digest):
+                    raise DomainError("IDEMPOTENCY_CONFLICT")
+                return {**prior_operation["metadata"]["state_after"],
+                        "version": prior_operation["aggregate_version"]}
+            current = self.store.state(conn, "candidate", request.strategy_version_id)
+            if not current or current["version"] != request.expected_version:
+                raise DomainError("CONCURRENT_MODIFICATION")
+            if current["state"]["status"] != "BLOCKED":
+                raise DomainError("REENTRY_REQUIRES_BLOCKED_DEPENDENCY")
+            row = conn.execute("SELECT * FROM evaluation_snapshots WHERE snapshot_id=%s",
+                               (request.snapshot_id,)).fetchone()
+            if (not row or conn.execute("SELECT 1 FROM snapshot_invalidations WHERE snapshot_id=%s",
+                                       (request.snapshot_id,)).fetchone()):
+                raise DomainError("STALE_EVALUATION_SNAPSHOT")
+            if current["state"]["snapshot_id"] == request.snapshot_id:
+                raise DomainError("REENTRY_REQUIRES_NEW_SNAPSHOT")
+            obj = conn.execute("SELECT * FROM research_objects WHERE object_id=%s",
+                               (request.strategy_version_id,)).fetchone()
+            if not obj or obj["artifact_id"] != row["manifest"]["candidate_artifact_id"]:
+                raise DomainError("CANDIDATE_SNAPSHOT_MISMATCH")
+            if obj["created_by"] == actor.principal_id:
+                raise DomainError("SELF_CERTIFICATION")
+            state = {"strategy_version_id": request.strategy_version_id,
+                     "snapshot_id": request.snapshot_id, "gate_id": -1, "status": "IDEA"}
+            event = self.store.transition(conn, actor, capability="gate", kind="candidate",
+                aggregate_id=request.strategy_version_id, expected_version=request.expected_version,
+                state=state, event_type="EVALUATION_REENTERED", operation_key=request.operation_key,
+                task_id=obj["campaign_id"], policy_version="evaluation-v1", metadata={
+                    "input_hash": digest, "reason": request.reason,
+                    "previous_snapshot_id": current["state"]["snapshot_id"],
+                    "invalidated_from_gate": 0,
+                })
+            return {**state, "version": event["aggregate_version"]}
 
     def snapshot(self,credential:Credential,snapshot:EvaluationSnapshot)->str:
         if snapshot.forward_evaluation_at.tzinfo is None:
@@ -121,7 +173,8 @@ class Evaluator:
             conn.execute("SELECT pg_advisory_xact_lock(71403218)")
             previous_operation=conn.execute("SELECT e.metadata,g.* FROM gate_decisions g JOIN event_log e USING(event_id) WHERE e.operation_key=%s",(request.operation_key,)).fetchone()
             if previous_operation:
-                if previous_operation["metadata"].get("input_hash")!=content_hash(request.model_dump(mode="json")):
+                if (previous_operation["actor_id"] != actor.principal_id
+                        or previous_operation["metadata"].get("input_hash")!=content_hash(request.model_dump(mode="json"))):
                     raise DomainError("IDEMPOTENCY_CONFLICT")
                 return {"gate_decision_id":previous_operation["gate_decision_id"],**previous_operation["metadata"]["state_after"],"version":previous_operation["gate_state_version_after"]}
             snapshot_row=conn.execute("SELECT * FROM evaluation_snapshots WHERE snapshot_id=%s",(request.snapshot_id,)).fetchone()
@@ -181,9 +234,11 @@ class Evaluator:
                     decision,reason="BLOCKED","FORWARD_HORIZON_INCOMPLETE"
             values={m.metric_id:m for m in request.metrics}
             reported_values={m["metric_id"]:m for report in reports for m in report.get("metrics",[])}
-            if len(values)!=len(request.metrics) or any(reported_values.get(m.metric_id)!=m.model_dump(mode="json") for m in request.metrics):
+            if decision != "FAIL" and (len(values)!=len(request.metrics) or any(reported_values.get(m.metric_id)!=m.model_dump(mode="json") for m in request.metrics)):
                 decision,reason="BLOCKED","METRICS_NOT_BOUND_TO_EVIDENCE"
             for rule in snapshot.rules_by_gate.get(str(request.gate_id),()):
+                if decision == "FAIL":
+                    break
                 metric=values.get(rule.metric_id)
                 if metric is None or metric.status!="VALUE" or metric.value is None:
                     decision,reason="BLOCKED","REQUIRED_METRIC_UNDEFINED"

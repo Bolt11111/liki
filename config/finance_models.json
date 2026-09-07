@@ -10,7 +10,7 @@
       "purpose": "Authoritative Decimal position, cash, fee, and additive-cost accounting.",
       "assumptions": ["all fills are authoritative and idempotent", "quote-currency accounting"],
       "limitations": ["FIFO tax lots are deliberately not represented; independent reconciliation uses FIFO"],
-      "dependencies": ["Python decimal; common-mode risk declared"],
+      "dependencies": ["Python decimal; common-mode risk declared", "shared Fill/Side/CostTreatment data contracts", "pinned fee schedule inputs shared by primary and direct reference fee calculations"],
       "validation": ["hand golden ledgers", "independent FIFO equity reconciliation", "property tests"]
     },
     {
@@ -21,7 +21,7 @@
       "status": "DEVELOPMENT",
       "purpose": "Causality-safe partial fills with declared fidelity and queue uncertainty.",
       "assumptions": ["available quantity is point-in-time", "F0 bars have no queue claim"],
-      "limitations": ["paper/modelled fill evidence is not observed endogenous impact"],
+      "limitations": ["paper/modelled fill evidence is not observed endogenous impact", "signed G5 supports F1 fully-funded long-only spot with explicit slippage/impact estimates; no passive queue or derivative promotion"],
       "dependencies": ["versioned market-data manifest", "instrument specification"],
       "validation": ["partial fill", "latency", "sequence-gap", "fidelity refusal tests"]
     },

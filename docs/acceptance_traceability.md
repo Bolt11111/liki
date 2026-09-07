@@ -1,106 +1,90 @@
-# Acceptance traceability audit
+# Acceptance traceability — 2026-09-07
 
-**Audit date:** 2026-09-06
-**Authority:** `docs/LIKI_SRS.md` v1.4 and `requirements_registry.json`
-**Scope:** requirements-to-code/test traceability only. This is not an SRS
-acceptance declaration.
+**Authority:** attached `LIKI_SRS.md` v1.4 (byte-identical to the repository
+copies) and `requirements_registry.json`. This is not system acceptance.
 
-## Method and status semantics
+## Current requirement matrix
 
-The registry remains the requirement-level completion matrix. Stable requirement
-IDs, source anchors, source lines, source text, source hashes, dependencies, and
-history were not changed. A requirement is `VERIFIED` only when a focused test
-named in its `test_refs` passed in this audit. `IN_PROGRESS` denotes a real,
-currently changing integration whose present tests are not acceptance evidence.
-All remaining `NOT_STARTED` records have no direct, atomic traceability evidence
-in this audit; this is intentionally not a claim that every related source file
-is empty.
-
-`VERIFIED` is evidence for a single atomic requirement, not a claim that its
-phase, section, module, or the system is accepted. No registry entry is marked
-`ACCEPTED`.
-
-## Current objective matrix
-
-| Status | Count | Interpretation |
+| Status | Count | Meaning |
 |---|---:|---|
-| VERIFIED | 35 | Directly proven atomic controls with exact code and named test references in the registry. |
-| IMPLEMENTED | 0 | No untested implementation was elevated on plausibility alone. |
-| IN_PROGRESS | 3 | Active parent integration: deterministic Telegram status command, owner notification flow, and alert deduplication. |
-| NOT_STARTED | 502 | No direct atomic evidence recorded by this audit. |
-| ACCEPTED | 0 | Broad system acceptance is absent. |
+| ACCEPTED | 11 | Eight early-gate controls and three supported G5 protocol requirements, closed by executed source-bound evidence |
+| VERIFIED | 35 | Earlier focused verification; not silently upgraded to acceptance |
+| IN_PROGRESS | 3 | Existing Telegram status, owner notification and alert-deduplication integrations |
+| NOT_STARTED | 499 | No completed atomic traceability claim; related code may exist |
+| Total | 548 | Existing IDs preserved; eight omitted explicit SRS list contracts recovered |
 
-The current `VERIFIED` items cover narrow persistence atomicity/concurrency and
-provenance, data gap/lookahead/as-of controls, fee/cost/order-state controls,
-purged validation/dependence resampling/sequential testing, inference
-idempotency/economics/context/egress, and governance blind-review/staleness/
-change-set/common-dependency controls. Exact IDs and references are maintained
-in `requirements_registry.json`, not duplicated here.
+**46/548 (8.39%) have verification or acceptance evidence. Only 11/548 (2.01%)
+are ACCEPTED.** These figures are not whole-system production readiness.
 
-## Focused verification performed
+The previous checkpoint reported 43/540 (7.96%) with verification or acceptance
+evidence and 8/540 (1.48%) ACCEPTED. Review found that the uppercase-only
+extractor omitted eight explicit requirement/output checklists, including G5
+and section 17.2. The compiler now retains these declarative list contracts.
+No SRS text, source hash, existing requirement ID or prior evidence was erased.
+The denominator correction is not eight newly requested product features.
 
-| Command | Result |
-|---|---|
-| `uv run pytest tests/data -q` | 9 passed |
-| `uv run pytest tests/finance -q` | 16 passed |
-| `uv run pytest tests/statistics -q` | 16 passed |
-| `uv run pytest tests/inference -q` | 20 passed |
-| `uv run pytest tests/test_store.py tests/test_research_evaluation.py tests/test_scheduler.py tests/test_sandbox.py tests/test_governance_service.py tests/governance tests/test_outbox.py tests/test_telegram.py tests/test_server.py tests/test_data_service.py tests/test_inference_service.py tests/test_paper_service.py -q` | 70 passed; two third-party FastAPI/Starlette deprecation warnings |
+## Closed integrated controls
 
-## Exact unmet requirement groups
+The early-screen runtime supports authenticated campaign/artifact submission,
+raw dataset persistence, research/trial registration, predeclared snapshots,
+signed G0–G4 execution, serialized decisions, blocked re-entry and operator reads.
+Its eight accepted IDs cover structured feasibility, empirical versus mechanism
+basis, fatal economics, evidence-versioned transitions, BLOCKED versus FAIL,
+separate outcome counts, append-only decisions and competing-sibling rejection.
 
-The following SRS groups retain one or more `NOT_STARTED` or `IN_PROGRESS`
-requirement records. They are the exact unaccepted groups; the registry is the
-authoritative itemized list within each group.
+G5 adds a supported fully-funded, long-only, single-currency spot quote protocol.
+The verifier resolves exact persisted source artifacts, validates data and
+configuration bindings, executes candidate and buy-and-hold programs, reconciles
+cash/positions independently, and persists a signed complete backtest package.
+The three accepted requirements are:
 
-- **Foundational semantics and traceability:** §§1, 1A.2–1A.4, 2.1–2.3,
-  4–7.5, 39–43A.
-- **Research process and scheduler:** §§9–12, 14, 16, 24.1–24.5, 26, 29,
-  32A.17, and 38C.
-- **Inference and agent controls:** §§8.1–8.23, 10, 11, 30.0–30.14, and
-  30.15 (beyond the individual provenance controls verified above).
-- **Data/ML:** §§13.1–13.21 and 13A.1–13A.8, except the exact data integrity
-  controls linked as `VERIFIED` in the registry.
-- **Statistics/evaluation:** §§12.2–12.7, 15.1–15.25, 17, 19, and 24, except
-  the exact purging, bootstrap, and sequential controls linked as `VERIFIED`.
-- **Finance, execution, and portfolio:** §§18.1–18.31, 25.1–25.21, 38A, and
-  36A.9–36A.14, except the exact fee/TCA/order-state/rounding/version controls
-  linked as `VERIFIED`.
-- **Governance/model risk/incidents:** §§20–24, 28A, 32A.14, and 36A.8–36A.17,
-  except the exact blind-context/protected-map/change-set/staleness/common-
-  dependency controls linked as `VERIFIED`.
-- **Operations/API/outbox/Telegram:** §38 and §38B remain `IN_PROGRESS` where
-  parent integration is active; no acceptance claim is made from the current
-  unit/integration tests.
-- **Acceptance gates:** §§33.8, 33.13–33.17, 34.0–34.12, and 41 remain
-  unaccepted. In particular, every §34.10 24-hour guarded-soak requirement
-  (LKI-REQ-977a521c-aaf2-4964-81c8-c93a336d067d through
-  LKI-REQ-3c9295af-2d7d-43f0-b7ce-c4b5038c2266) is `NOT_STARTED`.
+- `LKI-REQ-03b228ea-413a-44bd-9c03-b2ec213eb87c`: G5 protocol requirements;
+- `LKI-REQ-48cb8404-8a40-44d6-88bd-b43dc1a5499d`: identical-input deterministic replay;
+- `LKI-REQ-f7726b90-9dff-4a26-b500-df32ca5c2f48`: required full-backtest outputs.
 
-## Real external blockers
+`docs/backtest_protocol.md` defines the exact supported contract, source and
+cost assumptions, failure semantics, package fields and `/backtests/{id}` read
+API. G5 PASS is `BACKTESTED`, not profitability or execution permission. The
+fuller accounting, data-validity and execution-realism SRS sections are not
+closed by association with this protocol.
 
-- The data agent reported public Binance HTTP 451 responses. Live Binance
-  ingestion/reconciliation cannot be accepted from mocked tests while this
-  external endpoint blocks the environment.
-- No LLM provider key is available, so real provider routing, billing, and
-  recovery acceptance cannot be demonstrated; existing inference checks use
-  controlled test transports.
-- Telegram credentials are absent, so real Telegram delivery/reconciliation
-  acceptance cannot be demonstrated; existing Telegram checks use fixture
-  credentials and mocked transport.
+## Current executed evidence
 
-These are external acceptance blockers only. They do not excuse or reclassify
-unimplemented code requirements.
+`docs/acceptance/g5-protocol-2026-09-07.json` binds all eleven accepted IDs to
+the SRS hash, exact source/test hashes and **300 executed passing tests**, zero
+failures/skips, 658.39 seconds. The two warnings are pre-existing dependency
+deprecations. The recorder checked source hashes before and after execution.
+Ruff, Mypy across all 63 source modules, and evidence-aware registry validation
+also passed. The previous immutable early-gate manifest remains historical;
+current entries point to the renewed manifest, not stale source hashes.
 
-## Next largest gaps
+G5 verification includes real OS-process CLI restarts, PostgreSQL transactions,
+signed evidence and HTTP reads; hand-calculated candidate/benchmark PnL;
+ambient Decimal-context independence; missing costs; raw/normalized data and
+candidate/code binding failures; unsigned evidence and invented metrics;
+atomic rollback; idempotency; deferred/partial order ledgers; native quantity
+and price constraints; sell-side solvency; causal history; and independent fee
+fault injection. The independent adversarial test suite first exposed defects,
+then passed after the production fixes. Valid financial tests were not weakened.
 
-1. Build and run the versioned red-team/end-to-end acceptance corpus required by
-   §§33.14–33.17, then attach each outcome to individual registry IDs.
-2. Execute and preserve evidence for the real §34.10 24-hour guarded continuous
-   run; until then, no system-level acceptance can be claimed.
-3. Finish the parent API/outbox/Telegram integration and then replace the three
-   `IN_PROGRESS` entries with direct endpoint-to-delivery evidence.
-4. Establish live, licensed data acquisition/reconciliation once the Binance
-   access boundary is resolved; add independent-source and lifecycle fixtures.
-5. Close the untraced portfolio, model-risk, incident/SLO, scheduler resource,
-   and disaster-recovery requirements before attempting broader acceptance.
+The paper defect checkpoint separately passed 19 tests and eliminated the nine
+inherited type errors. Missing projections roll back financial transactions;
+unsupported contracts cannot enter the spot ledger. It claims no additional
+paper-service SRS acceptance.
+
+## Remaining dependency boundary
+
+Signed G6–G13 execution is still unsupported. G6 historical costs, latency,
+liquidity/capacity and stress integration is next; point estimates in G5 do not
+close it. Generic strategy-code integration, derivatives/cross-currency and
+passive execution remain outside the supported G5 protocol.
+
+Full G1 semantic-family classification, G2 timing/universe coverage and authentic
+data acquisition, G4 observed-economics provenance and additional prescreens,
+paper/portfolio/model-risk admission, notification workers, operational
+acceptance and the mandatory real 24-hour guarded soak remain open.
+
+The earlier Binance HTTP 451 and missing LLM/Telegram credentials are historical
+external findings, not newly measured health. They do not excuse incomplete
+local adapters or integrations. Test-only market fixtures prove software
+controls, not real market edge, observed liquidity, external billing or the soak.

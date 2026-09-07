@@ -158,9 +158,15 @@
       "introduced_by": "LIKI_SRS_v1.4",
       "status": "VERIFIED",
       "criticality": "CRITICAL",
-      "implementation_refs": ["requirements_registry.json"],
-      "test_refs": ["tests/test_requirements.py::test_ids_survive_insertion"],
-      "acceptance_evidence": ["2026-09-06 focused audit: tests/test_requirements.py passed"],
+      "implementation_refs": [
+        "requirements_registry.json"
+      ],
+      "test_refs": [
+        "tests/test_requirements.py::test_ids_survive_insertion"
+      ],
+      "acceptance_evidence": [
+        "2026-09-06 focused audit: tests/test_requirements.py passed"
+      ],
       "dependencies": [],
       "history": [],
       "cross_cutting": [
@@ -233,9 +239,15 @@
       "introduced_by": "LIKI_SRS_v1.4",
       "status": "VERIFIED",
       "criticality": "CRITICAL",
-      "implementation_refs": ["tools/requirements.py::extract"],
-      "test_refs": ["tests/test_requirements.py::test_examples_quotes_and_references_are_not_requirements"],
-      "acceptance_evidence": ["2026-09-06 focused audit: tests/test_requirements.py passed"],
+      "implementation_refs": [
+        "tools/requirements.py::extract"
+      ],
+      "test_refs": [
+        "tests/test_requirements.py::test_examples_quotes_and_references_are_not_requirements"
+      ],
+      "acceptance_evidence": [
+        "2026-09-06 focused audit: tests/test_requirements.py passed"
+      ],
       "dependencies": [],
       "history": [],
       "cross_cutting": [
@@ -1008,9 +1020,16 @@
       "introduced_by": "LIKI_SRS_v1.4",
       "status": "VERIFIED",
       "criticality": "CRITICAL",
-      "implementation_refs": ["liki/store.py::Store.transition", "migrations/001_core.sql::forbid_history_mutation"],
-      "test_refs": ["tests/test_store.py::test_immutable_history_and_least_privilege"],
-      "acceptance_evidence": ["2026-09-06 focused audit: tests/test_store.py passed"],
+      "implementation_refs": [
+        "liki/store.py::Store.transition",
+        "migrations/001_core.sql::forbid_history_mutation"
+      ],
+      "test_refs": [
+        "tests/test_store.py::test_immutable_history_and_least_privilege"
+      ],
+      "acceptance_evidence": [
+        "2026-09-06 focused audit: tests/test_store.py passed"
+      ],
       "dependencies": [],
       "history": [],
       "cross_cutting": [
@@ -1158,9 +1177,16 @@
       "introduced_by": "LIKI_SRS_v1.4",
       "status": "VERIFIED",
       "criticality": "CRITICAL",
-      "implementation_refs": ["liki/store.py::Store.transition"],
-      "test_refs": ["tests/test_store.py::test_atomic_event_outbox_and_replay", "tests/test_store.py::test_rollback_does_not_publish_event"],
-      "acceptance_evidence": ["2026-09-06 focused audit: tests/test_store.py passed"],
+      "implementation_refs": [
+        "liki/store.py::Store.transition"
+      ],
+      "test_refs": [
+        "tests/test_store.py::test_atomic_event_outbox_and_replay",
+        "tests/test_store.py::test_rollback_does_not_publish_event"
+      ],
+      "acceptance_evidence": [
+        "2026-09-06 focused audit: tests/test_store.py passed"
+      ],
       "dependencies": [],
       "history": [],
       "cross_cutting": [
@@ -1183,9 +1209,15 @@
       "introduced_by": "LIKI_SRS_v1.4",
       "status": "VERIFIED",
       "criticality": "CRITICAL",
-      "implementation_refs": ["liki/store.py::Store.transition"],
-      "test_refs": ["tests/test_store.py::test_concurrent_sibling_writers_cannot_both_win"],
-      "acceptance_evidence": ["2026-09-06 focused audit: tests/test_store.py passed"],
+      "implementation_refs": [
+        "liki/store.py::Store.transition"
+      ],
+      "test_refs": [
+        "tests/test_store.py::test_concurrent_sibling_writers_cannot_both_win"
+      ],
+      "acceptance_evidence": [
+        "2026-09-06 focused audit: tests/test_store.py passed"
+      ],
       "dependencies": [],
       "history": [],
       "cross_cutting": [
@@ -1231,13 +1263,38 @@
     {
       "requirement_id": "LKI-REQ-46f61c1c-b690-4f66-be9b-cf457d1b1879",
       "introduced_by": "LIKI_SRS_v1.4",
-      "status": "NOT_STARTED",
+      "status": "ACCEPTED",
       "criticality": "CRITICAL",
-      "implementation_refs": [],
-      "test_refs": [],
-      "acceptance_evidence": [],
+      "implementation_refs": [
+        "liki/evaluation.py",
+        "liki/verification.py",
+        "liki/store.py",
+        "liki/core.py",
+        "migrations/002_research_runtime.sql"
+      ],
+      "test_refs": [
+        "tests/test_research_runtime.py::test_concurrent_siblings_roles_and_stale_family_screen_fail_closed",
+        "tests/test_research_runtime.py::test_old_signed_report_cannot_be_reused_after_snapshot_round_trip"
+      ],
+      "acceptance_evidence": [
+        "docs/acceptance/g5-protocol-2026-09-07.json"
+      ],
       "dependencies": [],
-      "history": [],
+      "history": [
+        {
+          "date": "2026-09-07",
+          "from_status": "NOT_STARTED",
+          "to_status": "ACCEPTED",
+          "evidence": "docs/acceptance/early-gates-2026-09-07.json",
+          "scope": "Atomic early-gate runtime control; not whole-system acceptance"
+        },
+        {
+          "date": "2026-09-07",
+          "status": "ACCEPTED",
+          "evidence": "docs/acceptance/g5-protocol-2026-09-07.json",
+          "reason": "300 executed tests; source hashes unchanged. Renewed early-gate evidence against the G5 verifier revision."
+        }
+      ],
       "cross_cutting": [
         "constitution",
         "provenance",
@@ -1433,9 +1490,15 @@
       "introduced_by": "LIKI_SRS_v1.4",
       "status": "VERIFIED",
       "criticality": "CRITICAL",
-      "implementation_refs": ["liki/inference/backend.py::PostgresInferenceBackend"],
-      "test_refs": ["tests/inference/test_hardening.py::test_fenced_json_recovery_and_idempotency_context_conflict"],
-      "acceptance_evidence": ["2026-09-06 focused audit: tests/inference passed"],
+      "implementation_refs": [
+        "liki/inference/backend.py::PostgresInferenceBackend"
+      ],
+      "test_refs": [
+        "tests/inference/test_hardening.py::test_fenced_json_recovery_and_idempotency_context_conflict"
+      ],
+      "acceptance_evidence": [
+        "2026-09-06 focused audit: tests/inference passed"
+      ],
       "dependencies": [],
       "history": [],
       "cross_cutting": [
@@ -1583,9 +1646,15 @@
       "introduced_by": "LIKI_SRS_v1.4",
       "status": "VERIFIED",
       "criticality": "CRITICAL",
-      "implementation_refs": ["liki/inference/broker.py::InferenceBroker.select_routes"],
-      "test_refs": ["tests/inference/test_broker.py::test_route_economics_uses_task_calibration_and_configured_tier_prices"],
-      "acceptance_evidence": ["2026-09-06 focused audit: tests/inference passed"],
+      "implementation_refs": [
+        "liki/inference/broker.py::InferenceBroker.select_routes"
+      ],
+      "test_refs": [
+        "tests/inference/test_broker.py::test_route_economics_uses_task_calibration_and_configured_tier_prices"
+      ],
+      "acceptance_evidence": [
+        "2026-09-06 focused audit: tests/inference passed"
+      ],
       "dependencies": [],
       "history": [],
       "cross_cutting": [
@@ -2483,9 +2552,15 @@
       "introduced_by": "LIKI_SRS_v1.4",
       "status": "VERIFIED",
       "criticality": "CRITICAL",
-      "implementation_refs": ["liki/inference/context.py::ContextCompiler"],
-      "test_refs": ["tests/inference/test_broker.py::test_critical_context_rejects_any_unavailable_material_required_evidence"],
-      "acceptance_evidence": ["2026-09-06 focused audit: tests/inference passed"],
+      "implementation_refs": [
+        "liki/inference/context.py::ContextCompiler"
+      ],
+      "test_refs": [
+        "tests/inference/test_broker.py::test_critical_context_rejects_any_unavailable_material_required_evidence"
+      ],
+      "acceptance_evidence": [
+        "2026-09-06 focused audit: tests/inference passed"
+      ],
       "dependencies": [],
       "history": [],
       "cross_cutting": [
@@ -2508,9 +2583,15 @@
       "introduced_by": "LIKI_SRS_v1.4",
       "status": "VERIFIED",
       "criticality": "CRITICAL",
-      "implementation_refs": ["liki/inference/context.py::ContextCompiler"],
-      "test_refs": ["tests/inference/test_broker.py::test_context_omission_egress_tool_expansion_memory_and_review_independence"],
-      "acceptance_evidence": ["2026-09-06 focused audit: tests/inference passed"],
+      "implementation_refs": [
+        "liki/inference/context.py::ContextCompiler"
+      ],
+      "test_refs": [
+        "tests/inference/test_broker.py::test_context_omission_egress_tool_expansion_memory_and_review_independence"
+      ],
+      "acceptance_evidence": [
+        "2026-09-06 focused audit: tests/inference passed"
+      ],
       "dependencies": [],
       "history": [],
       "cross_cutting": [
@@ -3279,6 +3360,31 @@
       "kind": "normative"
     },
     {
+      "requirement_id": "LKI-REQ-aa0a8a81-ebf2-4f14-8603-e4e53f5a8185",
+      "introduced_by": "LIKI_SRS_v1.4",
+      "status": "NOT_STARTED",
+      "criticality": "CRITICAL",
+      "implementation_refs": [],
+      "test_refs": [],
+      "acceptance_evidence": [],
+      "dependencies": [],
+      "history": [],
+      "cross_cutting": [
+        "constitution",
+        "provenance",
+        "authorization",
+        "units",
+        "idempotency"
+      ],
+      "source_anchor": "10.10 Tool Capability Registry and Tool Router",
+      "source_line": 1424,
+      "requirement_text": "Each tool record contains:",
+      "text_hash": "sha256:88b170151cf91ccc38b2bb92a208a0bd8eb6714efc770a1009f962d92028a72f",
+      "owning_module": "inference",
+      "phase": 2,
+      "kind": "normative"
+    },
+    {
       "requirement_id": "LKI-REQ-d0ecc498-4c00-49af-997d-02253d7b2c5d",
       "introduced_by": "LIKI_SRS_v1.4",
       "status": "NOT_STARTED",
@@ -3808,9 +3914,15 @@
       "introduced_by": "LIKI_SRS_v1.4",
       "status": "VERIFIED",
       "criticality": "CRITICAL",
-      "implementation_refs": ["liki/data/validation.py::DatasetValidator"],
-      "test_refs": ["tests/data/test_data_integrity.py::test_validator_fails_closed_for_gap_and_lookahead"],
-      "acceptance_evidence": ["2026-09-06 focused audit: tests/data passed"],
+      "implementation_refs": [
+        "liki/data/validation.py::DatasetValidator"
+      ],
+      "test_refs": [
+        "tests/data/test_data_integrity.py::test_validator_fails_closed_for_gap_and_lookahead"
+      ],
+      "acceptance_evidence": [
+        "2026-09-06 focused audit: tests/data passed"
+      ],
       "dependencies": [],
       "history": [],
       "cross_cutting": [
@@ -3883,9 +3995,15 @@
       "introduced_by": "LIKI_SRS_v1.4",
       "status": "VERIFIED",
       "criticality": "CRITICAL",
-      "implementation_refs": ["liki/data/features.py::FeatureResult"],
-      "test_refs": ["tests/data/test_data_integrity.py::test_bars_and_asof_join_preserve_availability_boundaries"],
-      "acceptance_evidence": ["2026-09-06 focused audit: tests/data passed"],
+      "implementation_refs": [
+        "liki/data/features.py::FeatureResult"
+      ],
+      "test_refs": [
+        "tests/data/test_data_integrity.py::test_bars_and_asof_join_preserve_availability_boundaries"
+      ],
+      "acceptance_evidence": [
+        "2026-09-06 focused audit: tests/data passed"
+      ],
       "dependencies": [],
       "history": [],
       "cross_cutting": [
@@ -3983,9 +4101,15 @@
       "introduced_by": "LIKI_SRS_v1.4",
       "status": "VERIFIED",
       "criticality": "CRITICAL",
-      "implementation_refs": ["liki/data/orderbook.py::OrderBook"],
-      "test_refs": ["tests/data/test_data_integrity.py::test_order_book_requires_continuous_sequence"],
-      "acceptance_evidence": ["2026-09-06 focused audit: tests/data passed"],
+      "implementation_refs": [
+        "liki/data/orderbook.py::OrderBook"
+      ],
+      "test_refs": [
+        "tests/data/test_data_integrity.py::test_order_book_requires_continuous_sequence"
+      ],
+      "acceptance_evidence": [
+        "2026-09-06 focused audit: tests/data passed"
+      ],
       "dependencies": [],
       "history": [],
       "cross_cutting": [
@@ -4258,9 +4382,15 @@
       "introduced_by": "LIKI_SRS_v1.4",
       "status": "VERIFIED",
       "criticality": "CRITICAL",
-      "implementation_refs": ["liki/data/validation.py::DatasetValidator"],
-      "test_refs": ["tests/data/test_adversarial_data.py::test_timestamp_and_gap_checks_fail_closed_without_forward_fill"],
-      "acceptance_evidence": ["2026-09-06 focused audit: tests/data passed"],
+      "implementation_refs": [
+        "liki/data/validation.py::DatasetValidator"
+      ],
+      "test_refs": [
+        "tests/data/test_adversarial_data.py::test_timestamp_and_gap_checks_fail_closed_without_forward_fill"
+      ],
+      "acceptance_evidence": [
+        "2026-09-06 focused audit: tests/data passed"
+      ],
       "dependencies": [],
       "history": [],
       "cross_cutting": [
@@ -4308,9 +4438,15 @@
       "introduced_by": "LIKI_SRS_v1.4",
       "status": "VERIFIED",
       "criticality": "CRITICAL",
-      "implementation_refs": ["liki/data/features.py::build_bars"],
-      "test_refs": ["tests/data/test_data_integrity.py::test_bars_and_asof_join_preserve_availability_boundaries"],
-      "acceptance_evidence": ["2026-09-06 focused audit: tests/data passed"],
+      "implementation_refs": [
+        "liki/data/features.py::build_bars"
+      ],
+      "test_refs": [
+        "tests/data/test_data_integrity.py::test_bars_and_asof_join_preserve_availability_boundaries"
+      ],
+      "acceptance_evidence": [
+        "2026-09-06 focused audit: tests/data passed"
+      ],
       "dependencies": [],
       "history": [],
       "cross_cutting": [
@@ -4333,9 +4469,15 @@
       "introduced_by": "LIKI_SRS_v1.4",
       "status": "VERIFIED",
       "criticality": "CRITICAL",
-      "implementation_refs": ["liki/data/features.py::asof_join"],
-      "test_refs": ["tests/data/test_data_integrity.py::test_bars_and_asof_join_preserve_availability_boundaries"],
-      "acceptance_evidence": ["2026-09-06 focused audit: tests/data passed"],
+      "implementation_refs": [
+        "liki/data/features.py::asof_join"
+      ],
+      "test_refs": [
+        "tests/data/test_data_integrity.py::test_bars_and_asof_join_preserve_availability_boundaries"
+      ],
+      "acceptance_evidence": [
+        "2026-09-06 focused audit: tests/data passed"
+      ],
       "dependencies": [],
       "history": [],
       "cross_cutting": [
@@ -4358,9 +4500,15 @@
       "introduced_by": "LIKI_SRS_v1.4",
       "status": "VERIFIED",
       "criticality": "CRITICAL",
-      "implementation_refs": ["liki/data/features.py::asof_join"],
-      "test_refs": ["tests/data/test_data_integrity.py::test_bars_and_asof_join_preserve_availability_boundaries"],
-      "acceptance_evidence": ["2026-09-06 focused audit: tests/data passed"],
+      "implementation_refs": [
+        "liki/data/features.py::asof_join"
+      ],
+      "test_refs": [
+        "tests/data/test_data_integrity.py::test_bars_and_asof_join_preserve_availability_boundaries"
+      ],
+      "acceptance_evidence": [
+        "2026-09-06 focused audit: tests/data passed"
+      ],
       "dependencies": [],
       "history": [],
       "cross_cutting": [
@@ -4956,13 +5104,41 @@
     {
       "requirement_id": "LKI-REQ-14733bdf-f460-4178-8c17-891df3005cb3",
       "introduced_by": "LIKI_SRS_v1.4",
-      "status": "NOT_STARTED",
+      "status": "ACCEPTED",
       "criticality": "CRITICAL",
-      "implementation_refs": [],
-      "test_refs": [],
-      "acceptance_evidence": [],
+      "implementation_refs": [
+        "liki/early_gate_checks.py",
+        "liki/verification.py",
+        "liki/research_runtime.py",
+        "liki/research.py",
+        "liki/data_service.py",
+        "liki/data/models.py"
+      ],
+      "test_refs": [
+        "tests/test_research_runtime.py::test_cli_campaign_reaches_g4_with_signed_evidence_and_audited_read_models[EMPIRICAL]",
+        "tests/test_research_runtime.py::test_cli_campaign_reaches_g4_with_signed_evidence_and_audited_read_models[MECHANISM]",
+        "tests/test_early_gate_adversarial.py::test_g3_rejects_blank_required_prose",
+        "tests/test_early_gate_adversarial.py::test_empirical_pattern_must_actually_declare_observations"
+      ],
+      "acceptance_evidence": [
+        "docs/acceptance/g5-protocol-2026-09-07.json"
+      ],
       "dependencies": [],
-      "history": [],
+      "history": [
+        {
+          "date": "2026-09-07",
+          "from_status": "NOT_STARTED",
+          "to_status": "ACCEPTED",
+          "evidence": "docs/acceptance/early-gates-2026-09-07.json",
+          "scope": "Atomic early-gate runtime control; not whole-system acceptance"
+        },
+        {
+          "date": "2026-09-07",
+          "status": "ACCEPTED",
+          "evidence": "docs/acceptance/g5-protocol-2026-09-07.json",
+          "reason": "300 executed tests; source hashes unchanged. Renewed early-gate evidence against the G5 verifier revision."
+        }
+      ],
       "cross_cutting": [
         "constitution",
         "provenance",
@@ -4981,13 +5157,35 @@
     {
       "requirement_id": "LKI-REQ-76571605-87ae-4d4c-ac91-06374e90e63e",
       "introduced_by": "LIKI_SRS_v1.4",
-      "status": "NOT_STARTED",
+      "status": "ACCEPTED",
       "criticality": "CRITICAL",
-      "implementation_refs": [],
-      "test_refs": [],
-      "acceptance_evidence": [],
+      "implementation_refs": [
+        "liki/early_gate_checks.py",
+        "liki/verification.py",
+        "liki/research_runtime.py"
+      ],
+      "test_refs": [
+        "tests/test_research_runtime.py::test_cli_campaign_reaches_g4_with_signed_evidence_and_audited_read_models[EMPIRICAL]"
+      ],
+      "acceptance_evidence": [
+        "docs/acceptance/g5-protocol-2026-09-07.json"
+      ],
       "dependencies": [],
-      "history": [],
+      "history": [
+        {
+          "date": "2026-09-07",
+          "from_status": "NOT_STARTED",
+          "to_status": "ACCEPTED",
+          "evidence": "docs/acceptance/early-gates-2026-09-07.json",
+          "scope": "Atomic early-gate runtime control; not whole-system acceptance"
+        },
+        {
+          "date": "2026-09-07",
+          "status": "ACCEPTED",
+          "evidence": "docs/acceptance/g5-protocol-2026-09-07.json",
+          "reason": "300 executed tests; source hashes unchanged. Renewed early-gate evidence against the G5 verifier revision."
+        }
+      ],
       "cross_cutting": [
         "constitution",
         "provenance",
@@ -5006,6 +5204,120 @@
     {
       "requirement_id": "LKI-REQ-0712f0fe-410d-4d0f-a4ea-8a2b64f5474a",
       "introduced_by": "LIKI_SRS_v1.4",
+      "status": "ACCEPTED",
+      "criticality": "CRITICAL",
+      "implementation_refs": [
+        "liki/early_gate_checks.py",
+        "liki/verification.py",
+        "liki/evaluation.py",
+        "liki/research_runtime.py"
+      ],
+      "test_refs": [
+        "tests/test_research_runtime.py::test_fatal_cost_fact_fails_before_backtest_and_cannot_be_downgraded_by_forged_metrics",
+        "tests/test_early_gate_adversarial.py::test_g4_duplicate_contradictory_ids_never_win_by_row_order"
+      ],
+      "acceptance_evidence": [
+        "docs/acceptance/g5-protocol-2026-09-07.json"
+      ],
+      "dependencies": [],
+      "history": [
+        {
+          "date": "2026-09-07",
+          "from_status": "NOT_STARTED",
+          "to_status": "ACCEPTED",
+          "evidence": "docs/acceptance/early-gates-2026-09-07.json",
+          "scope": "Atomic early-gate runtime control; not whole-system acceptance"
+        },
+        {
+          "date": "2026-09-07",
+          "status": "ACCEPTED",
+          "evidence": "docs/acceptance/g5-protocol-2026-09-07.json",
+          "reason": "300 executed tests; source hashes unchanged. Renewed early-gate evidence against the G5 verifier revision."
+        }
+      ],
+      "cross_cutting": [
+        "constitution",
+        "provenance",
+        "authorization",
+        "units",
+        "idempotency"
+      ],
+      "source_anchor": "G4 \u2014 Cheap Economics / Statistical Proxy",
+      "source_line": 2261,
+      "requirement_text": "The gate SHALL prefer killing a candidate for an already-known fatal fact rather than after a full backtest.",
+      "text_hash": "sha256:03f6dc12395493aabfb48e85d9f233cd728bc2c5a286729fb7a0b430a9921731",
+      "owning_module": "evaluation",
+      "phase": 7,
+      "kind": "normative"
+    },
+    {
+      "requirement_id": "LKI-REQ-03b228ea-413a-44bd-9c03-b2ec213eb87c",
+      "introduced_by": "LIKI_SRS_v1.4",
+      "status": "ACCEPTED",
+      "criticality": "CRITICAL",
+      "implementation_refs": [
+        "liki/backtest_gate.py",
+        "liki/finance/backtest.py",
+        "liki/finance/accounting.py",
+        "liki/finance/reference.py",
+        "liki/finance/execution.py",
+        "liki/finance/contracts.py",
+        "liki/finance/types.py",
+        "liki/finance/metrics.py",
+        "liki/verification.py",
+        "liki/research_runtime.py",
+        "liki/evaluation.py",
+        "liki/store.py",
+        "liki/core.py",
+        "liki/data_service.py",
+        "liki/data/models.py",
+        "liki/operations.py",
+        "liki/server.py",
+        "config/finance_models.json",
+        "config/metrics.json"
+      ],
+      "test_refs": [
+        "tests/test_backtest_runtime.py::test_signed_cli_backtest_replays_persisted_data_and_audits_complete_package",
+        "tests/test_backtest_runtime.py::test_invalid_protocol_dependencies_produce_signed_blocked_not_empty_success",
+        "tests/test_backtest_runtime.py::test_g5_rejects_unsigned_caller_reports_and_caller_metrics",
+        "tests/test_backtest_gate.py::test_golden_protocol_has_independent_finances_benchmark_and_complete_outputs",
+        "tests/test_backtest_gate.py::test_missing_cost_never_defaults_to_zero"
+      ],
+      "acceptance_evidence": [
+        "docs/acceptance/g5-protocol-2026-09-07.json"
+      ],
+      "dependencies": [],
+      "history": [
+        {
+          "date": "2026-09-07",
+          "status": "IMPLEMENTED",
+          "evidence": "Supported fully-funded F1 spot G5 protocol integrated; focused financial/traceability tests pass. Whole-checkpoint source-bound acceptance pending."
+        },
+        {
+          "date": "2026-09-07",
+          "status": "ACCEPTED",
+          "evidence": "docs/acceptance/g5-protocol-2026-09-07.json",
+          "reason": "300 executed tests; source hashes unchanged. Supported spot G5 protocol acceptance."
+        }
+      ],
+      "cross_cutting": [
+        "constitution",
+        "provenance",
+        "authorization",
+        "units",
+        "idempotency"
+      ],
+      "source_anchor": "G5 \u2014 Full Protocol Backtest",
+      "source_line": 2267,
+      "requirement_text": "Requirements:\n\n- immutable backtest configuration;\n- versioned code;\n- versioned data;\n- deterministic seed policy;\n- no silent missing-cost fallback;\n- benchmark strategy;\n- complete trade/order/event ledger;\n- gross and net performance;\n- exposure and turnover;\n- drawdown/tail statistics;\n- scenario slices;\n- reproducible artifact package.",
+      "text_hash": "sha256:dd797e810862997ff43ea1cd5397203aab6c4dfae34a6136c344f0765c2145db",
+      "owning_module": "evaluation",
+      "phase": 7,
+      "kind": "normative"
+    },
+    {
+      "requirement_id": "LKI-REQ-5ee003a8-c9b4-482d-81fd-8e001ea7a773",
+      "introduced_by": "LIKI_SRS_v1.4",
       "status": "NOT_STARTED",
       "criticality": "CRITICAL",
       "implementation_refs": [],
@@ -5020,10 +5332,10 @@
         "units",
         "idempotency"
       ],
-      "source_anchor": "G4 \u2014 Cheap Economics / Statistical Proxy",
-      "source_line": 2261,
-      "requirement_text": "The gate SHALL prefer killing a candidate for an already-known fatal fact rather than after a full backtest.",
-      "text_hash": "sha256:03f6dc12395493aabfb48e85d9f233cd728bc2c5a286729fb7a0b430a9921731",
+      "source_anchor": "G6 \u2014 Costs, Slippage, Liquidity, and Capacity",
+      "source_line": 2288,
+      "requirement_text": "Must evaluate relevant:\n\n- maker/taker fees;\n- funding;\n- borrow/financing;\n- spread;\n- slippage;\n- market impact;\n- participation;\n- queue/fill uncertainty;\n- minimum notional;\n- tick/lot constraints;\n- liquidation mechanics;\n- venue limits;\n- latency;\n- rejects;\n- outages/staleness.",
+      "text_hash": "sha256:104a3b811df643c320f5991bb775e41dd1bdf9d67c718d486cf6a9a8703c5526",
       "owning_module": "evaluation",
       "phase": 7,
       "kind": "normative"
@@ -5156,13 +5468,37 @@
     {
       "requirement_id": "LKI-REQ-04699e76-f8a7-4be3-a5cc-83d47ce439e3",
       "introduced_by": "LIKI_SRS_v1.4",
-      "status": "NOT_STARTED",
+      "status": "ACCEPTED",
       "criticality": "CRITICAL",
-      "implementation_refs": [],
-      "test_refs": [],
-      "acceptance_evidence": [],
+      "implementation_refs": [
+        "liki/evaluation.py",
+        "liki/verification.py",
+        "liki/research_runtime.py",
+        "liki/store.py"
+      ],
+      "test_refs": [
+        "tests/test_research_runtime.py::test_blocked_dependency_reentry_replays_from_g0_without_rewriting_history",
+        "tests/test_research_runtime.py::test_old_signed_report_cannot_be_reused_after_snapshot_round_trip"
+      ],
+      "acceptance_evidence": [
+        "docs/acceptance/g5-protocol-2026-09-07.json"
+      ],
       "dependencies": [],
-      "history": [],
+      "history": [
+        {
+          "date": "2026-09-07",
+          "from_status": "NOT_STARTED",
+          "to_status": "ACCEPTED",
+          "evidence": "docs/acceptance/early-gates-2026-09-07.json",
+          "scope": "Atomic early-gate runtime control; not whole-system acceptance"
+        },
+        {
+          "date": "2026-09-07",
+          "status": "ACCEPTED",
+          "evidence": "docs/acceptance/g5-protocol-2026-09-07.json",
+          "reason": "300 executed tests; source hashes unchanged. Renewed early-gate evidence against the G5 verifier revision."
+        }
+      ],
       "cross_cutting": [
         "constitution",
         "provenance",
@@ -5206,13 +5542,37 @@
     {
       "requirement_id": "LKI-REQ-5d459405-5537-4e94-9085-b11fe5270186",
       "introduced_by": "LIKI_SRS_v1.4",
-      "status": "NOT_STARTED",
+      "status": "ACCEPTED",
       "criticality": "CRITICAL",
-      "implementation_refs": [],
-      "test_refs": [],
-      "acceptance_evidence": [],
+      "implementation_refs": [
+        "liki/evaluation.py",
+        "liki/early_gate_checks.py",
+        "liki/operations.py"
+      ],
+      "test_refs": [
+        "tests/test_research_runtime.py::test_blocked_dependency_reentry_replays_from_g0_without_rewriting_history",
+        "tests/test_research_runtime.py::test_g4_cannot_lower_or_underfill_the_predeclared_g3_test",
+        "tests/test_early_gate_checks.py::test_g1_uses_candidate_hash_and_trial_cache_from_authenticated_database"
+      ],
+      "acceptance_evidence": [
+        "docs/acceptance/g5-protocol-2026-09-07.json"
+      ],
       "dependencies": [],
-      "history": [],
+      "history": [
+        {
+          "date": "2026-09-07",
+          "from_status": "NOT_STARTED",
+          "to_status": "ACCEPTED",
+          "evidence": "docs/acceptance/early-gates-2026-09-07.json",
+          "scope": "Atomic early-gate runtime control; not whole-system acceptance"
+        },
+        {
+          "date": "2026-09-07",
+          "status": "ACCEPTED",
+          "evidence": "docs/acceptance/g5-protocol-2026-09-07.json",
+          "reason": "300 executed tests; source hashes unchanged. Renewed early-gate evidence against the G5 verifier revision."
+        }
+      ],
       "cross_cutting": [
         "constitution",
         "provenance",
@@ -5231,13 +5591,36 @@
     {
       "requirement_id": "LKI-REQ-36413358-b7b1-4073-ac8d-61c08b2a0cd5",
       "introduced_by": "LIKI_SRS_v1.4",
-      "status": "NOT_STARTED",
+      "status": "ACCEPTED",
       "criticality": "CRITICAL",
-      "implementation_refs": [],
-      "test_refs": [],
-      "acceptance_evidence": [],
+      "implementation_refs": [
+        "liki/evaluation.py",
+        "liki/operations.py",
+        "liki/server.py"
+      ],
+      "test_refs": [
+        "tests/test_research_runtime.py::test_blocked_dependency_reentry_replays_from_g0_without_rewriting_history",
+        "tests/test_research_runtime.py::test_fatal_cost_fact_fails_before_backtest_and_cannot_be_downgraded_by_forged_metrics"
+      ],
+      "acceptance_evidence": [
+        "docs/acceptance/g5-protocol-2026-09-07.json"
+      ],
       "dependencies": [],
-      "history": [],
+      "history": [
+        {
+          "date": "2026-09-07",
+          "from_status": "NOT_STARTED",
+          "to_status": "ACCEPTED",
+          "evidence": "docs/acceptance/early-gates-2026-09-07.json",
+          "scope": "Atomic early-gate runtime control; not whole-system acceptance"
+        },
+        {
+          "date": "2026-09-07",
+          "status": "ACCEPTED",
+          "evidence": "docs/acceptance/g5-protocol-2026-09-07.json",
+          "reason": "300 executed tests; source hashes unchanged. Renewed early-gate evidence against the G5 verifier revision."
+        }
+      ],
       "cross_cutting": [
         "constitution",
         "provenance",
@@ -5458,9 +5841,15 @@
       "introduced_by": "LIKI_SRS_v1.4",
       "status": "VERIFIED",
       "criticality": "CRITICAL",
-      "implementation_refs": ["liki/statistics/validation.py::purged_kfold"],
-      "test_refs": ["tests/statistics/test_adversarial_reference.py::test_purge_removes_overlapping_labels_and_embargo_exactly_after_test_window"],
-      "acceptance_evidence": ["2026-09-06 focused audit: tests/statistics passed"],
+      "implementation_refs": [
+        "liki/statistics/validation.py::purged_kfold"
+      ],
+      "test_refs": [
+        "tests/statistics/test_adversarial_reference.py::test_purge_removes_overlapping_labels_and_embargo_exactly_after_test_window"
+      ],
+      "acceptance_evidence": [
+        "2026-09-06 focused audit: tests/statistics passed"
+      ],
       "dependencies": [],
       "history": [],
       "cross_cutting": [
@@ -5533,9 +5922,15 @@
       "introduced_by": "LIKI_SRS_v1.4",
       "status": "VERIFIED",
       "criticality": "CRITICAL",
-      "implementation_refs": ["liki/statistics/resampling.py::stationary_bootstrap_matrix"],
-      "test_refs": ["tests/statistics/test_adversarial_reference.py::test_dependence_bootstrap_uses_one_shared_index_path_for_every_strategy"],
-      "acceptance_evidence": ["2026-09-06 focused audit: tests/statistics passed"],
+      "implementation_refs": [
+        "liki/statistics/resampling.py::stationary_bootstrap_matrix"
+      ],
+      "test_refs": [
+        "tests/statistics/test_adversarial_reference.py::test_dependence_bootstrap_uses_one_shared_index_path_for_every_strategy"
+      ],
+      "acceptance_evidence": [
+        "2026-09-06 focused audit: tests/statistics passed"
+      ],
       "dependencies": [],
       "history": [],
       "cross_cutting": [
@@ -5833,9 +6228,16 @@
       "introduced_by": "LIKI_SRS_v1.4",
       "status": "VERIFIED",
       "criticality": "CRITICAL",
-      "implementation_refs": ["liki/statistics/validation.py::sequential_z_test"],
-      "test_refs": ["tests/statistics/test_validation.py::test_sequential_z_test_requires_predeclared_design", "tests/statistics/test_adversarial_reference.py::test_sequential_interface_rejects_unscheduled_or_nonterminal_claims"],
-      "acceptance_evidence": ["2026-09-06 focused audit: tests/statistics passed"],
+      "implementation_refs": [
+        "liki/statistics/validation.py::sequential_z_test"
+      ],
+      "test_refs": [
+        "tests/statistics/test_validation.py::test_sequential_z_test_requires_predeclared_design",
+        "tests/statistics/test_adversarial_reference.py::test_sequential_interface_rejects_unscheduled_or_nonterminal_claims"
+      ],
+      "acceptance_evidence": [
+        "2026-09-06 focused audit: tests/statistics passed"
+      ],
       "dependencies": [],
       "history": [],
       "cross_cutting": [
@@ -6181,13 +6583,50 @@
     {
       "requirement_id": "LKI-REQ-48cb8404-8a40-44d6-88bd-b43dc1a5499d",
       "introduced_by": "LIKI_SRS_v1.4",
-      "status": "NOT_STARTED",
+      "status": "ACCEPTED",
       "criticality": "CRITICAL",
-      "implementation_refs": [],
-      "test_refs": [],
-      "acceptance_evidence": [],
+      "implementation_refs": [
+        "liki/backtest_gate.py",
+        "liki/finance/backtest.py",
+        "liki/finance/accounting.py",
+        "liki/finance/reference.py",
+        "liki/finance/execution.py",
+        "liki/finance/contracts.py",
+        "liki/finance/types.py",
+        "liki/finance/metrics.py",
+        "liki/verification.py",
+        "liki/research_runtime.py",
+        "liki/evaluation.py",
+        "liki/store.py",
+        "liki/core.py",
+        "liki/data_service.py",
+        "liki/data/models.py",
+        "liki/operations.py",
+        "liki/server.py",
+        "config/finance_models.json",
+        "config/metrics.json"
+      ],
+      "test_refs": [
+        "tests/test_backtest_runtime.py::test_signed_cli_backtest_replays_persisted_data_and_audits_complete_package",
+        "tests/test_backtest_gate.py::test_protocol_replay_is_byte_identical_across_ambient_decimal_contexts"
+      ],
+      "acceptance_evidence": [
+        "docs/acceptance/g5-protocol-2026-09-07.json"
+      ],
       "dependencies": [],
-      "history": [],
+      "history": [
+        {
+          "date": "2026-09-07",
+          "status": "IMPLEMENTED",
+          "evidence": "Supported fully-funded F1 spot G5 protocol integrated; focused financial/traceability tests pass. Whole-checkpoint source-bound acceptance pending."
+        },
+        {
+          "date": "2026-09-07",
+          "status": "ACCEPTED",
+          "evidence": "docs/acceptance/g5-protocol-2026-09-07.json",
+          "reason": "300 executed tests; source hashes unchanged. Supported spot G5 protocol acceptance."
+        }
+      ],
       "cross_cutting": [
         "constitution",
         "provenance",
@@ -6199,6 +6638,71 @@
       "source_line": 2945,
       "requirement_text": "the backtest MUST reproduce identical deterministic outputs, except explicitly stochastic simulations whose seeds/distributions are recorded.",
       "text_hash": "sha256:19342b416907bdf44f5a72df0c848eb7f0ca24a7590e93c12c16a7c66dff4532",
+      "owning_module": "finance",
+      "phase": 6,
+      "kind": "normative"
+    },
+    {
+      "requirement_id": "LKI-REQ-f7726b90-9dff-4a26-b500-df32ca5c2f48",
+      "introduced_by": "LIKI_SRS_v1.4",
+      "status": "ACCEPTED",
+      "criticality": "CRITICAL",
+      "implementation_refs": [
+        "liki/backtest_gate.py",
+        "liki/finance/backtest.py",
+        "liki/finance/accounting.py",
+        "liki/finance/reference.py",
+        "liki/finance/execution.py",
+        "liki/finance/contracts.py",
+        "liki/finance/types.py",
+        "liki/finance/metrics.py",
+        "liki/verification.py",
+        "liki/research_runtime.py",
+        "liki/evaluation.py",
+        "liki/store.py",
+        "liki/core.py",
+        "liki/data_service.py",
+        "liki/data/models.py",
+        "liki/operations.py",
+        "liki/server.py",
+        "config/finance_models.json",
+        "config/metrics.json"
+      ],
+      "test_refs": [
+        "tests/test_backtest_runtime.py::test_signed_cli_backtest_replays_persisted_data_and_audits_complete_package",
+        "tests/test_backtest_gate.py::test_golden_protocol_has_independent_finances_benchmark_and_complete_outputs",
+        "tests/test_backtest_gate.py::test_predeclared_regime_windows_partition_pnl_without_resetting_positions",
+        "tests/finance/test_backtest_adversarial.py::test_deferred_partial_orders_share_each_observations_participation_budget",
+        "tests/finance/test_backtest_adversarial.py::test_order_preserves_requested_and_normalized_quantity_with_consistent_filled_state"
+      ],
+      "acceptance_evidence": [
+        "docs/acceptance/g5-protocol-2026-09-07.json"
+      ],
+      "dependencies": [],
+      "history": [
+        {
+          "date": "2026-09-07",
+          "status": "IMPLEMENTED",
+          "evidence": "Supported fully-funded F1 spot G5 protocol integrated; focused financial/traceability tests pass. Whole-checkpoint source-bound acceptance pending."
+        },
+        {
+          "date": "2026-09-07",
+          "status": "ACCEPTED",
+          "evidence": "docs/acceptance/g5-protocol-2026-09-07.json",
+          "reason": "300 executed tests; source hashes unchanged. Supported spot G5 protocol acceptance."
+        }
+      ],
+      "cross_cutting": [
+        "constitution",
+        "provenance",
+        "authorization",
+        "units",
+        "idempotency"
+      ],
+      "source_anchor": "17.2 Required outputs",
+      "source_line": 2949,
+      "requirement_text": "Every full backtest artifact includes:\n\n- full order/trade ledger;\n- positions over time;\n- cash/equity curve;\n- gross PnL;\n- every cost component;\n- net PnL;\n- exposure;\n- leverage;\n- turnover;\n- drawdown;\n- tail losses;\n- holding-time distribution;\n- per-market/per-regime slices;\n- capacity estimates;\n- rejection/error events;\n- exact config and hashes.",
+      "text_hash": "sha256:31476be02ffb46c83ff5023b26795dc1ba603ebc4c240784e30b768d2b19fd99",
       "owning_module": "finance",
       "phase": 6,
       "kind": "normative"
@@ -6304,6 +6808,31 @@
       "kind": "normative"
     },
     {
+      "requirement_id": "LKI-REQ-d46b246d-37c9-45d5-a9fc-bc5b3494065d",
+      "introduced_by": "LIKI_SRS_v1.4",
+      "status": "NOT_STARTED",
+      "criticality": "CRITICAL",
+      "implementation_refs": [],
+      "test_refs": [],
+      "acceptance_evidence": [],
+      "dependencies": [],
+      "history": [],
+      "cross_cutting": [
+        "constitution",
+        "provenance",
+        "authorization",
+        "units",
+        "idempotency"
+      ],
+      "source_anchor": "17.6 Reproducibility tiers",
+      "source_line": 3005,
+      "requirement_text": "Every experiment declares one reproducibility tier:\n\n- `BITWISE`: expected identical bytes/results; preferred for Decimal accounting and deterministic backtest state machines;\n- `NUMERIC_TOLERANCE`: floating-point result reproducible within predeclared tolerance;\n- `STATISTICAL`: stochastic/ML process reproducible in distribution/declared metric tolerance across repeated seeded runs.",
+      "text_hash": "sha256:7c8ebf7a64cd1cc959195dd062f9f7e88b74005bf073712e7415d8ca129ac423",
+      "owning_module": "finance",
+      "phase": 6,
+      "kind": "normative"
+    },
+    {
       "requirement_id": "LKI-REQ-049929a8-2f4c-4a6c-a105-48f2100cc3cd",
       "introduced_by": "LIKI_SRS_v1.4",
       "status": "NOT_STARTED",
@@ -6383,9 +6912,16 @@
       "introduced_by": "LIKI_SRS_v1.4",
       "status": "VERIFIED",
       "criticality": "CRITICAL",
-      "implementation_refs": ["liki/finance/metrics.py::FeeSchedule", "liki/finance/metrics.py::select_fee"],
-      "test_refs": ["tests/finance/test_backtest_contracts.py::test_effective_dates_and_fee_tier_selection_fail_closed"],
-      "acceptance_evidence": ["2026-09-06 focused audit: tests/finance passed"],
+      "implementation_refs": [
+        "liki/finance/metrics.py::FeeSchedule",
+        "liki/finance/metrics.py::select_fee"
+      ],
+      "test_refs": [
+        "tests/finance/test_backtest_contracts.py::test_effective_dates_and_fee_tier_selection_fail_closed"
+      ],
+      "acceptance_evidence": [
+        "2026-09-06 focused audit: tests/finance passed"
+      ],
       "dependencies": [],
       "history": [],
       "cross_cutting": [
@@ -6558,9 +7094,15 @@
       "introduced_by": "LIKI_SRS_v1.4",
       "status": "VERIFIED",
       "criticality": "CRITICAL",
-      "implementation_refs": ["liki/finance/metrics.py::TransactionCostAnalysis"],
-      "test_refs": ["tests/finance/test_backtest_contracts.py::test_fx_availability_and_tca_residual_are_explicit"],
-      "acceptance_evidence": ["2026-09-06 focused audit: tests/finance passed"],
+      "implementation_refs": [
+        "liki/finance/metrics.py::TransactionCostAnalysis"
+      ],
+      "test_refs": [
+        "tests/finance/test_backtest_contracts.py::test_fx_availability_and_tca_residual_are_explicit"
+      ],
+      "acceptance_evidence": [
+        "2026-09-06 focused audit: tests/finance passed"
+      ],
       "dependencies": [],
       "history": [],
       "cross_cutting": [
@@ -6583,9 +7125,15 @@
       "introduced_by": "LIKI_SRS_v1.4",
       "status": "VERIFIED",
       "criticality": "CRITICAL",
-      "implementation_refs": ["liki/finance/accounting.py::Ledger"],
-      "test_refs": ["tests/finance/test_accounting.py::test_hand_calculated_golden_ledger_and_cost_nonoverlap"],
-      "acceptance_evidence": ["2026-09-06 focused audit: tests/finance passed"],
+      "implementation_refs": [
+        "liki/finance/accounting.py::Ledger"
+      ],
+      "test_refs": [
+        "tests/finance/test_accounting.py::test_hand_calculated_golden_ledger_and_cost_nonoverlap"
+      ],
+      "acceptance_evidence": [
+        "2026-09-06 focused audit: tests/finance passed"
+      ],
       "dependencies": [],
       "history": [],
       "cross_cutting": [
@@ -6633,9 +7181,15 @@
       "introduced_by": "LIKI_SRS_v1.4",
       "status": "VERIFIED",
       "criticality": "CRITICAL",
-      "implementation_refs": ["liki/finance/execution.py::OrderRecord"],
-      "test_refs": ["tests/finance/test_contracts_execution.py::test_lifecycle_timeout_reconciliation_and_partial_fill_invariants"],
-      "acceptance_evidence": ["2026-09-06 focused audit: tests/finance passed"],
+      "implementation_refs": [
+        "liki/finance/execution.py::OrderRecord"
+      ],
+      "test_refs": [
+        "tests/finance/test_contracts_execution.py::test_lifecycle_timeout_reconciliation_and_partial_fill_invariants"
+      ],
+      "acceptance_evidence": [
+        "2026-09-06 focused audit: tests/finance passed"
+      ],
       "dependencies": [],
       "history": [],
       "cross_cutting": [
@@ -6683,9 +7237,15 @@
       "introduced_by": "LIKI_SRS_v1.4",
       "status": "VERIFIED",
       "criticality": "CRITICAL",
-      "implementation_refs": ["liki/finance/contracts.py::InstrumentSpec"],
-      "test_refs": ["tests/finance/test_contracts_execution.py::test_venue_rounding_pretrade_and_paper_only_envelope"],
-      "acceptance_evidence": ["2026-09-06 focused audit: tests/finance passed"],
+      "implementation_refs": [
+        "liki/finance/contracts.py::InstrumentSpec"
+      ],
+      "test_refs": [
+        "tests/finance/test_contracts_execution.py::test_venue_rounding_pretrade_and_paper_only_envelope"
+      ],
+      "acceptance_evidence": [
+        "2026-09-06 focused audit: tests/finance passed"
+      ],
       "dependencies": [],
       "history": [],
       "cross_cutting": [
@@ -6933,9 +7493,16 @@
       "introduced_by": "LIKI_SRS_v1.4",
       "status": "VERIFIED",
       "criticality": "CRITICAL",
-      "implementation_refs": ["liki/finance/contracts.py::effective_at", "liki/finance/metrics.py::select_fee"],
-      "test_refs": ["tests/finance/test_backtest_contracts.py::test_effective_dates_and_fee_tier_selection_fail_closed"],
-      "acceptance_evidence": ["2026-09-06 focused audit: tests/finance passed"],
+      "implementation_refs": [
+        "liki/finance/contracts.py::effective_at",
+        "liki/finance/metrics.py::select_fee"
+      ],
+      "test_refs": [
+        "tests/finance/test_backtest_contracts.py::test_effective_dates_and_fee_tier_selection_fail_closed"
+      ],
+      "acceptance_evidence": [
+        "2026-09-06 focused audit: tests/finance passed"
+      ],
       "dependencies": [],
       "history": [],
       "cross_cutting": [
@@ -8208,9 +8775,15 @@
       "introduced_by": "LIKI_SRS_v1.4",
       "status": "VERIFIED",
       "criticality": "CRITICAL",
-      "implementation_refs": ["liki/governance/domain.py::build_blind_packet"],
-      "test_refs": ["tests/governance/test_domain.py::test_lawful_green_promotion_waits_for_delivered_24_hour_window"],
-      "acceptance_evidence": ["2026-09-06 focused audit: tests/governance passed"],
+      "implementation_refs": [
+        "liki/governance/domain.py::build_blind_packet"
+      ],
+      "test_refs": [
+        "tests/governance/test_domain.py::test_lawful_green_promotion_waits_for_delivered_24_hour_window"
+      ],
+      "acceptance_evidence": [
+        "2026-09-06 focused audit: tests/governance passed"
+      ],
       "dependencies": [],
       "history": [],
       "cross_cutting": [
@@ -8308,9 +8881,16 @@
       "introduced_by": "LIKI_SRS_v1.4",
       "status": "VERIFIED",
       "criticality": "CRITICAL",
-      "implementation_refs": ["config/governance_policy.json", "liki/governance/policy.py::GovernancePolicy.floor_for"],
-      "test_refs": ["tests/governance/test_domain.py::test_protected_paths_and_real_money_cannot_be_downgraded_or_auto_promoted"],
-      "acceptance_evidence": ["2026-09-06 focused audit: tests/governance passed"],
+      "implementation_refs": [
+        "config/governance_policy.json",
+        "liki/governance/policy.py::GovernancePolicy.floor_for"
+      ],
+      "test_refs": [
+        "tests/governance/test_domain.py::test_protected_paths_and_real_money_cannot_be_downgraded_or_auto_promoted"
+      ],
+      "acceptance_evidence": [
+        "2026-09-06 focused audit: tests/governance passed"
+      ],
       "dependencies": [],
       "history": [],
       "cross_cutting": [
@@ -8358,9 +8938,15 @@
       "introduced_by": "LIKI_SRS_v1.4",
       "status": "VERIFIED",
       "criticality": "CRITICAL",
-      "implementation_refs": ["liki/governance/domain.py::ChangeSet"],
-      "test_refs": ["tests/governance/test_domain.py::test_amber_needs_adversarial_review_and_combined_change_set_needs_test_evidence"],
-      "acceptance_evidence": ["2026-09-06 focused audit: tests/governance passed"],
+      "implementation_refs": [
+        "liki/governance/domain.py::ChangeSet"
+      ],
+      "test_refs": [
+        "tests/governance/test_domain.py::test_amber_needs_adversarial_review_and_combined_change_set_needs_test_evidence"
+      ],
+      "acceptance_evidence": [
+        "2026-09-06 focused audit: tests/governance passed"
+      ],
       "dependencies": [],
       "history": [],
       "cross_cutting": [
@@ -8483,9 +9069,16 @@
       "introduced_by": "LIKI_SRS_v1.4",
       "status": "VERIFIED",
       "criticality": "CRITICAL",
-      "implementation_refs": ["liki/governance/domain.py::ApprovalSnapshot", "liki/governance/domain.py::mark_stale_if_snapshot_changed"],
-      "test_refs": ["tests/governance/test_domain.py::test_review_padding_unresolved_objections_incidents_and_stale_snapshots_fail_closed"],
-      "acceptance_evidence": ["2026-09-06 focused audit: tests/governance passed"],
+      "implementation_refs": [
+        "liki/governance/domain.py::ApprovalSnapshot",
+        "liki/governance/domain.py::mark_stale_if_snapshot_changed"
+      ],
+      "test_refs": [
+        "tests/governance/test_domain.py::test_review_padding_unresolved_objections_incidents_and_stale_snapshots_fail_closed"
+      ],
+      "acceptance_evidence": [
+        "2026-09-06 focused audit: tests/governance passed"
+      ],
       "dependencies": [],
       "history": [],
       "cross_cutting": [
@@ -8508,9 +9101,15 @@
       "introduced_by": "LIKI_SRS_v1.4",
       "status": "VERIFIED",
       "criticality": "CRITICAL",
-      "implementation_refs": ["liki/governance/domain.py::evaluate_promotion"],
-      "test_refs": ["tests/governance/test_domain.py::test_review_padding_unresolved_objections_incidents_and_stale_snapshots_fail_closed"],
-      "acceptance_evidence": ["2026-09-06 focused audit: tests/governance passed"],
+      "implementation_refs": [
+        "liki/governance/domain.py::evaluate_promotion"
+      ],
+      "test_refs": [
+        "tests/governance/test_domain.py::test_review_padding_unresolved_objections_incidents_and_stale_snapshots_fail_closed"
+      ],
+      "acceptance_evidence": [
+        "2026-09-06 focused audit: tests/governance passed"
+      ],
       "dependencies": [],
       "history": [],
       "cross_cutting": [
@@ -8549,6 +9148,31 @@
       "source_line": 4105,
       "requirement_text": "Every tunable number MUST live in a versioned policy registry.",
       "text_hash": "sha256:2339ecec47408fb0021867ebada1bc19f24b7ef2d6f518bd7be64f0d72dc0895",
+      "owning_module": "governance",
+      "phase": 9,
+      "kind": "normative"
+    },
+    {
+      "requirement_id": "LKI-REQ-29dfd32c-fe48-41f2-a364-134121b329b3",
+      "introduced_by": "LIKI_SRS_v1.4",
+      "status": "NOT_STARTED",
+      "criticality": "CRITICAL",
+      "implementation_refs": [],
+      "test_refs": [],
+      "acceptance_evidence": [],
+      "dependencies": [],
+      "history": [],
+      "cross_cutting": [
+        "constitution",
+        "provenance",
+        "authorization",
+        "units",
+        "idempotency"
+      ],
+      "source_anchor": "24. Policy Registry and numeric governance",
+      "source_line": 4107,
+      "requirement_text": "Each numeric policy includes:\n\n- unit;\n- default;\n- safe bounds;\n- origin;\n- rationale;\n- last calibration;\n- proposal ID;\n- monitoring metric;\n- rollback condition.",
+      "text_hash": "sha256:ad71b89bb77b2a6afd455d76bf1ab1f6249eabcded662b5fb38960d6c258fc12",
       "owning_module": "governance",
       "phase": 9,
       "kind": "normative"
@@ -9808,9 +10432,15 @@
       "introduced_by": "LIKI_SRS_v1.4",
       "status": "VERIFIED",
       "criticality": "CRITICAL",
-      "implementation_refs": ["liki/governance/domain.py::find_common_dependencies"],
-      "test_refs": ["tests/governance/test_domain.py::test_incident_and_model_risk_require_evidence_and_independence"],
-      "acceptance_evidence": ["2026-09-06 focused audit: tests/governance passed"],
+      "implementation_refs": [
+        "liki/governance/domain.py::find_common_dependencies"
+      ],
+      "test_refs": [
+        "tests/governance/test_domain.py::test_incident_and_model_risk_require_evidence_and_independence"
+      ],
+      "acceptance_evidence": [
+        "2026-09-06 focused audit: tests/governance passed"
+      ],
       "dependencies": [],
       "history": [],
       "cross_cutting": [
@@ -10483,9 +11113,15 @@
       "introduced_by": "LIKI_SRS_v1.4",
       "status": "VERIFIED",
       "criticality": "CRITICAL",
-      "implementation_refs": ["liki/inference/context.py::ContextCompiler"],
-      "test_refs": ["tests/inference/test_broker.py::test_context_omission_egress_tool_expansion_memory_and_review_independence"],
-      "acceptance_evidence": ["2026-09-06 focused audit: tests/inference passed"],
+      "implementation_refs": [
+        "liki/inference/context.py::ContextCompiler"
+      ],
+      "test_refs": [
+        "tests/inference/test_broker.py::test_context_omission_egress_tool_expansion_memory_and_review_independence"
+      ],
+      "acceptance_evidence": [
+        "2026-09-06 focused audit: tests/inference passed"
+      ],
       "dependencies": [],
       "history": [],
       "cross_cutting": [
@@ -10508,9 +11144,15 @@
       "introduced_by": "LIKI_SRS_v1.4",
       "status": "VERIFIED",
       "criticality": "CRITICAL",
-      "implementation_refs": ["liki/inference/context.py::ContextCompiler"],
-      "test_refs": ["tests/inference/test_hardening.py::test_secret_and_unlicensed_memory_never_enter_context"],
-      "acceptance_evidence": ["2026-09-06 focused audit: tests/inference passed"],
+      "implementation_refs": [
+        "liki/inference/context.py::ContextCompiler"
+      ],
+      "test_refs": [
+        "tests/inference/test_hardening.py::test_secret_and_unlicensed_memory_never_enter_context"
+      ],
+      "acceptance_evidence": [
+        "2026-09-06 focused audit: tests/inference passed"
+      ],
       "dependencies": [],
       "history": [],
       "cross_cutting": [
@@ -10683,9 +11325,16 @@
       "introduced_by": "LIKI_SRS_v1.4",
       "status": "VERIFIED",
       "criticality": "CRITICAL",
-      "implementation_refs": ["liki/store.py::Store.transaction", "liki/governance_service.py::GovernanceService.propose"],
-      "test_refs": ["tests/test_governance_service.py::test_service_rejects_forged_producer_and_owner_veto_is_durable"],
-      "acceptance_evidence": ["2026-09-06 focused audit: tests/test_governance_service.py passed"],
+      "implementation_refs": [
+        "liki/store.py::Store.transaction",
+        "liki/governance_service.py::GovernanceService.propose"
+      ],
+      "test_refs": [
+        "tests/test_governance_service.py::test_service_rejects_forged_producer_and_owner_veto_is_durable"
+      ],
+      "acceptance_evidence": [
+        "2026-09-06 focused audit: tests/test_governance_service.py passed"
+      ],
       "dependencies": [],
       "history": [],
       "cross_cutting": [
@@ -10708,9 +11357,16 @@
       "introduced_by": "LIKI_SRS_v1.4",
       "status": "VERIFIED",
       "criticality": "CRITICAL",
-      "implementation_refs": ["liki/store.py::Store.put_artifact", "liki/governance_service.py::GovernanceService._artifact"],
-      "test_refs": ["tests/test_governance_service.py::test_service_rejects_forged_producer_and_owner_veto_is_durable"],
-      "acceptance_evidence": ["2026-09-06 focused audit: tests/test_governance_service.py passed"],
+      "implementation_refs": [
+        "liki/store.py::Store.put_artifact",
+        "liki/governance_service.py::GovernanceService._artifact"
+      ],
+      "test_refs": [
+        "tests/test_governance_service.py::test_service_rejects_forged_producer_and_owner_veto_is_durable"
+      ],
+      "acceptance_evidence": [
+        "2026-09-06 focused audit: tests/test_governance_service.py passed"
+      ],
       "dependencies": [],
       "history": [],
       "cross_cutting": [
@@ -11404,6 +12060,31 @@
       "kind": "normative"
     },
     {
+      "requirement_id": "LKI-REQ-e45eba75-3e7e-4404-bb68-56a06a39c222",
+      "introduced_by": "LIKI_SRS_v1.4",
+      "status": "NOT_STARTED",
+      "criticality": "CRITICAL",
+      "implementation_refs": [],
+      "test_refs": [],
+      "acceptance_evidence": [],
+      "dependencies": [],
+      "history": [],
+      "cross_cutting": [
+        "constitution",
+        "provenance",
+        "authorization",
+        "units",
+        "idempotency"
+      ],
+      "source_anchor": "33.2 Inference Broker tests",
+      "source_line": 5788,
+      "requirement_text": "Must test:\n\n- 80% synthetic provider success;\n- correlated provider outage;\n- route fallback;\n- fixed-price vs token-price optimization;\n- truncated response;\n- schema repair;\n- timeout after actual success;\n- idempotency;\n- circuit breaker;\n- task hibernation/revival;\n- hedged critical request deduplication;\n- provider billing-plan reconciliation, including billable failed calls.",
+      "text_hash": "sha256:5bbd2a83d130487a243ed1dbb63245d799562560abb24f4c8b47382bfd40a7d8",
+      "owning_module": "acceptance",
+      "phase": 12,
+      "kind": "normative"
+    },
+    {
       "requirement_id": "LKI-REQ-4ccea265-7fe7-4bae-8eee-bdec6df68936",
       "introduced_by": "LIKI_SRS_v1.4",
       "status": "NOT_STARTED",
@@ -11424,6 +12105,31 @@
       "source_line": 5860,
       "requirement_text": "Faults SHALL include:\n\n- kill inference worker;\n- kill backtest worker;\n- restart DB;\n- duplicate event;\n- freeze heartbeat;\n- provider outage;\n- data feed stale;\n- clock shift;\n- disk full;\n- corrupt temporary artifact;\n- network partition;\n- delayed provider response;\n- provider returns invalid JSON;\n- evaluator returns conflicting totals.",
       "text_hash": "sha256:2d1a9ddb7296fa290e266999259df03fb58b8bc9387b2ecf2e1058e1f7741999",
+      "owning_module": "acceptance",
+      "phase": 12,
+      "kind": "normative"
+    },
+    {
+      "requirement_id": "LKI-REQ-325c0540-ecd9-42d4-aa59-c819d3aa1a5a",
+      "introduced_by": "LIKI_SRS_v1.4",
+      "status": "NOT_STARTED",
+      "criticality": "CRITICAL",
+      "implementation_refs": [],
+      "test_refs": [],
+      "acceptance_evidence": [],
+      "dependencies": [],
+      "history": [],
+      "cross_cutting": [
+        "constitution",
+        "provenance",
+        "authorization",
+        "units",
+        "idempotency"
+      ],
+      "source_anchor": "33.9 Portfolio/risk tests",
+      "source_line": 5883,
+      "requirement_text": "Must include:\n\n- synchronized multi-strategy portfolio replay;\n- cross-strategy netting;\n- common-liquidity capacity collision;\n- covariance singularity/noise case;\n- correlation-to-one stress;\n- stablecoin/collateral shock;\n- venue failure;\n- risk-of-ruin Monte Carlo fixture;\n- strategy suspend/retire lifecycle.",
+      "text_hash": "sha256:3e56dcf7d7d7c3d3f70e59630e3168cd9ccac23d4ed2a4137d3062d1e7b0a9be",
       "owning_module": "acceptance",
       "phase": 12,
       "kind": "normative"
@@ -12156,13 +12862,37 @@
     {
       "requirement_id": "LKI-REQ-4886caa4-c7ba-4fea-b976-b5dac45c30b7",
       "introduced_by": "LIKI_SRS_v1.4",
-      "status": "NOT_STARTED",
+      "status": "ACCEPTED",
       "criticality": "CRITICAL",
-      "implementation_refs": [],
-      "test_refs": [],
-      "acceptance_evidence": [],
+      "implementation_refs": [
+        "liki/evaluation.py",
+        "liki/store.py",
+        "migrations/002_research_runtime.sql",
+        "migrations/012_workload_authorization.sql"
+      ],
+      "test_refs": [
+        "tests/test_research_runtime.py::test_concurrent_siblings_roles_and_stale_family_screen_fail_closed",
+        "tests/test_research_runtime.py::test_blocked_dependency_reentry_replays_from_g0_without_rewriting_history"
+      ],
+      "acceptance_evidence": [
+        "docs/acceptance/g5-protocol-2026-09-07.json"
+      ],
       "dependencies": [],
-      "history": [],
+      "history": [
+        {
+          "date": "2026-09-07",
+          "from_status": "NOT_STARTED",
+          "to_status": "ACCEPTED",
+          "evidence": "docs/acceptance/early-gates-2026-09-07.json",
+          "scope": "Atomic early-gate runtime control; not whole-system acceptance"
+        },
+        {
+          "date": "2026-09-07",
+          "status": "ACCEPTED",
+          "evidence": "docs/acceptance/g5-protocol-2026-09-07.json",
+          "reason": "300 executed tests; source hashes unchanged. Renewed early-gate evidence against the G5 verifier revision."
+        }
+      ],
       "cross_cutting": [
         "constitution",
         "provenance",
@@ -12383,8 +13113,12 @@
       "introduced_by": "LIKI_SRS_v1.4",
       "status": "IN_PROGRESS",
       "criticality": "CRITICAL",
-      "implementation_refs": ["liki/telegram.py::TelegramService"],
-      "test_refs": ["tests/test_telegram.py::test_telegram_auth_replay_private_chat_and_no_inference"],
+      "implementation_refs": [
+        "liki/telegram.py::TelegramService"
+      ],
+      "test_refs": [
+        "tests/test_telegram.py::test_telegram_auth_replay_private_chat_and_no_inference"
+      ],
       "acceptance_evidence": [],
       "dependencies": [],
       "history": [],
@@ -13033,8 +13767,14 @@
       "introduced_by": "LIKI_SRS_v1.4",
       "status": "IN_PROGRESS",
       "criticality": "CRITICAL",
-      "implementation_refs": ["liki/outbox.py::Outbox", "liki/telegram.py::TelegramService"],
-      "test_refs": ["tests/test_outbox.py::test_delivery_commit_receipt_and_idempotency", "tests/test_telegram.py::test_telegram_transport_requires_real_receipt"],
+      "implementation_refs": [
+        "liki/outbox.py::Outbox",
+        "liki/telegram.py::TelegramService"
+      ],
+      "test_refs": [
+        "tests/test_outbox.py::test_delivery_commit_receipt_and_idempotency",
+        "tests/test_telegram.py::test_telegram_transport_requires_real_receipt"
+      ],
       "acceptance_evidence": [],
       "dependencies": [],
       "history": [],
@@ -13083,8 +13823,12 @@
       "introduced_by": "LIKI_SRS_v1.4",
       "status": "IN_PROGRESS",
       "criticality": "CRITICAL",
-      "implementation_refs": ["liki/outbox.py::Outbox.notify"],
-      "test_refs": ["tests/test_outbox.py::test_delivery_commit_receipt_and_idempotency"],
+      "implementation_refs": [
+        "liki/outbox.py::Outbox.notify"
+      ],
+      "test_refs": [
+        "tests/test_outbox.py::test_delivery_commit_receipt_and_idempotency"
+      ],
       "acceptance_evidence": [],
       "dependencies": [],
       "history": [],

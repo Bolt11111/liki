@@ -80,6 +80,24 @@ class Operations:
             "SELECT task_class,lane_class,status,count(*) AS count,min(created_at) AS oldest_at "
             "FROM tasks GROUP BY task_class,lane_class,status ORDER BY task_class,lane_class,status")}
 
+    def gate_outcomes(self, credential: Credential) -> list[dict]:
+        return self.query(credential,
+            "SELECT gate_id,decision,reason_code,count(*) AS count FROM gate_decisions "
+            "GROUP BY gate_id,decision,reason_code ORDER BY gate_id,decision,reason_code")
+
+    def backtest(self, credential: Credential, strategy_version_id: str) -> dict:
+        with self.store.transaction(credential) as (conn, actor):
+            actor.require("read")
+            row = conn.execute("SELECT verifier_execution_id,report_artifact_id,snapshot_id "
+                "FROM verifier_executions WHERE strategy_version_id=%s AND gate_id=5 "
+                "ORDER BY created_at DESC,verifier_execution_id DESC LIMIT 1", (strategy_version_id,)).fetchone()
+            if row is None:
+                raise DomainError("BACKTEST_NOT_FOUND")
+            report = self.store.artifact(conn, actor, row["report_artifact_id"])
+            package_id = report["content"].get("package_artifact_id")
+            package = self.store.artifact(conn, actor, package_id) if package_id else None
+            return {**row, "report": report, "package": package}
+
     def activity(self, credential: Credential, *, run_id: str | None = None,
                  agent_id: str | None = None) -> list[dict]:
         query = ("SELECT r.run_id,r.task_id,r.parent_task_id,r.agent_role_id,r.worker_id,"

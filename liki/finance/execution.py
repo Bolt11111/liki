@@ -128,6 +128,13 @@ class OrderIntent(FinanceModel):
     def _decimal(cls, value: object) -> Decimal | None:
         return None if value is None else decimal(value)  # type: ignore[arg-type]
 
+    @field_validator("information_cutoff_time", "signal_ready_time", "order_eligible_time", "submission_time")
+    @classmethod
+    def _aware(cls, value: datetime) -> datetime:
+        if value.tzinfo is None or value.utcoffset() is None:
+            raise ValueError("order timestamps must be timezone-aware")
+        return value
+
     @model_validator(mode="after")
     def causal_order(self) -> OrderIntent:
         if self.quantity <= ZERO:

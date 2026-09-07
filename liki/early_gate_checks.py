@@ -16,7 +16,7 @@ from typing import Any, Literal
 from pydantic import Field, ValidationError, field_validator, model_validator
 
 from liki.core import Contract, DomainError, content_hash
-from liki.data.models import DatasetManifest, QualityStatus, ensure_utc
+from liki.data.models import DatasetManifest, QualityStatus, ensure_optional_utc, ensure_utc
 from liki.store import Identity, Store
 
 
@@ -77,9 +77,8 @@ class UniverseMembershipRow(Contract):
     source_available_at: datetime
     decision_time: datetime
 
-    _utc = field_validator(
-        "effective_from", "effective_to", "source_available_at", "decision_time"
-    )(ensure_utc)
+    _utc = field_validator("effective_from", "source_available_at", "decision_time")(ensure_utc)
+    _optional_utc = field_validator("effective_to")(ensure_optional_utc)
 
     @model_validator(mode="after")
     def interval_is_valid(self) -> UniverseMembershipRow:
@@ -107,6 +106,13 @@ class FalsifiablePrediction(Contract):
     disconfirming_outcome: str = Field(min_length=1)
     measurement_method: str = Field(min_length=1)
 
+    @field_validator("*")
+    @classmethod
+    def nonblank(cls, value: str) -> str:
+        if not value.strip():
+            raise ValueError("prediction fields must not be blank")
+        return value
+
 
 class MinimumViableTest(Contract):
     test_id: str = Field(min_length=1)
@@ -129,8 +135,16 @@ class G3Plan(Contract):
 
     @model_validator(mode="after")
     def basis_has_evidence_surface(self) -> G3Plan:
+        text = (self.market_structure, *self.constraints, self.minimum_viable_test.test_id,
+                self.minimum_viable_test.sample_unit, self.minimum_viable_test.outcome_id)
+        if any(not value.strip() for value in text):
+            raise ValueError("feasibility declarations must not be blank")
         if self.basis == "MECHANISM" and (not self.mechanism or not self.payer):
             raise ValueError("mechanism basis requires mechanism and payer")
+        if self.basis == "MECHANISM" and any(
+            not value.strip() for value in (self.mechanism or "", self.payer or "")
+        ):
+            raise ValueError("mechanism and payer must not be blank")
         if self.basis == "EMPIRICAL" and not self.empirical_pattern_artifact_id:
             raise ValueError("empirical basis requires an observed-pattern artifact")
         return self
@@ -253,6 +267,8 @@ class CapacityObservation(Contract):
     def notional_is_nonnegative(self) -> CapacityObservation:
         if min(self.requested_notional, self.executable_notional, self.planned_notional) < 0:
             raise ValueError("capacity notionals must be non-negative")
+        if self.executable_notional > self.requested_notional:
+            raise ValueError("executable notional cannot exceed the requested amount")
         return self
 
 
@@ -263,8 +279,9 @@ class G4Evidence(Contract):
 
     @model_validator(mode="after")
     def unique_sample_ids(self) -> G4Evidence:
-        if len({sample.sample_id for sample in self.samples}) != len(self.samples):
-            raise ValueError("cost sample IDs must be unique")
+        for rows in (self.samples, self.benchmarks, self.capacity):
+            if len({sample.sample_id for sample in rows}) != len(rows):
+                raise ValueError("sample IDs must be unique within each evidence series")
         return self
 
 
@@ -372,16 +389,22 @@ def _artifact_by_id(
 def _gate_one(
     conn: Any, plan: G1Plan, policy: GatePolicy, *, strategy_version_id: str, candidate_hash: str
 ) -> tuple[dict[str, bool], bool, dict[str, Any]]:
-    exact_duplicate = conn.execute(
-        "SELECT 1 FROM research_objects ro JOIN artifacts a ON a.artifact_id=ro.artifact_id "
-        "WHERE ro.object_id<>%s AND a.content_hash=%s LIMIT 1", (strategy_version_id, candidate_hash)
-    ).fetchone() is not None
+    duplicates = conn.execute(
+        "SELECT ro.object_id FROM research_objects ro JOIN artifacts a ON a.artifact_id=ro.artifact_id "
+        "WHERE ro.object_id<>%s AND a.content_hash=%s", (strategy_version_id, candidate_hash)
+    ).fetchall()
+    exact_duplicate = bool(duplicates)
     semantic_hash = content_hash({
         "configuration": plan.semantic_configuration, "datasets": plan.dataset_snapshot_ids,
         "metrics": plan.metric_ids, "type": plan.trial_type,
     })
+    declared_trial = conn.execute(
+        "SELECT 1 FROM trial_events WHERE strategy_version_id=%s AND trial_family_id=%s "
+        "AND semantic_hash=%s AND NOT infrastructure_retry",
+        (strategy_version_id, plan.family_id, semantic_hash),
+    ).fetchone() is not None
     equivalent = conn.execute(
-        "SELECT trial_event_id FROM trial_events WHERE semantic_hash=%s AND strategy_version_id<>%s "
+        "SELECT trial_event_id,strategy_version_id FROM trial_events WHERE semantic_hash=%s AND strategy_version_id<>%s "
         "AND NOT infrastructure_retry", (semantic_hash, strategy_version_id)
     ).fetchall()
     family_trials = conn.execute(
@@ -395,8 +418,9 @@ def _gate_one(
     ).fetchall()
     failures = conn.execute(
         "SELECT g.reason_code,g.created_at,g.artifact_ids FROM gate_decisions g "
-        "JOIN trial_events t ON t.strategy_version_id=g.strategy_version_id "
-        "WHERE t.trial_family_id=%s AND g.decision='FAIL'", (plan.family_id,)
+        "WHERE g.strategy_version_id=ANY(%s) AND g.decision='FAIL'",
+        (list({trial["strategy_version_id"] for trial in family_trials + equivalent}
+              | {duplicate["object_id"] for duplicate in duplicates}),)
     ).fetchall()
     known_hard = False
     cooldown_active = False
@@ -410,11 +434,12 @@ def _gate_one(
             known_hard = known_hard or bool(artifact and artifact["content"].get("hard_invalidity"))
     checks = {
         "not_duplicate": not exact_duplicate and not equivalent,
-        "family_history_checked": True,
+        "family_history_checked": declared_trial,
         "cooldown_clear": not cooldown_active,
         "no_known_invalidity": not known_hard,
     }
-    return checks, exact_duplicate or bool(equivalent) or known_hard, {
+    # A declaration/duplicate with no conclusive result is not scientific falsification.
+    return checks, known_hard, {
         "family_key": plan.family_key.model_dump(mode="json"), "family_trial_count": len(family_trials),
         "equivalent_experiment_count": len(equivalent), "prior_failure_count": len(failures),
         "candidate_exact_duplicate": exact_duplicate, "semantic_hash": semantic_hash,
@@ -471,7 +496,9 @@ def _gate_two(
     except (KeyError, TypeError, ValidationError):
         hard_invalidity = True
         unknowns.append("G2_TIMING_OR_UNIVERSE_ROWS_INVALID")
-    availability = bool(manifests) and not unknowns
+    if not feature_rows or not label_rows or not universe_rows:
+        unknowns.append("G2_TIMING_OR_UNIVERSE_ROWS_EMPTY")
+    availability = len(manifests) == len(snapshot_dataset_ids) and bool(manifests) and not unknowns
     checks = {
         "point_in_time": availability and all(m.as_of_time >= m.end_time for m in manifests)
         and all(row.latest_source_timestamp_used <= row.decision_time for row in feature_rows),
@@ -508,6 +535,9 @@ def _gate_three(
             artifact is not None
             and artifact["schema_name"] == "research/empirical-pattern-v1"
             and tuple(artifact["content"].get("dataset_snapshot_ids", ())) == snapshot_dataset_ids
+            and isinstance(artifact["content"].get("observations"), list)
+            and bool(artifact["content"]["observations"])
+            and all(isinstance(value, str) and value.strip() for value in artifact["content"]["observations"])
         )
         if not empirical_bound:
             unknowns.append("EMPIRICAL_PATTERN_ARTIFACT_NOT_BOUND")
@@ -546,6 +576,7 @@ def _gate_four(
     sample_ids = {sample.sample_id for sample in samples}
     benchmark_by_id = {sample.sample_id: sample for sample in evidence.benchmarks}
     capacity_by_id = {sample.sample_id: sample for sample in evidence.capacity}
+    samples_by_id = {sample.sample_id: sample for sample in samples}
     bounds = plan.cost_bounds.model_dump()
     cost_bounded = all(
         bounds[name][0] <= getattr(sample, name) <= bounds[name][1]
@@ -558,11 +589,14 @@ def _gate_four(
         for observation in evidence.capacity
     ) and sample_ids <= set(capacity_by_id)
     matching_benchmarks = all(
-        benchmark.sample_id in sample_ids and benchmark.dataset_snapshot_id in snapshot_dataset_ids
+        benchmark.sample_id in sample_ids
+        and benchmark.dataset_snapshot_id == samples_by_id[benchmark.sample_id].dataset_snapshot_id
         and benchmark.benchmark_id == plan.benchmark_id and benchmark.benchmark_version == plan.benchmark_version
         and benchmark.currency == plan.currency
         for benchmark in evidence.benchmarks
     ) and sample_ids <= set(benchmark_by_id)
+    if not matching_benchmarks:
+        unknowns.append("G4_BENCHMARK_SAMPLE_BINDING_MISMATCH")
     mean_after_cost = sum((sample.after_cost_pnl for sample in samples), Decimal("0")) / Decimal(len(samples))
     mean_excess = sum(
         (sample.after_cost_pnl - benchmark_by_id[sample.sample_id].after_cost_pnl for sample in samples if sample.sample_id in benchmark_by_id),
@@ -639,6 +673,13 @@ def check_gate(
             conn, plan.g1, policy, strategy_version_id=strategy_version_id,
             candidate_hash=candidate["content_hash"],
         )
+        if not checks["not_duplicate"] and not hard_invalidity:
+            unknowns.append("EQUIVALENT_RESEARCH_NOT_CONCLUSIVELY_REJECTED")
+        if not checks["family_history_checked"]:
+            unknowns.append("G1_DECLARED_TRIAL_NOT_BOUND")
+        if tuple(plan.g1.dataset_snapshot_ids) != snapshot_dataset_ids:
+            checks["family_history_checked"] = False
+            unknowns.append("G1_DATASET_SET_NOT_SNAPSHOT_PINNED")
     elif gate_id == 2:
         assert plan.g2 is not None
         checks, hard_invalidity, unknowns, metrics = _gate_two(
