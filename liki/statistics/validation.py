@@ -2,10 +2,11 @@
 
 from __future__ import annotations
 
+from collections.abc import Sequence
 from dataclasses import dataclass
 from itertools import combinations
-from math import isfinite
-from collections.abc import Sequence
+from math import comb, isfinite
+from numbers import Integral
 
 import numpy as np
 from scipy.stats import norm
@@ -27,66 +28,99 @@ class CPCVSplit:
     embargo_indices: tuple[int, ...]
 
 
+def _integer(value: int, name: str, *, minimum: int) -> int:
+    if isinstance(value, bool) or not isinstance(value, Integral) or value < minimum:
+        raise ValueError(f"{name} must be an integer >= {minimum}")
+    return int(value)
+
+
+def _validated_event_ends(event_end_indices: Sequence[int]) -> tuple[int, ...]:
+    ends = tuple(event_end_indices)
+    if any(
+        isinstance(end, bool) or not isinstance(end, Integral) or not index <= end < len(ends)
+        for index, end in enumerate(ends)
+    ):
+        raise ValueError(
+            "event end indices must be integers, in-range, and not precede decision index"
+        )
+    return tuple(int(end) for end in ends)
+
+
+def _purged_indices(
+    ends: tuple[int, ...], windows: Sequence[tuple[int, int]], embargo: int
+) -> tuple[tuple[int, ...], tuple[int, ...], tuple[int, ...]]:
+    test = {index for start, stop in windows for index in range(start, stop)}
+    # Contiguous decision indices make each group's event union one closed interval.
+    horizons = tuple((start, max(ends[start:stop])) for start, stop in windows)
+    embargoed = {
+        index
+        for _, horizon in horizons
+        for index in range(horizon + 1, min(len(ends), horizon + embargo + 1))
+    } - test
+    excluded = test | embargoed
+    train = tuple(
+        index
+        for index, end in enumerate(ends)
+        if index not in excluded
+        and not any(index <= horizon and end >= start for start, horizon in horizons)
+    )
+    return train, tuple(sorted(test)), tuple(sorted(embargoed))
+
+
 def purged_kfold(
     event_end_indices: Sequence[int], *, folds: int, embargo: int
 ) -> tuple[PurgedFold, ...]:
-    """Exclude training events extending into each test window plus a future embargo."""
-    n = len(event_end_indices)
-    if folds < 2 or folds > n or embargo < 0:
+    """Purge intersections between closed training and test events [i, end_i].
+
+    Contiguous folds use boundaries floor(n * fold / folds). For each test fold,
+    h = max(end_i) over its events; embargo excludes decision indices h+1 through
+    h+embargo, clipped to the dataset. Empty training sets are returned unchanged.
+    """
+    ends = _validated_event_ends(event_end_indices)
+    folds = _integer(folds, "folds", minimum=2)
+    embargo = _integer(embargo, "embargo", minimum=0)
+    n = len(ends)
+    if folds > n:
         raise ValueError("invalid temporal fold configuration")
-    if any(end < index or end >= n for index, end in enumerate(event_end_indices)):
-        raise ValueError("event end indices must be in-range and not precede decision index")
-    boundaries = np.linspace(0, n, folds + 1, dtype=int)
-    splits: list[PurgedFold] = []
-    for fold in range(folds):
-        start, stop = int(boundaries[fold]), int(boundaries[fold + 1])
-        test = set(range(start, stop))
-        embargo_indices = set(range(stop, min(n, stop + embargo)))
-        train = tuple(
-            index
-            for index, event_end in enumerate(event_end_indices)
-            if index not in test | embargo_indices and not (index < stop and event_end >= start)
-        )
-        splits.append(PurgedFold(train, tuple(sorted(test)), tuple(sorted(embargo_indices))))
-    return tuple(splits)
+    return tuple(
+        PurgedFold(*_purged_indices(ends, ((n * fold // folds, n * (fold + 1) // folds),), embargo))
+        for fold in range(folds)
+    )
 
 
 def cpcv_splits(
     event_end_indices: Sequence[int], *, groups: int, test_groups: int, embargo: int
 ) -> tuple[CPCVSplit, ...]:
-    if groups < 2 or not 1 <= test_groups < groups:
+    """Enumerate at most 10000 purged test-group combinations in lexical order.
+
+    Groups use the same boundaries and closed-event purging as purged_kfold.
+    Each selected group's maximum event end independently starts its embargo;
+    these embargo indices are unioned, clipped, and stripped of test indices.
+    Gaps between disjoint test-event intervals remain eligible for training.
+    """
+    ends = _validated_event_ends(event_end_indices)
+    groups = _integer(groups, "groups", minimum=2)
+    test_groups = _integer(test_groups, "test_groups", minimum=1)
+    embargo = _integer(embargo, "embargo", minimum=0)
+    n = len(ends)
+    if groups > n or test_groups >= groups:
         raise ValueError("invalid CPCV group configuration")
-    n = len(event_end_indices)
-    boundaries = np.linspace(0, n, groups + 1, dtype=int)
-    output: list[CPCVSplit] = []
-    for selected in combinations(range(groups), test_groups):
-        test = set().union(
-            *(set(range(int(boundaries[group]), int(boundaries[group + 1]))) for group in selected)
-        )
-        embargoed = set().union(
-            *(
-                set(range(int(boundaries[group + 1]), min(n, int(boundaries[group + 1]) + embargo)))
-                for group in selected
-            )
-        )
-        train = tuple(
-            index
-            for index, end in enumerate(event_end_indices)
-            if index not in test | embargoed
-            and not any(index < test_index + 1 and end >= test_index for test_index in test)
-        )
-        output.append(CPCVSplit(train, tuple(sorted(test)), tuple(sorted(embargoed))))
-    return tuple(output)
+    if comb(groups, test_groups) > 10_000:
+        raise ValueError("CPCV configuration exceeds the limit of 10000 splits")
+    windows = tuple((n * group // groups, n * (group + 1) // groups) for group in range(groups))
+    return tuple(
+        CPCVSplit(*_purged_indices(ends, tuple(windows[group] for group in selected), embargo))
+        for selected in combinations(range(groups), test_groups)
+    )
 
 
 def walk_forward_splits(
     n_observations: int, *, train_size: int, test_size: int, step: int | None = None
 ) -> tuple[tuple[tuple[int, ...], tuple[int, ...]], ...]:
-    if n_observations <= 0 or train_size <= 0 or test_size <= 0:
-        raise ValueError("sizes must be positive")
-    step = step or test_size
-    if step <= 0:
-        raise ValueError("step must be positive")
+    n_observations = _integer(n_observations, "n_observations", minimum=1)
+    train_size = _integer(train_size, "train_size", minimum=1)
+    test_size = _integer(test_size, "test_size", minimum=1)
+    step = test_size if step is None else _integer(step, "step", minimum=1)
     output = []
     for start in range(0, n_observations - train_size - test_size + 1, step):
         output.append(

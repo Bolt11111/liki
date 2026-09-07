@@ -52,7 +52,7 @@ class DatasetInput(Contract):
 class VerifyInput(Contract):
     snapshot_id: str = Field(min_length=1)
     strategy_version_id: str = Field(min_length=1)
-    gate_id: Literal[0, 1, 2, 3, 4, 5, 6]
+    gate_id: Literal[0, 1, 2, 3, 4, 5, 6, 7]
     operation_key: str = Field(min_length=1)
 
 

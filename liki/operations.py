@@ -91,6 +91,9 @@ class Operations:
     def economics(self, credential: Credential, strategy_version_id: str) -> dict:
         return self._execution_report(credential, strategy_version_id, 6, "ECONOMICS_NOT_FOUND")
 
+    def out_of_sample(self, credential: Credential, strategy_version_id: str) -> dict:
+        return self._execution_report(credential, strategy_version_id, 7, "OOS_NOT_FOUND")
+
     def _execution_report(self, credential: Credential, strategy_version_id: str, gate_id: int, missing: str) -> dict:
         with self.store.transaction(credential) as (conn, actor):
             actor.require("read")

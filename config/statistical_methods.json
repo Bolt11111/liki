@@ -66,6 +66,14 @@
       "dependence_handling": "Lan-DeMets O'Brien-Fleming-shaped cumulative spend, converted with Bonferroni-valid per-look boundaries; not exact joint-look calibration and not valid for uncontrolled serial dependence",
       "failure_conditions": ["zero variance", "schedule does not end at 1", "non-increasing information fractions", "undeclared schedule"],
       "reference_tests": ["tests/statistics/test_validation.py::test_sequential_z_test_requires_predeclared_design"]
+    },
+    {
+      "method_id": "chronological-fixed-program-v1",
+      "formula_reference": "LIKI SRS G7 and 15.7; prospective chronological fixed-program validation",
+      "supported_input": "signed G6 lineage, prospectively registered fixed observation grid, frozen G5 configuration and G6 cost/latency inputs, persisted trial history",
+      "dependence_handling": "all development event horizons plus declared embargo precede validation; no fitting, random folds, nested selection or significance claim",
+      "failure_conditions": ["post-observation declaration", "missing or over-budget trial history", "overlapping event horizons", "changed execution assumptions", "unbound raw data", "known after-cost loss"],
+      "reference_tests": ["tests/test_oos_gate.py::test_oos_golden_replays_frozen_program_after_friction_without_development_pnl", "tests/test_oos_runtime.py::test_signed_g7_cli_replay_audit_exposure_and_operator_reads"]
     }
   ]
 }

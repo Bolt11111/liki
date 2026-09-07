@@ -90,6 +90,13 @@ class Research:
                 raise DomainError("RETRY_CLASSIFICATION_REQUIRED")
             tags=set(trial.contamination_tags)
             tags.update(r["tag"] for r in conn.execute("SELECT tag FROM memory_contamination_edges WHERE descendant_id=%s",(trial.strategy_version_id,)))
+            if conn.execute("WITH RECURSIVE ancestry(id) AS (SELECT %s::text UNION "
+                    "SELECT l.parent_id FROM lineage_edges l JOIN ancestry a ON l.child_id=a.id) "
+                    "SELECT 1 FROM verifier_executions v WHERE v.gate_id=7 AND "
+                    "(v.strategy_version_id IN (SELECT id FROM ancestry) OR v.strategy_version_id IN "
+                    "(SELECT strategy_version_id FROM trial_events WHERE trial_family_id=%s)) LIMIT 1",
+                    (trial.strategy_version_id, trial.trial_family_id)).fetchone():
+                tags.add("saw_g7_result")
             event=self.store.transition(conn,actor,capability="research",kind="trial",aggregate_id=trial.trial_event_id,expected_version=0,
                 state={**trial.model_dump(mode="json"),"contamination_tags":sorted(tags)},event_type="TRIAL_RECORDED",operation_key=trial.operation_key,task_id=trial.campaign_id,policy_version="trial-v1")
             conn.execute("INSERT INTO trial_events(trial_event_id,campaign_id,trial_family_id,strategy_version_id,parent_trial_event_id,trial_type,selection_reason,dataset_snapshot_ids,metric_ids,started_at,scientific_retry_of,infrastructure_retry,contamination_tags,metadata_json,operation_key,semantic_hash,event_id) "

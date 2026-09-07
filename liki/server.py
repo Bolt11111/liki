@@ -149,6 +149,10 @@ def create_app(store: Store | None = None, telegram_settings: TelegramSettings |
     def execution_economics(strategy_version_id: str, auth: Auth):
         return operations.economics(auth, strategy_version_id)
 
+    @app.get("/out-of-sample/{strategy_version_id}")
+    def out_of_sample(strategy_version_id: str, auth: Auth):
+        return operations.out_of_sample(auth, strategy_version_id)
+
     @app.get("/gates/{strategy_version_id}")
     def gates(strategy_version_id: str, auth: Auth):
         return operations.query(auth, "SELECT gate_decision_id,gate_id,snapshot_id,gate_version,"

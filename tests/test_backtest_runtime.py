@@ -109,7 +109,8 @@ def test_signed_cli_backtest_replays_persisted_data_and_audits_complete_package(
     assert result["status"] == "BACKTESTED" and result["version"] == 6
     assert runtime.call("decide", decision) == result
     assert runtime.call("verify", verify) == evidence
-    runtime.call("verify", runtime.verification(snapshot, 7), error="INVALID_REQUEST")
+    runtime.call("verify", runtime.verification(snapshot, 7), error="GATE_DEPENDENCY_UNSATISFIED")
+    runtime.call("verify", runtime.verification(snapshot, 8), error="INVALID_REQUEST")
     client = TestClient(create_app(runtime.store))
     history = client.get("/gates/" + runtime.candidate_id, headers=headers(runtime.credentials)).json()
     assert [row["state_after"] for row in history][-1] == "BACKTESTED"

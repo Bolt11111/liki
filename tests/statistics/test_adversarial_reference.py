@@ -120,10 +120,12 @@ def test_purge_removes_overlapping_labels_and_embargo_exactly_after_test_window(
     folds = purged_kfold(event_end_indices, folds=3, embargo=2)
     middle = folds[1]
     assert middle.test_indices == (4, 5, 6, 7)
-    assert middle.embargo_indices == (8, 9)
+    # Test event 7 ends at 10; 8–10 overlap labels, and embargo begins at 11.
+    assert middle.embargo_indices == (11,)
+    assert middle.train_indices == (0,)
     for train_index in middle.train_indices:
         assert not any(
-            train_index <= test_index <= event_end_indices[train_index]
+            train_index <= event_end_indices[test_index] and event_end_indices[train_index] >= test_index
             for test_index in middle.test_indices
         )
 

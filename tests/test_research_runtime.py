@@ -190,7 +190,8 @@ def test_cli_campaign_reaches_g4_with_signed_evidence_and_audited_read_models(ru
         assert runtime.call("decide", request) == result
     assert result["status"] == "PROXY_SURVIVOR" and result["version"] == 5
     runtime.call("verify", runtime.verification(snapshot, 6), error="GATE_DEPENDENCY_UNSATISFIED")
-    runtime.call("verify", runtime.verification(snapshot, 7), error="INVALID_REQUEST")
+    runtime.call("verify", runtime.verification(snapshot, 7), error="GATE_DEPENDENCY_UNSATISFIED")
+    runtime.call("verify", runtime.verification(snapshot, 8), error="INVALID_REQUEST")
     client = TestClient(create_app(runtime.store))
     history = client.get("/gates/" + runtime.candidate_id, headers=headers(runtime.credentials)).json()
     assert [row["gate_id"] for row in history] == list(range(5))

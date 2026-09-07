@@ -101,7 +101,11 @@ class EconomicsRuntime(BacktestRuntime):
             body["gate_input_artifact_ids"]["6"] = [aid, self.execution_dataset, self.policy_id]
             if self.g6_failure != "untrusted_policy":
                 body["calibration_artifact_ids"].append(self.policy_id)
+            body = self.finalize_snapshot(body)
         return Runtime.call(self, action, body, role, error=error)
+
+    def finalize_snapshot(self, body):
+        return body
 
 
 @pytest.fixture

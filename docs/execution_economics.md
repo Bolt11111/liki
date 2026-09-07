@@ -163,4 +163,5 @@ Use the existing authenticated CLI `verify` and `decide` actions with `gate_id: 
 `GET /execution-economics/{strategy_version_id}` returns the latest authorized
 report/package, including blocked diagnostics. Persistence, evidence, event
 history and state transition are transactional, append-only and retry-idempotent.
-G7 and later gates remain separate, unimplemented signed runtimes at this checkpoint.
+G7 adds a separate prospective, frozen-program validation runtime described in
+`docs/out_of_sample.md`. Signed G8 and later gates remain unimplemented.

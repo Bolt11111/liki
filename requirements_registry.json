@@ -1277,7 +1277,7 @@
         "tests/test_research_runtime.py::test_old_signed_report_cannot_be_reused_after_snapshot_round_trip"
       ],
       "acceptance_evidence": [
-        "docs/acceptance/g6-economics-2026-09-07.json"
+        "docs/acceptance/g7-oos-2026-09-07.json"
       ],
       "dependencies": [],
       "history": [
@@ -5121,7 +5121,7 @@
         "tests/test_early_gate_adversarial.py::test_empirical_pattern_must_actually_declare_observations"
       ],
       "acceptance_evidence": [
-        "docs/acceptance/g6-economics-2026-09-07.json"
+        "docs/acceptance/g7-oos-2026-09-07.json"
       ],
       "dependencies": [],
       "history": [
@@ -5168,7 +5168,7 @@
         "tests/test_research_runtime.py::test_cli_campaign_reaches_g4_with_signed_evidence_and_audited_read_models[EMPIRICAL]"
       ],
       "acceptance_evidence": [
-        "docs/acceptance/g6-economics-2026-09-07.json"
+        "docs/acceptance/g7-oos-2026-09-07.json"
       ],
       "dependencies": [],
       "history": [
@@ -5217,7 +5217,7 @@
         "tests/test_early_gate_adversarial.py::test_g4_duplicate_contradictory_ids_never_win_by_row_order"
       ],
       "acceptance_evidence": [
-        "docs/acceptance/g6-economics-2026-09-07.json"
+        "docs/acceptance/g7-oos-2026-09-07.json"
       ],
       "dependencies": [],
       "history": [
@@ -5284,7 +5284,7 @@
         "tests/test_backtest_gate.py::test_missing_cost_never_defaults_to_zero"
       ],
       "acceptance_evidence": [
-        "docs/acceptance/g6-economics-2026-09-07.json"
+        "docs/acceptance/g7-oos-2026-09-07.json"
       ],
       "dependencies": [],
       "history": [
@@ -5362,7 +5362,7 @@
         "tests/finance/test_execution_reference.py::test_two_level_nonlinear_impact_uses_entire_swept_quantity"
       ],
       "acceptance_evidence": [
-        "docs/acceptance/g6-economics-2026-09-07.json"
+        "docs/acceptance/g7-oos-2026-09-07.json"
       ],
       "dependencies": [],
       "history": [{"date": "2026-09-07", "from": "NOT_STARTED", "to": "ACCEPTED", "reason": "Signed G6 spot execution protocol, independent financial controls, persisted provenance and 495-test source-bound checkpoint; unsupported contracts remain blocked."}],
@@ -5384,13 +5384,33 @@
     {
       "requirement_id": "LKI-REQ-5cc8c4f0-f317-4e2b-983e-5936e9c37098",
       "introduced_by": "LIKI_SRS_v1.4",
-      "status": "NOT_STARTED",
+      "status": "ACCEPTED",
       "criticality": "CRITICAL",
-      "implementation_refs": [],
-      "test_refs": [],
-      "acceptance_evidence": [],
+      "implementation_refs": [
+        "liki/statistics/oos.py::OOSDeclaration",
+        "liki/statistics/oos.py::evaluate_oos",
+        "liki/oos_gate.py::check_oos",
+        "liki/verification.py::VerificationRunner",
+        "liki/research_runtime.py::VerifyInput",
+        "liki/research.py::Research",
+        "liki/operations.py::Operations",
+        "liki/server.py::create_app",
+        "config/statistical_methods.json",
+        "docs/out_of_sample.md"
+      ],
+      "test_refs": [
+        "tests/test_oos_runtime.py::test_signed_g7_cli_replay_audit_exposure_and_operator_reads",
+        "tests/test_oos_runtime.py::test_g7_unknown_dependencies_produce_signed_blocked_not_fake_oos",
+        "tests/test_oos_runtime.py::test_g7_oos_loss_is_signed_fail_not_unknown",
+        "tests/test_oos_gate.py::test_oos_cannot_retune_both_development_and_validation_latency_after_declaration",
+        "tests/test_oos_gate.py::test_oos_golden_replays_frozen_program_after_friction_without_development_pnl",
+        "tests/test_oos_gate.py::test_oos_repeatability_and_immutable_upstream_under_decimal_contexts"
+      ],
+      "acceptance_evidence": [
+        "docs/acceptance/g7-oos-2026-09-07.json"
+      ],
       "dependencies": [],
-      "history": [],
+      "history": [{"date": "2026-09-07", "from": "NOT_STARTED", "to": "ACCEPTED", "reason": "Prospective signed G7 fixed-program protocol; 595 passing tests with immutable source-bound evidence."}],
       "cross_cutting": [
         "constitution",
         "provenance",
@@ -5522,7 +5542,7 @@
         "tests/test_research_runtime.py::test_old_signed_report_cannot_be_reused_after_snapshot_round_trip"
       ],
       "acceptance_evidence": [
-        "docs/acceptance/g6-economics-2026-09-07.json"
+        "docs/acceptance/g7-oos-2026-09-07.json"
       ],
       "dependencies": [],
       "history": [
@@ -5596,7 +5616,7 @@
         "tests/test_early_gate_checks.py::test_g1_uses_candidate_hash_and_trial_cache_from_authenticated_database"
       ],
       "acceptance_evidence": [
-        "docs/acceptance/g6-economics-2026-09-07.json"
+        "docs/acceptance/g7-oos-2026-09-07.json"
       ],
       "dependencies": [],
       "history": [
@@ -5644,7 +5664,7 @@
         "tests/test_research_runtime.py::test_fatal_cost_fact_fails_before_backtest_and_cannot_be_downgraded_by_forged_metrics"
       ],
       "acceptance_evidence": [
-        "docs/acceptance/g6-economics-2026-09-07.json"
+        "docs/acceptance/g7-oos-2026-09-07.json"
       ],
       "dependencies": [],
       "history": [
@@ -5855,13 +5875,26 @@
     {
       "requirement_id": "LKI-REQ-d9be817a-05bf-43f4-a3eb-10a929b6352f",
       "introduced_by": "LIKI_SRS_v1.4",
-      "status": "NOT_STARTED",
+      "status": "ACCEPTED",
       "criticality": "CRITICAL",
-      "implementation_refs": [],
-      "test_refs": [],
-      "acceptance_evidence": [],
+      "implementation_refs": [
+        "liki/statistics/oos.py::OOSDeclaration",
+        "liki/statistics/oos.py::evaluate_oos",
+        "liki/oos_gate.py::check_oos",
+        "liki/statistics/validation.py::purged_kfold",
+        "liki/statistics/validation.py::cpcv_splits",
+        "liki/statistics/validation.py::walk_forward_splits"
+      ],
+      "test_refs": [
+        "tests/test_oos_gate.py::test_oos_declaration_rejects_undefined_or_adaptive_protocols",
+        "tests/test_oos_runtime.py::test_signed_g7_cli_replay_audit_exposure_and_operator_reads",
+        "tests/statistics/test_validation_adversarial.py::test_walk_forward_defaults_only_an_omitted_step_and_preserves_chronology"
+      ],
+      "acceptance_evidence": [
+        "docs/acceptance/g7-oos-2026-09-07.json"
+      ],
       "dependencies": [],
-      "history": [],
+      "history": [{"date": "2026-09-07", "from": "NOT_STARTED", "to": "ACCEPTED", "reason": "Signed chronological G7 defaults and deterministic temporal split guards; no IID random-fold default."}],
       "cross_cutting": [
         "constitution",
         "provenance",
@@ -5880,19 +5913,25 @@
     {
       "requirement_id": "LKI-REQ-255add46-94c0-4b21-a180-4cde8bab0630",
       "introduced_by": "LIKI_SRS_v1.4",
-      "status": "VERIFIED",
+      "status": "ACCEPTED",
       "criticality": "CRITICAL",
       "implementation_refs": [
-        "liki/statistics/validation.py::purged_kfold"
+        "liki/statistics/validation.py::purged_kfold",
+        "liki/statistics/validation.py::cpcv_splits",
+        "liki/statistics/oos.py::evaluate_oos",
+        "liki/oos_gate.py::check_oos"
       ],
       "test_refs": [
-        "tests/statistics/test_adversarial_reference.py::test_purge_removes_overlapping_labels_and_embargo_exactly_after_test_window"
+        "tests/statistics/test_adversarial_reference.py::test_purge_removes_overlapping_labels_and_embargo_exactly_after_test_window",
+        "tests/statistics/test_validation_adversarial.py::test_exhaustive_small_intervals_against_independent_occupied_time_oracle",
+        "tests/test_oos_gate.py::test_oos_fail_closed_for_leakage_retuning_and_conflicting_sources",
+        "tests/test_oos_runtime.py::test_signed_g7_cli_replay_audit_exposure_and_operator_reads"
       ],
       "acceptance_evidence": [
-        "2026-09-06 focused audit: tests/statistics passed"
+        "docs/acceptance/g7-oos-2026-09-07.json"
       ],
       "dependencies": [],
-      "history": [],
+      "history": [{"date": "2026-09-07", "from": "VERIFIED", "to": "ACCEPTED", "reason": "Corrected full event-interval purging and horizon-based embargo; independent exhaustive oracle plus signed G7 boundary enforcement."}],
       "cross_cutting": [
         "constitution",
         "provenance",
@@ -5936,13 +5975,25 @@
     {
       "requirement_id": "LKI-REQ-0d35fa4e-ef07-40ed-b2f7-0b66078a5ab0",
       "introduced_by": "LIKI_SRS_v1.4",
-      "status": "NOT_STARTED",
+      "status": "ACCEPTED",
       "criticality": "CRITICAL",
-      "implementation_refs": [],
-      "test_refs": [],
-      "acceptance_evidence": [],
+      "implementation_refs": [
+        "liki/statistics/oos.py::OOSDeclaration",
+        "liki/statistics/oos.py::evaluate_oos",
+        "liki/oos_gate.py::check_oos",
+        "docs/out_of_sample.md"
+      ],
+      "test_refs": [
+        "tests/test_oos_gate.py::test_oos_declaration_rejects_undefined_or_adaptive_protocols",
+        "tests/test_oos_gate.py::test_oos_fail_closed_for_leakage_retuning_and_conflicting_sources",
+        "tests/test_oos_runtime.py::test_g7_unknown_dependencies_produce_signed_blocked_not_fake_oos",
+        "tests/test_oos_runtime.py::test_signed_g7_cli_replay_audit_exposure_and_operator_reads"
+      ],
+      "acceptance_evidence": [
+        "docs/acceptance/g7-oos-2026-09-07.json"
+      ],
       "dependencies": [],
-      "history": [],
+      "history": [{"date": "2026-09-07", "from": "NOT_STARTED", "to": "ACCEPTED", "reason": "Prospective fixed-program method, event-horizon lower bound and embargo are pinned before validation observations and trial exposure."}],
       "cross_cutting": [
         "constitution",
         "provenance",
@@ -6652,7 +6703,7 @@
         "tests/test_backtest_gate.py::test_protocol_replay_is_byte_identical_across_ambient_decimal_contexts"
       ],
       "acceptance_evidence": [
-        "docs/acceptance/g6-economics-2026-09-07.json"
+        "docs/acceptance/g7-oos-2026-09-07.json"
       ],
       "dependencies": [],
       "history": [
@@ -6717,7 +6768,7 @@
         "tests/finance/test_backtest_adversarial.py::test_order_preserves_requested_and_normalized_quantity_with_consistent_filled_state"
       ],
       "acceptance_evidence": [
-        "docs/acceptance/g6-economics-2026-09-07.json"
+        "docs/acceptance/g7-oos-2026-09-07.json"
       ],
       "dependencies": [],
       "history": [
@@ -7148,7 +7199,7 @@
         "tests/test_economics_runtime.py::test_g6_signed_cli_provenance_replay_idempotency_and_operator_api"
       ],
       "acceptance_evidence": [
-        "docs/acceptance/g6-economics-2026-09-07.json"
+        "docs/acceptance/g7-oos-2026-09-07.json"
       ],
       "dependencies": [],
       "history": [{"date": "2026-09-07", "from": "VERIFIED", "to": "ACCEPTED", "reason": "Component/shortfall distinction now exercised through signed G6 persistence and gate decisions, with source-bound golden and integration evidence."}],
@@ -7185,7 +7236,7 @@
         "tests/test_economics_runtime.py::test_g6_known_cost_failure_is_fail_not_missing_information"
       ],
       "acceptance_evidence": [
-        "docs/acceptance/g6-economics-2026-09-07.json"
+        "docs/acceptance/g7-oos-2026-09-07.json"
       ],
       "dependencies": [],
       "history": [{"date": "2026-09-07", "from": "VERIFIED", "to": "ACCEPTED", "reason": "No-double-counting accounting now has independently reconciled G6 partial-fill and friction-loss acceptance evidence."}],
@@ -12928,7 +12979,7 @@
         "tests/test_research_runtime.py::test_blocked_dependency_reentry_replays_from_g0_without_rewriting_history"
       ],
       "acceptance_evidence": [
-        "docs/acceptance/g6-economics-2026-09-07.json"
+        "docs/acceptance/g7-oos-2026-09-07.json"
       ],
       "dependencies": [],
       "history": [

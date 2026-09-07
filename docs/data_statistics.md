@@ -44,7 +44,11 @@ it returns `VALUE`, `UNDEFINED`, `INSUFFICIENT_DATA`, `NUMERIC_ERROR`, or
   the complete searched model set. `false_discovery_rate_bh` returns the full
   discovered set under a declared FDR target.
 - `purged_kfold`, `cpcv_splits`, and `walk_forward_splits` keep label horizons
-  out of train/test boundaries. `sequential_z_test` requires the complete
+  out of train/test boundaries. Purging compares full closed event intervals;
+  embargo begins after each test group's maximum event end, not its final
+  decision timestamp. Invalid integral inputs and oversized CPCV enumerations
+  fail explicitly. The signed prospective G7 protocol is described in
+  `docs/out_of_sample.md`. `sequential_z_test` requires the complete
   predeclared schedule and applies a conservative O'Brien-Fleming-shaped
   Lan-DeMets spend with Bonferroni-valid look boundaries. It does **not** claim
   exact joint-look O'Brien-Fleming calibration and is not a shortcut for

@@ -14,7 +14,7 @@ from pydantic import Field, ValidationError, model_validator
 from liki.core import Contract, DomainError, canonical, content_hash, environment_fingerprint, uid
 from liki.store import Credential, Store
 
-VERIFIER_VERSION = "deterministic-gates-v4"
+VERIFIER_VERSION = "deterministic-gates-v5"
 
 
 def verifier_code_hash() -> str:
@@ -86,11 +86,11 @@ class VerificationRunner:
 
     def execute(
         self, credential: Credential, *, snapshot_id: str, strategy_version_id: str,
-        gate_id: Literal[0, 1, 2, 3, 4, 5, 6], operation_key: str,
+        gate_id: Literal[0, 1, 2, 3, 4, 5, 6, 7], operation_key: str,
     ) -> str:
         from liki.evaluation import EVIDENCE_CLASSES, EvaluationSnapshot, REQUIRED_CHECKS
 
-        if gate_id not in range(7):
+        if gate_id not in range(8):
             raise DomainError("VERIFIER_GATE_NOT_SUPPORTED")
 
         with self.store.transaction(credential) as (conn, actor):
@@ -161,6 +161,9 @@ class VerificationRunner:
                 elif gate_id == 6:
                     from liki.economics_gate import check_economics
                     derived_report = check_economics(self.store, conn, actor, row, obj)
+                elif gate_id == 7:
+                    from liki.oos_gate import check_oos
+                    derived_report = check_oos(self.store, conn, actor, row, obj)
                 else:
                     from liki.early_gate_checks import check_gate
                     derived_report = check_gate(self.store, conn, actor, row, obj, gate_id,
@@ -268,8 +271,10 @@ class VerificationRunner:
             )
             conn.execute(
                 "INSERT INTO evidence VALUES(%s,%s,%s,'DERIVED_VALUE',"
-                "'DEVELOPMENT',now(),'{}',%s,now())",
-                (evidence_id, report_id, EVIDENCE_CLASSES[gate_id], actor.principal_id),
+                "%s,now(),%s,%s,now())",
+                (evidence_id, report_id, EVIDENCE_CLASSES[gate_id],
+                 "VALIDATION" if gate_id == 7 else "DEVELOPMENT",
+                 ["saw_g7_result"] if gate_id == 7 else [], actor.principal_id),
             )
             return evidence_id
 

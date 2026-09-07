@@ -142,3 +142,47 @@ one accepted protocol requirement and promotes two previously verified
 accounting controls. Thus 47/548 (8.58%) have verification or acceptance
 evidence; only 14/548 (2.55%) are accepted. This is not system acceptance.
 Signed predeclared G7 OOS/walk-forward validation is the next connected slice.
+
+## G7 prospective chronological validation checkpoint
+
+The signed runtime now executes `chronological-fixed-program-v1` after an
+applied signed G6 PASS. It binds the candidate, normalized G5 configuration,
+G6 policy and development execution tape before future validation observations.
+The entire predeclared time/count grid is replayed with cold-start cash-only
+state, no fitting, all inherited economic scenarios and the unchanged thresholds.
+Raw sources are bound to exact dataset persistence events, providers, hashes
+and actual availability. Unknown inputs block; known after-friction failure
+fails. G5/G6 packages remain unchanged.
+
+Snapshot-bound trial provenance includes conservative campaign and cross-campaign
+family counts, event hashes and budget. Signed G7 executions persist validation
+exposure. Subsequent trials inherit `saw_g7_result` through ancestry or family;
+an exact execution retry is not a new scientific trial.
+
+Independent temporal review reproduced leakage from future training events
+intersecting extended test-label horizons. K-fold/CPCV now compare full closed
+event intervals and start embargo after each test group's maximum event end.
+Invalid/nonintegral inputs, explicit zero step and excessive CPCV combinations
+fail closed. Independent exhaustive occupied-time-set oracles cover the repair.
+The legacy test expected embargo after decision 7 despite its label ending at
+10; it now requires embargo `(11,)`, training `(0,)`, and full-interval separation.
+This corrects the invalid expectation and strengthens its financial assertion.
+
+G7 review also reproduced post-declaration latency selection and unchecked raw
+provider attribution. Both were fixed and regression-tested before acceptance.
+Runtime integration caught normalized-versus-raw configuration hashing and
+timestamped provenance serialization mistakes; both were repaired in the
+actual persistence path. No failing run produced acceptance evidence.
+
+Focused verification: **108 statistics/calculation tests**, **8 real-process
+CLI/PostgreSQL/HTTP tests in 311.26 seconds**, Ruff clean and Mypy clean across
+69 source modules. The frozen complete suite then passed **595 tests in 981.49
+seconds**, no failures/skips, with two existing dependency deprecations.
+`docs/acceptance/g7-oos-2026-09-07.json` binds 18 accepted IDs and 53 exact
+source/test/config hashes to that execution and the unchanged SRS.
+
+The matrix is **548 total: 18 ACCEPTED, 32 VERIFIED, 3 IN_PROGRESS, 495
+NOT_STARTED**. Thus 50/548 (9.12%) have verification or acceptance evidence;
+only 18/548 (3.28%) are accepted. Rolling retraining, nested selection,
+cross-sectional validation, G8 inference and full production acceptance are
+not claimed. G8's statistical foundation and signed integration are next.
